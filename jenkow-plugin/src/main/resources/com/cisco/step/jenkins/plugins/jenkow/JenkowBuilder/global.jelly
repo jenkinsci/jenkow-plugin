@@ -1,0 +1,51 @@
+<!--
+The MIT License
+
+Copyright (c) 2012, Cisco Systems, Inc., Max Spring
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <f:section title="${%BPMN Workflow}">
+
+<!-- TODO 6: for some reason the "convention over configuration" online help approach does not work. I have to give explicit help references instead. -->
+
+    <f:entry field="workflowRepoRoot" title="${%Workflow Project Directory}" help="${rootURL}/plugin/jenkow-plugin/help-workflowRepoRoot.html">
+      <f:textbox name="workflowRepoRoot" value="${it.getWorkflowRepoRoot()}" />
+    </f:entry>
+
+<!-- help: http://activiti.org/userguide/index.html#databaseConfiguration -->
+<!-- ?????? onchange="Form.findMatchingInput(this,'m2release.nexusPassword').onchange()" --> 
+
+    <f:optionalBlock name="useExternalDB" title="Use external Database" checked="${descriptor.useExternalDB}" help="${rootURL}/plugin/jenkow-plugin/help-useExternalDB.html">
+      <f:entry title="JDBC URL" help="${rootURL}/plugin/jenkow-plugin/help-global.jdbcUrl.html">
+        <f:textbox name="jdbcUrl" value="${descriptor.jdbcUrl}" />
+      </f:entry>
+      <f:entry title="JDBC Username" help="${rootURL}/plugin/jenkow-plugin/help-global.jdbcUsername.html">
+        <f:textbox name="jdbcUsername" value="${descriptor.jdbcUsername}" />
+      </f:entry>
+      <f:entry title="JDBC Password" help="${rootURL}/plugin/jenkow-plugin/help-global.jdbcPassword.html">
+        <f:password name="jdbcPassword" value="${descriptor.jdbcPassword}" />
+      </f:entry>
+      <f:entry title="JDBC Driver" help="${rootURL}/plugin/jenkow-plugin/help-global.jdbcDriver.html">
+        <f:textbox name="jdbcDriver" value="${descriptor.jdbcDriver}"/>
+      </f:entry>
+    </f:optionalBlock>
+  </f:section>
+</j:jelly>

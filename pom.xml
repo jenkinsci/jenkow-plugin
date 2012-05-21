@@ -254,7 +254,7 @@ THE SOFTWARE.
     </repository>
     <repository>
       <id>repo.activiti</id>
-      <url>http://maven.alfresco.com/nexus/content/repositories/activiti/</url>
+      <url>http://maven.alfresco.com/nexus/content/groups/public/</url>
     </repository>
   </repositories>
   <pluginRepositories>

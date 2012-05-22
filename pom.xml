@@ -37,7 +37,7 @@ THE SOFTWARE.
   <name>${project.artifactId}</name>
   <version>0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <url/>
+  <url>https://wiki.jenkins-ci.org/display/JENKINS/Jenkow+Plugin</url>
 
   <modules>
     <module>jenkow-plugin</module>

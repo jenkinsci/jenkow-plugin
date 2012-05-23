@@ -25,6 +25,7 @@ package com.cisco.step.jenkins.plugins.jenkow;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
@@ -65,7 +66,10 @@ class EclipseResources {
                 + "		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>\n"
                 + "	</natures>\n"
                 + "</projectDescription>\n");
-            
+
+// TODO: use hudson.Util.expandMacro to expand occurrences of ${ade} to the actual value
+//  move these files into resources
+//            Util.expandMacro(str, Collections.singletonMap("ade",ade));
             String ade = getClass().getResource("/activiti-designer-extensions").getFile();
             FileUtils.writeStringToFile(new File(dir,".classpath")
                 , "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"

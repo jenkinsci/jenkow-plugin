@@ -49,6 +49,7 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.impl.repository.DeploymentBuilderImpl;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.ProcessDefinition;
@@ -99,6 +100,9 @@ public class JenkowBuilder extends Builder{
             if (!wff.exists()) log.println("error: "+wff+" does not exist");
             String wfn = wff+"20.xml"; // TODO 9: workaround for http://forums.activiti.org/en/viewtopic.php?f=8&t=3745&start=10
             DeploymentBuilder db = repoSvc.createDeployment().addInputStream(wfn,new FileInputStream(wff));
+
+            // skip XML Schema validation as documents produced by Activiti designer doesn't seem to conform to them
+            ((DeploymentBuilderImpl)db).getDeployment().setValidatingSchema(false);
 
             // TODO 7: We should avoid redeploying here, if workflow is already deployed?
             Deployment d = db.deploy();

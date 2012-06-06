@@ -34,6 +34,7 @@ import hudson.util.FormValidation;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashMap;
@@ -76,7 +77,7 @@ public class JenkowBuilder extends Builder{
     }
     
     @Override
-    public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
+    public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) throws InterruptedException, FileNotFoundException {
         PrintStream log = listener.getLogger();
         BuildLoggerMap.put(build,log);
         
@@ -131,8 +132,6 @@ public class JenkowBuilder extends Builder{
                 }
                 Thread.sleep(1000);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
         	Thread.currentThread().setContextClassLoader(previous);
         	BuildLoggerMap.remove(build);

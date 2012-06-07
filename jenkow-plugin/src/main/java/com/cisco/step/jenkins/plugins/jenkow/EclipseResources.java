@@ -89,6 +89,7 @@ class EclipseResources {
     
     void ensureWorkflowDefinition(File dir, String wfName){
         try {
+            if (new File(wfName).exists()) return;
             File f = new File(dir,mkWfPath(wfName));
             if (f.exists()) return;
             

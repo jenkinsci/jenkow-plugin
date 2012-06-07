@@ -54,7 +54,6 @@ public abstract class JenkowTestCase extends HudsonTestCase{
 	}
 	
 	protected String getWfName(String shortName){
-		String wf = getClass().getResource("/diagrams/"+shortName+EclipseResources.WORKFLOW_EXT).getFile();
-		return wf.substring(0,wf.length()-EclipseResources.WORKFLOW_EXT.length());
+		return getClass().getResource("/diagrams/"+shortName+EclipseResources.WORKFLOW_EXT).getFile();
 	}
 }

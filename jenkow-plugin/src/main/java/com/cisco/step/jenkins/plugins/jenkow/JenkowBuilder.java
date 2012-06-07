@@ -50,7 +50,6 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.impl.repository.DeploymentBuilderImpl;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.ProcessDefinition;
@@ -103,7 +102,7 @@ public class JenkowBuilder extends Builder{
             DeploymentBuilder db = repoSvc.createDeployment().addInputStream(wfn,new FileInputStream(wff));
 
             // skip XML Schema validation as documents produced by Activiti designer doesn't seem to conform to them
-            ((DeploymentBuilderImpl)db).getDeployment().setValidatingSchema(false);
+//            ((DeploymentBuilderImpl)db).getDeployment().setValidatingSchema(false);
 
             // TODO 7: We should avoid redeploying here, if workflow is already deployed?
             Deployment d = db.deploy();
@@ -260,7 +259,12 @@ public class JenkowBuilder extends Builder{
         }
 
 		File getWorkflowFile(String wfName){
-            return new File(getEffectiveWorkflowRepoRoot(),EclipseResources.mkWfPath(wfName)).getAbsoluteFile();
+            File wff = new File(wfName);
+			if (wff.isAbsolute()){
+				return wff;
+            }else{
+            	return new File(getEffectiveWorkflowRepoRoot(),EclipseResources.mkWfPath(wfName)).getAbsoluteFile();
+            }
         }
 		
 		public JenkowEngineConfig getEngineConfig(){

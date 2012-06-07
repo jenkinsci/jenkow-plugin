@@ -137,14 +137,13 @@ THE SOFTWARE.
         <configuration>
           <excludes>
 <!--
-excluding all, because of xalan 2.6.0 - 2.7.1 conflict
--->
-            <exclude>**/com/cisco/step/jenkins/plugins/jenkow/WaitsForeverTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/SimpleWfRunTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/SimpleWfCallsJobTest.java</exclude>
-            <exclude>**/com/cisco/step/jenkins/plugins/jenkow/JobResultConsumptionTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/ParallelJobsTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/ExecLoggerTest.java</exclude>
+            <exclude>**/com/cisco/step/jenkins/plugins/jenkow/WaitsForeverTest.java</exclude>
+            <exclude>**/com/cisco/step/jenkins/plugins/jenkow/JobResultConsumptionTest.java</exclude>
+-->
           </excludes>
         </configuration>
       </plugin>

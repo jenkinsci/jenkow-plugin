@@ -6,7 +6,7 @@
     * what to show in build log?
 
 * 20120607-01: need to bundle the Activiti Designer update site with Jenkow, otherwise any time there's a new Activiti Designer release it can easily break the Jenkow Designer extension
-* 20120509-01: provide remote access to workflow repository on the server; options: [Git|http://stackoverflow.com/questions/6468122/how-to-write-or-package-a-git-server-as-a-java-servlet-or-java-webapp], [Eclipse EFS|http://www.eclipsezone.com/articles/efs/]?
+* 20120509-01: provide remote access to workflow repository on the server; options: [Git](http://stackoverflow.com/questions/6468122/how-to-write-or-package-a-git-server-as-a-java-servlet-or-java-webapp), [Eclipse EFS](http://www.eclipsezone.com/articles/efs/)?
 * 20120504-01: when a Jenkins Task references a non-existing job, create a basic job from template
 * 20120504-02: Bundle Activiti Designer Extension update site (plus own Eclipse extensions) with the Jenkow plugin
 * 20120504-03: Jenkins Task Type: allow to set Jenkins Job parameter

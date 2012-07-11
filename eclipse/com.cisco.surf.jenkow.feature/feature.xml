@@ -22,13 +22,24 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
-<site>
-   <category-def name="jenkow.category" label="Jenkow / Activiti BPMN Designer"/>
-   <feature url="features/org.activiti.designer.feature_0.0.0.jar" id="org.activiti.designer.feature" version="0.0.0">
-      <category name="jenkow.category"/>
-   </feature>
-   <feature url="features/org.eclipse.graphiti.feature_0.0.0.jar" id="org.eclipse.graphiti.feature" version="0.0.0"/>
-   <feature url="features/com.cisco.surf.jenkow.feature_0.0.0.jar" id="com.cisco.surf.jenkow.feature" version="0.0.0">
-      <category name="jenkow.category"/>
-   </feature>
-</site>
+<feature id="com.cisco.surf.jenkow.feature" label="Jenkow Feature" version="0.2.0.qualifier" provider-name="CISCO">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+   </requires>
+
+   <plugin id="com.cisco.surf.jenkow.ide.config" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+
+</feature>

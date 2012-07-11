@@ -38,6 +38,7 @@ THE SOFTWARE.
 
   <modules>
     <module>com.cisco.surf.jenkow.ide.config</module>
+    <module>com.cisco.surf.jenkow.feature</module>
     <module>com.cisco.surf.jenkow.site</module>
   </modules>
   
@@ -59,5 +60,16 @@ THE SOFTWARE.
       <url>http://activiti.org/designer/update/</url>
     </repository>
   </repositories>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>${tycho.groupid}</groupId>
+        <artifactId>tycho-maven-plugin</artifactId>
+        <version>${tycho.version}</version>
+        <extensions>true</extensions>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

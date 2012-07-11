@@ -48,12 +48,6 @@ THE SOFTWARE.
   <build>
     <plugins>
       <plugin>
-        <groupId>${tycho.groupid}</groupId>
-        <artifactId>tycho-maven-plugin</artifactId>
-        <version>${tycho.version}</version>
-        <extensions>true</extensions>
-      </plugin>
-      <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-p2-repository-plugin</artifactId>
         <version>${tycho.version}</version>

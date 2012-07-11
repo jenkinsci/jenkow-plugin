@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <!--
 The MIT License
 
@@ -22,13 +22,19 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
-<site>
-   <category-def name="jenkow.category" label="Jenkow / Activiti BPMN Designer"/>
-   <feature url="features/org.activiti.designer.feature_0.0.0.jar" id="org.activiti.designer.feature" version="0.0.0">
-      <category name="jenkow.category"/>
-   </feature>
-   <feature url="features/org.eclipse.graphiti.feature_0.0.0.jar" id="org.eclipse.graphiti.feature" version="0.0.0"/>
-   <feature url="features/com.cisco.surf.jenkow.feature_0.0.0.jar" id="com.cisco.surf.jenkow.feature" version="0.0.0">
-      <category name="jenkow.category"/>
-   </feature>
-</site>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.cisco.step.jenkins.plugins</groupId>
+    <artifactId>jenkow-eclipse-parent</artifactId>
+    <version>0.2-SNAPSHOT</version>
+    <relativePath>..</relativePath>
+  </parent>
+
+  <artifactId>com.cisco.surf.jenkow.feature</artifactId>
+  <version>0.2.0-SNAPSHOT</version>
+  <packaging>eclipse-feature</packaging>
+  <name>eclipse/${project.artifactId}</name>
+
+</project>

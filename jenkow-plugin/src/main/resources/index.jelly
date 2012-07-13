@@ -22,5 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 <div>
-  This plugin integrates the <A HREF="http://activiti.org/">Activiti BPM Platform</A> into Jenkins.
+  <p>Integrates the <A HREF="http://activiti.org/">Activiti BPM Platform</A> into Jenkins.</p>
+  <p>(Local Eclipse <A HREF="plugin/jenkow-plugin/site">update site</A>.)</p>
 </div>

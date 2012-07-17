@@ -1,6 +1,7 @@
 * 20120713-01: make designer extension part of Activiti Designer, so no need to install a separate designer extension
   [Activiti Form Thread](http://forums.activiti.org/en/viewtopic.php?f=8&t=4234)
     * It may be possible to completely do away with the User Library, by bundling the extension with Designer
+    * Add Eclipse extension point to Designer allowing to register an Eclipse extension to contribute to the palette
 * 20120613-01: Workflow Job Type
     * has one workflow definition
     * historic processes map to build results

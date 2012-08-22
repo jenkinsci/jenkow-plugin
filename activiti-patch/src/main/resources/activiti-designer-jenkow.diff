@@ -1,0 +1,380 @@
+Index: org.activiti.designer.integration/src/main/java/org/activiti/designer/integration/servicetask/CustomServiceTaskDescriptor.java
+===================================================================
+--- org.activiti.designer.integration/src/main/java/org/activiti/designer/integration/servicetask/CustomServiceTaskDescriptor.java	(revision 0)
++++ org.activiti.designer.integration/src/main/java/org/activiti/designer/integration/servicetask/CustomServiceTaskDescriptor.java	(revision 0)
+@@ -0,0 +1,27 @@
++package org.activiti.designer.integration.servicetask;
++
++public class CustomServiceTaskDescriptor {
++    private Class <? extends CustomServiceTask> clazz;
++    private String extensionName;
++    private String extensionJarPath;
++    
++	public CustomServiceTaskDescriptor(
++			Class<? extends CustomServiceTask> clazz, String extensionName,
++			String extensionJarPath) {
++		this.clazz = clazz;
++		this.extensionName = extensionName;
++		this.extensionJarPath = extensionJarPath;
++	}
++
++	public Class<? extends CustomServiceTask> getClazz() {
++		return clazz;
++	}
++
++	public String getExtensionName() {
++		return extensionName;
++	}
++
++	public String getExtensionJarPath() {
++		return extensionJarPath;
++	}
++}
+Index: org.activiti.designer.eclipse/META-INF/MANIFEST.MF
+===================================================================
+--- org.activiti.designer.eclipse/META-INF/MANIFEST.MF	(revision 3644)
++++ org.activiti.designer.eclipse/META-INF/MANIFEST.MF	(working copy)
+@@ -33,6 +33,7 @@
+  org.activiti.designer.eclipse.extension.export,
+  org.activiti.designer.eclipse.extension.icon,
+  org.activiti.designer.eclipse.extension.validation,
++ org.activiti.designer.eclipse.extension.palette,
+  org.activiti.designer.eclipse.perspective,
+  org.activiti.designer.eclipse.preferences,
+  org.activiti.designer.eclipse.property,
+Index: org.activiti.designer.eclipse/schema/org.activiti.designer.eclipse.extension.PaletteExtensionProvider.exsd
+===================================================================
+--- org.activiti.designer.eclipse/schema/org.activiti.designer.eclipse.extension.PaletteExtensionProvider.exsd	(revision 0)
++++ org.activiti.designer.eclipse/schema/org.activiti.designer.eclipse.extension.PaletteExtensionProvider.exsd	(revision 0)
+@@ -0,0 +1,102 @@
++<?xml version='1.0' encoding='UTF-8'?>
++<!-- Schema file written by PDE -->
++<schema targetNamespace="org.activiti.designer.eclipse" xmlns="http://www.w3.org/2001/XMLSchema">
++<annotation>
++      <appinfo>
++         <meta.schema plugin="org.activiti.designer.eclipse" id="org.activiti.designer.eclipse.extension.PaletteExtensionProvider" name="Palette Extension Provider"/>
++      </appinfo>
++      <documentation>
++         [Enter description of this extension point.]
++      </documentation>
++   </annotation>
++
++   <element name="extension">
++      <annotation>
++         <appinfo>
++            <meta.element />
++         </appinfo>
++      </annotation>
++      <complexType>
++         <choice minOccurs="1" maxOccurs="unbounded">
++            <element ref="provider"/>
++         </choice>
++         <attribute name="point" type="string" use="required">
++            <annotation>
++               <documentation>
++                  
++               </documentation>
++            </annotation>
++         </attribute>
++         <attribute name="id" type="string">
++            <annotation>
++               <documentation>
++                  
++               </documentation>
++            </annotation>
++         </attribute>
++         <attribute name="name" type="string">
++            <annotation>
++               <documentation>
++                  
++               </documentation>
++               <appinfo>
++                  <meta.attribute translatable="true"/>
++               </appinfo>
++            </annotation>
++         </attribute>
++      </complexType>
++   </element>
++
++   <element name="provider">
++      <complexType>
++         <attribute name="class" type="string">
++            <annotation>
++               <documentation>
++                  
++               </documentation>
++               <appinfo>
++                  <meta.attribute kind="java" basedOn=":org.activiti.designer.eclipse.extension.palette.IPaletteProvider"/>
++               </appinfo>
++            </annotation>
++         </attribute>
++      </complexType>
++   </element>
++
++   <annotation>
++      <appinfo>
++         <meta.section type="since"/>
++      </appinfo>
++      <documentation>
++         [Enter the first release in which this extension point appears.]
++      </documentation>
++   </annotation>
++
++   <annotation>
++      <appinfo>
++         <meta.section type="examples"/>
++      </appinfo>
++      <documentation>
++         [Enter extension point usage example here.]
++      </documentation>
++   </annotation>
++
++   <annotation>
++      <appinfo>
++         <meta.section type="apiinfo"/>
++      </appinfo>
++      <documentation>
++         [Enter API information here.]
++      </documentation>
++   </annotation>
++
++   <annotation>
++      <appinfo>
++         <meta.section type="implementation"/>
++      </appinfo>
++      <documentation>
++         [Enter information about supplied implementation of this extension point.]
++      </documentation>
++   </annotation>
++
++
++</schema>
+Index: org.activiti.designer.eclipse/src/main/java/org/activiti/designer/eclipse/common/ActivitiPlugin.java
+===================================================================
+--- org.activiti.designer.eclipse/src/main/java/org/activiti/designer/eclipse/common/ActivitiPlugin.java	(revision 3644)
++++ org.activiti.designer.eclipse/src/main/java/org/activiti/designer/eclipse/common/ActivitiPlugin.java	(working copy)
+@@ -13,6 +13,8 @@
+ import org.eclipse.ui.plugin.AbstractUIPlugin;
+ import org.osgi.framework.BundleContext;
+ 
++import org.activiti.designer.eclipse.util.PaletteExtensionUtil;
++
+ public class ActivitiPlugin extends AbstractUIPlugin {
+ 
+   public static final String PLUGIN_ID = "org.activiti.designer.eclipse"; //$NON-NLS-1$
+@@ -33,6 +35,8 @@
+ 
+   public static final String ICON_PROVIDER_EXTENSIONPOINT_ID = "org.activiti.designer.eclipse.extension.IconProvider";
+ 
++  public static final String PALETTE_EXTENSION_PROVIDER_EXTENSIONPOINT_ID = "org.activiti.designer.eclipse.extension.PaletteExtensionProvider";
++
+   private static ActivitiPlugin _plugin;
+ 
+   // The image cache object used in the plugin
+@@ -62,6 +66,8 @@
+ 
+     // Initialize the image cache
+     imageCache = new ImageCache();
++    
++    PaletteExtensionUtil.pushPaletteExtensions();
+   }
+ 
+   @Override
+Index: org.activiti.designer.eclipse/src/main/java/org/activiti/designer/eclipse/extension/palette/IPaletteProvider.java
+===================================================================
+--- org.activiti.designer.eclipse/src/main/java/org/activiti/designer/eclipse/extension/palette/IPaletteProvider.java	(revision 0)
++++ org.activiti.designer.eclipse/src/main/java/org/activiti/designer/eclipse/extension/palette/IPaletteProvider.java	(revision 0)
+@@ -0,0 +1,9 @@
++package org.activiti.designer.eclipse.extension.palette;
++
++import java.util.List;
++
++import org.activiti.designer.integration.servicetask.CustomServiceTaskDescriptor;
++
++public interface IPaletteProvider {
++	List<CustomServiceTaskDescriptor> provide();
++}
+Index: org.activiti.designer.eclipse/src/main/java/org/activiti/designer/eclipse/util/PaletteExtensionUtil.java
+===================================================================
+--- org.activiti.designer.eclipse/src/main/java/org/activiti/designer/eclipse/util/PaletteExtensionUtil.java	(revision 0)
++++ org.activiti.designer.eclipse/src/main/java/org/activiti/designer/eclipse/util/PaletteExtensionUtil.java	(revision 0)
+@@ -0,0 +1,49 @@
++package org.activiti.designer.eclipse.util;
++
++import java.util.List;
++
++import org.activiti.designer.eclipse.common.ActivitiPlugin;
++import org.activiti.designer.eclipse.extension.palette.IPaletteProvider;
++import org.activiti.designer.integration.servicetask.CustomServiceTaskDescriptor;
++import org.activiti.designer.util.extension.ExtensionUtil;
++import org.eclipse.core.runtime.CoreException;
++import org.eclipse.core.runtime.IConfigurationElement;
++import org.eclipse.core.runtime.IExtensionRegistry;
++import org.eclipse.core.runtime.ISafeRunnable;
++import org.eclipse.core.runtime.Platform;
++import org.eclipse.core.runtime.SafeRunner;
++
++public class PaletteExtensionUtil {
++	
++	public static void pushPaletteExtensions(){
++		IExtensionRegistry registry = Platform.getExtensionRegistry();
++		IConfigurationElement[] cfgs = registry.getConfigurationElementsFor(ActivitiPlugin.PALETTE_EXTENSION_PROVIDER_EXTENSIONPOINT_ID);
++		for (IConfigurationElement cfg : cfgs){
++			try {
++				Object o = cfg.createExecutableExtension("class");
++				if (o instanceof IPaletteProvider){
++					executeExtension((IPaletteProvider)o);
++				}
++			} catch (CoreException e) {
++				e.printStackTrace();
++			}
++		}
++	}
++
++	private static void executeExtension(final IPaletteProvider provider) {
++		ISafeRunnable runnable = new ISafeRunnable() {
++			@Override
++			public void handleException(Throwable e) {
++				System.out.println("Exception in client");
++				e.printStackTrace();
++			}
++
++			@Override
++			public void run() throws Exception {
++				List<CustomServiceTaskDescriptor> descriptors = provider.provide();
++				ExtensionUtil.addProvidedCustomServiceTaskDescriptors(descriptors);
++			}
++		};
++		SafeRunner.run(runnable);
++	}
++}
+Index: org.activiti.designer.eclipse/plugin.xml
+===================================================================
+--- org.activiti.designer.eclipse/plugin.xml	(revision 3644)
++++ org.activiti.designer.eclipse/plugin.xml	(working copy)
+@@ -4,6 +4,7 @@
+    <extension-point id="org.activiti.designer.eclipse.extension.export.ExportMarshaller" name="Export Marshaller" schema="schema/org.activiti.designer.eclipse.extension.export.ExportMarshaller.exsd"/>
+    <extension-point id="org.activiti.designer.eclipse.extension.validation.ProcessValidator" name="ProcessValidator" schema="schema/org.activiti.designer.eclipse.extension.validation.ProcessValidator.exsd"/>
+    <extension-point id="org.activiti.designer.eclipse.extension.IconProvider" name="Icon Provider" schema="schema/org.activiti.designer.eclipse.extension.IconProvider.exsd"/>
++   <extension-point id="org.activiti.designer.eclipse.extension.PaletteExtensionProvider" name="Palette Extension Provider" schema="schema/org.activiti.designer.eclipse.extension.PaletteExtensionProvider.exsd"/>
+    <extension
+          point="org.eclipse.ui.perspectives">
+       <perspective
+Index: org.activiti.designer.updatesite/pom.xml
+===================================================================
+--- org.activiti.designer.updatesite/pom.xml	(revision 3644)
++++ org.activiti.designer.updatesite/pom.xml	(working copy)
+@@ -9,7 +9,7 @@
+ 	</parent>
+ 
+ 	<artifactId>org.activiti.designer.updatesite</artifactId>
+-	<packaging>eclipse-update-site</packaging>
++	<packaging>eclipse-repository</packaging>
+ 	<name>Activiti Designer - Update site</name>
+ 
+-</project>
+\ No newline at end of file
++</project>
+Index: org.activiti.designer.updatesite/category.xml
+===================================================================
+--- org.activiti.designer.updatesite/category.xml	(revision 0)
++++ org.activiti.designer.updatesite/category.xml	(revision 0)
+@@ -0,0 +1,14 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<site>
++   <description name="Activiti Eclipse BPMN 2.0 Designer Update Site" url="http://activiti.org/designer/update">
++      Activiti Eclipse BPMN 2.0 Designer Update Site
++   </description>
++   <feature url="features/org.activiti.designer.feature_5.9.3.jar" id="org.activiti.designer.feature" version="5.9.3">
++      <category name="designer"/>
++   </feature>
++   <category-def name="designer" label="Activiti BPMN Designer">
++      <description>
++         Activiti BPMN Designer
++      </description>
++   </category-def>
++</site>
+Index: org.activiti.designer.parent/pom.xml
+===================================================================
+--- org.activiti.designer.parent/pom.xml	(revision 3644)
++++ org.activiti.designer.parent/pom.xml	(working copy)
+@@ -33,7 +33,7 @@
+ 		<repository>
+ 			<id>Graphiti</id>
+ 			<layout>p2</layout>
+-			<url>http://download.eclipse.org/graphiti/updates/milestones/</url>
++            <url>http://download.eclipse.org/graphiti/updates/0.9.0</url>
+ 		</repository>
+ 		<repository>
+ 			<id>Oribit</id>
+@@ -89,4 +89,4 @@
+ 		</plugins>
+ 	</build>
+ 
+-</project>
+\ No newline at end of file
++</project>
+Index: org.activiti.designer.util/src/main/java/org/activiti/designer/util/extension/ExtensionUtil.java
+===================================================================
+--- org.activiti.designer.util/src/main/java/org/activiti/designer/util/extension/ExtensionUtil.java	(revision 3669)
++++ org.activiti.designer.util/src/main/java/org/activiti/designer/util/extension/ExtensionUtil.java	(working copy)
+@@ -13,6 +13,7 @@
+ 
+ import org.activiti.designer.bpmn2.model.CustomProperty;
+ import org.activiti.designer.bpmn2.model.ServiceTask;
++import org.activiti.designer.integration.servicetask.CustomServiceTaskDescriptor;
+ import org.activiti.designer.integration.palette.AbstractDefaultPaletteCustomizer;
+ import org.activiti.designer.integration.palette.DefaultPaletteCustomizer;
+ import org.activiti.designer.integration.palette.PaletteEntry;
+@@ -53,10 +54,17 @@
+ 	public static final String USER_LIBRARY_NAME_EXTENSIONS = "Activiti Designer Extensions";
+ 
+   public static final String DESIGNER_EXTENSIONS_USER_LIB_PATH = "org.eclipse.jdt.USER_LIBRARY/" + USER_LIBRARY_NAME_EXTENSIONS;
++  
++  public static List<CustomServiceTaskDescriptor> providedCustomServiceTaskDescriptors;
+ 	
+   private ExtensionUtil() {
+ 
+   }
++  
++  public static void addProvidedCustomServiceTaskDescriptors(List<CustomServiceTaskDescriptor> descriptors){
++	  if (providedCustomServiceTaskDescriptors == null) providedCustomServiceTaskDescriptors = new ArrayList<CustomServiceTaskDescriptor>();
++	  providedCustomServiceTaskDescriptors.addAll(descriptors);
++  }
+ 
+   public static final Set<PaletteEntry> getDisabledPaletteEntries(IProject project) {
+ 
+@@ -414,6 +422,8 @@
+   public static List<CustomServiceTaskContext> getCustomServiceTaskContexts(final IProject project) {
+ 
+     List<CustomServiceTaskContext> result = new ArrayList<CustomServiceTaskContext>();
++    
++    addToCustomServiceTasks(result);
+ 
+     IJavaProject javaProject = null;
+     try {
+@@ -546,7 +556,23 @@
+ 
+     return result;
+   }
+-
++  
++	private static void addToCustomServiceTasks(List<CustomServiceTaskContext> result) {
++		if (providedCustomServiceTaskDescriptors != null) {
++			for (CustomServiceTaskDescriptor dscr : providedCustomServiceTaskDescriptors) {
++				Class<? extends CustomServiceTask> clazz = dscr.getClazz();
++				if (clazz != null && !Modifier.isAbstract(clazz.getModifiers()) && CustomServiceTask.class.isAssignableFrom(clazz)) {
++					try {
++						CustomServiceTask customServiceTask = (CustomServiceTask)clazz.newInstance();
++						result.add(new CustomServiceTaskContextImpl(customServiceTask,dscr.getExtensionName(),dscr.getExtensionJarPath()));
++					} catch (Exception e) {
++						e.printStackTrace();
++					}
++				}
++			}
++		}
++	}
++  
+   /**
+    * @param packageFragmentRoot
+    * @throws JavaModelException

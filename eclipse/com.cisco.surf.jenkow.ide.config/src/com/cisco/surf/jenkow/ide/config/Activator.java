@@ -35,18 +35,10 @@ import org.osgi.framework.BundleContext;
  * The activator class controls the plug-in life cycle
  */
 public class Activator extends AbstractUIPlugin implements IStartup {
-
-	// The plug-in ID
 	public static final String PLUGIN_ID = "com.cisco.surf.jenkow.ide.config"; //$NON-NLS-1$
-
-	// The shared instance
 	private static Activator plugin;
 	
-	/**
-	 * The constructor
-	 */
 	public Activator() {
-		
 	}
 
 	/*
@@ -57,13 +49,13 @@ public class Activator extends AbstractUIPlugin implements IStartup {
 		super.start(context);
 		plugin = this;
 		
-		String prop = System.getProperty("osgi.install.area");
-		if(prop != null)
-		{
-			UserLibConfigurator userLib = new UserLibConfigurator();
-			File installArea = new File(new java.net.URI(prop));
-			userLib.configure("Activiti Designer Extensions", new File(installArea,"/activiti-designer-extensions/"));
-		}
+//		String prop = System.getProperty("osgi.install.area");
+//		if(prop != null)
+//		{
+//			UserLibConfigurator userLib = new UserLibConfigurator();
+//			File installArea = new File(new java.net.URI(prop));
+//			userLib.configure("Activiti Designer Extensions", new File(installArea,"/activiti-designer-extensions/"));
+//		}
 	}
 
 	/*
@@ -75,11 +67,6 @@ public class Activator extends AbstractUIPlugin implements IStartup {
 		super.stop(context);
 	}
 
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
 	public static Activator getDefault() {
 		return plugin;
 	}
@@ -87,7 +74,6 @@ public class Activator extends AbstractUIPlugin implements IStartup {
 	@Override
 	public void earlyStartup() {
 		// TODO Auto-generated method stub
-		
 	}
 
 }

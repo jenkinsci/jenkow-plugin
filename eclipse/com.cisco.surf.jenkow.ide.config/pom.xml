@@ -36,9 +36,96 @@ THE SOFTWARE.
   <version>0.2.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
   <name>eclipse/${project.artifactId}</name>
+  
+  <properties>
+    <designer.extension.name>jenkow-designer-extension-${jenkow.base.version}-${maven.build.timestamp}.jar</designer.extension.name>
+  </properties>
 
   <build>
+    <resources>
+      <resource>
+        <directory>${basedir}/src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>${project.build.directory}/generated-resources</directory>
+      </resource>
+    </resources>
     <plugins>
+      <plugin>
+        <groupId>com.google.code.maven-replacer-plugin</groupId>
+        <artifactId>replacer</artifactId>
+        <version>1.5.0</version>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>replace</goal>
+            </goals>                   
+          </execution>
+        </executions>
+        <configuration>
+          <file>build.env.template</file>
+          <outputFile>${project.build.directory}/generated-resources/build.env.properties</outputFile>
+          <replacements>
+            <replacement>
+              <token>@DDESIGNER_EXTENSION_NAME@</token>
+              <value>${designer.extension.name}</value>
+            </replacement>         
+          </replacements>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.5</version>
+        <executions>
+          <execution>
+            <id>copy</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.cisco.step.jenkins.plugins</groupId>
+                  <artifactId>jenkow-designer-extension</artifactId>
+                  <version>${project.version}</version>
+                  <type>jar</type>
+                  <overWrite>true</overWrite>
+                  <destFileName>${designer.extension.name}</destFileName>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${project.build.directory}/generated-resources</outputDirectory>
+              <overWriteReleases>true</overWriteReleases>
+              <overWriteSnapshots>true</overWriteSnapshots>
+            </configuration>
+          </execution>
+          <execution>
+            <id>unpack</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.cisco.step.jenkins.plugins</groupId>
+                  <artifactId>jenkow-designer-extension</artifactId>
+                  <version>${project.version}</version>
+                  <type>jar</type>
+                  <overWrite>true</overWrite>
+                  <includes>**/*.class</includes>
+                  <excludes>**/*test.class</excludes>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${project.build.directory}/generated-resources</outputDirectory>
+              <overWriteReleases>true</overWriteReleases>
+              <overWriteSnapshots>true</overWriteSnapshots>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>${tycho.groupid}</groupId>
         <artifactId>tycho-maven-plugin</artifactId>

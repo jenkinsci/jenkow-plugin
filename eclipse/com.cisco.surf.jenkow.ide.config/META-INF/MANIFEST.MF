@@ -7,6 +7,10 @@ Bundle-Activator: com.cisco.surf.jenkow.ide.config.Activator
 Bundle-Vendor: CISCO
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.jdt.core
+ org.eclipse.jdt.core,
+ org.activiti.designer.integration,
+ org.activiti.designer.util
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
+Export-Package: com.cisco.surf.jenkow.ide.config
+Import-Package: org.activiti.designer.eclipse.extension.palette

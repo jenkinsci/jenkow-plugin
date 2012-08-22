@@ -32,42 +32,27 @@ THE SOFTWARE.
     <relativePath>..</relativePath>
   </parent>
 
-  <artifactId>jenkow-designer-extension</artifactId>
-  <version>0.2.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <artifactId>jenkow-activiti-patch</artifactId>
   <name>${project.artifactId}</name>
-  <description>Eclipse extension for Activiti Designer</description>
-    
-  <properties>
-    <maven.test.skip>true</maven.test.skip>
-  </properties>
+  <packaging>pom</packaging>
   
-  <dependencies>
-    <dependency>
-      <groupId>org.activiti</groupId>
-      <artifactId>activiti-designer-integration</artifactId>
-      <version>${activiti.designer.version}</version>
-      <scope>compile</scope>
-    </dependency>
-  </dependencies>
-
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <index>true</index>
-            <manifest>
-              <addClasspath>false</addClasspath>
-              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-            </manifest>
-            <manifestEntries>
-              <ActivitiDesigner-Extension-Name>Jenkins</ActivitiDesigner-Extension-Name>
-            </manifestEntries>
-          </archive>
-        </configuration>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <workingDirectory>${project.build.directory}</workingDirectory>
+              <executable>${basedir}/patch.sh</executable>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

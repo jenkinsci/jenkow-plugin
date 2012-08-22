@@ -4,5 +4,11 @@
    <extension
          point="org.eclipse.ui.startup">
    </extension>
+   <extension
+         point="org.activiti.designer.eclipse.extension.PaletteExtensionProvider">
+      <provider
+            class="com.cisco.surf.jenkow.ide.config.PaletteProvider">
+      </provider>
+   </extension>
 
 </plugin>

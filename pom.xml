@@ -40,6 +40,7 @@ THE SOFTWARE.
   <url>https://wiki.jenkins-ci.org/display/JENKINS/Jenkow+Plugin</url>
 
   <modules>
+    <module>activiti-patch</module>
     <module>jenkow-designer-extension</module>
     <module>eclipse</module>
     <module>jenkow-plugin</module>
@@ -73,6 +74,7 @@ THE SOFTWARE.
   </scm>
 
   <properties>
+    <jenkow.base.version>0.2.0</jenkow.base.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <tycho.groupid>org.eclipse.tycho</tycho.groupid>
     <tycho.version>0.15.0</tycho.version>

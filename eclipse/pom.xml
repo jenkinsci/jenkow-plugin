@@ -57,7 +57,11 @@ THE SOFTWARE.
     <repository>
       <id>activiti</id>
       <layout>p2</layout>
+<!--
       <url>http://activiti.org/designer/update/</url>
+      <url>file:///scratch/jenkow/activiti-designer/org.activiti.designer.updatesite/target/repository</url>
+-->
+      <url>file://${basedir}/../../activiti-patch/target/activiti/org.activiti.designer.updatesite/target/repository</url>
     </repository>
   </repositories>
 

@@ -4,7 +4,7 @@
     <startEvent id="startevent1" name="Start"></startEvent>
     <scriptTask id="scripttask1" name="Script Task" scriptFormat="groovy">
       <script><![CDATA[System.out.println("scripttask begin");
-Thread.sleep(1000);
+Thread.sleep(2000);
 System.out.println("scripttask end");
 ]]></script>
     </scriptTask>

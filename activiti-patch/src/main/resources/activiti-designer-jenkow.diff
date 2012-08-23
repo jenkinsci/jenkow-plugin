@@ -294,26 +294,6 @@ Index: org.activiti.designer.updatesite/category.xml
 +      </description>
 +   </category-def>
 +</site>
-Index: org.activiti.designer.parent/pom.xml
-===================================================================
---- org.activiti.designer.parent/pom.xml	(revision 3644)
-+++ org.activiti.designer.parent/pom.xml	(working copy)
-@@ -33,7 +33,7 @@
- 		<repository>
- 			<id>Graphiti</id>
- 			<layout>p2</layout>
--			<url>http://download.eclipse.org/graphiti/updates/milestones/</url>
-+            <url>http://download.eclipse.org/graphiti/updates/0.9.0</url>
- 		</repository>
- 		<repository>
- 			<id>Oribit</id>
-@@ -89,4 +89,4 @@
- 		</plugins>
- 	</build>
- 
--</project>
-\ No newline at end of file
-+</project>
 Index: org.activiti.designer.util/src/main/java/org/activiti/designer/util/extension/ExtensionUtil.java
 ===================================================================
 --- org.activiti.designer.util/src/main/java/org/activiti/designer/util/extension/ExtensionUtil.java	(revision 3669)

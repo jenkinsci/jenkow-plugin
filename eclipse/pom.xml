@@ -28,7 +28,7 @@ THE SOFTWARE.
   <parent>
     <groupId>com.cisco.step.jenkins.plugins</groupId>
     <artifactId>jenkow-parent</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
 
@@ -57,7 +57,7 @@ THE SOFTWARE.
     <repository>
       <id>activiti</id>
       <layout>p2</layout>
-<!--
+<!-- Once the patch has been accepted by Activiti Designer, we can use the update site again.
       <url>http://activiti.org/designer/update/</url>
       <url>file:///scratch/jenkow/activiti-designer/org.activiti.designer.updatesite/target/repository</url>
 -->

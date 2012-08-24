@@ -28,12 +28,11 @@ THE SOFTWARE.
   <parent>
     <groupId>com.cisco.step.jenkins.plugins</groupId>
     <artifactId>jenkow-eclipse-parent</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
 
   <artifactId>com.cisco.surf.jenkow.site</artifactId>
-  <version>0.2.0-SNAPSHOT</version>
   <packaging>eclipse-repository</packaging>
   <name>eclipse/${project.artifactId}</name>
   

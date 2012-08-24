@@ -28,12 +28,11 @@ THE SOFTWARE.
   <parent>
     <groupId>com.cisco.step.jenkins.plugins</groupId>
     <artifactId>jenkow-parent</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
 
   <artifactId>jenkow-designer-extension</artifactId>
-  <version>0.2.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>${project.artifactId}</name>
   <description>Eclipse extension for Activiti Designer</description>

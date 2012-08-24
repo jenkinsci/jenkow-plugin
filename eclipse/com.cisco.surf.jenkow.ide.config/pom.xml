@@ -39,6 +39,14 @@ THE SOFTWARE.
   <properties>
     <designer.extension.name>jenkow-designer-extension-${jenkow.base.version}-${maven.build.timestamp}.jar</designer.extension.name>
   </properties>
+  
+  <dependencies>
+    <dependency>
+      <groupId>com.cisco.step.jenkins.plugins</groupId>
+      <artifactId>jenkow-designer-extension</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
 
   <build>
     <resources>

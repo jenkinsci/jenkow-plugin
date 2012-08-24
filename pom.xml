@@ -41,10 +41,23 @@ THE SOFTWARE.
 
   <modules>
     <module>activiti-patch</module>
-    <module>jenkow-designer-extension</module>
-    <module>eclipse</module>
-    <module>jenkow-plugin</module>
   </modules>
+  
+  <profiles>
+    <profile>
+      <id>eclipse-module</id>
+      <activation>
+        <file>
+          <exists>activiti-patch/target/activiti/org.activiti.designer.updatesite/target/repository</exists>
+        </file>
+      </activation>
+      <modules>
+        <module>eclipse</module>
+        <module>jenkow-designer-extension</module>
+        <module>jenkow-plugin</module>
+      </modules>
+    </profile>
+  </profiles>
   
   <developers>
     <developer>

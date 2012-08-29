@@ -27,7 +27,9 @@ THE SOFTWARE.
    <feature url="features/org.activiti.designer.feature_0.0.0.jar" id="org.activiti.designer.feature" version="0.0.0">
       <category name="jenkow.category"/>
    </feature>
-   <feature url="features/org.eclipse.graphiti.feature_0.0.0.jar" id="org.eclipse.graphiti.feature" version="0.0.0"/>
+   <feature url="features/org.eclipse.graphiti.feature_0.0.0.jar" id="org.eclipse.graphiti.feature" version="0.0.0">
+      <category name="jenkow.category"/>
+   </feature>
    <feature url="features/com.cisco.surf.jenkow.feature_0.0.0.jar" id="com.cisco.surf.jenkow.feature" version="0.0.0">
       <category name="jenkow.category"/>
    </feature>

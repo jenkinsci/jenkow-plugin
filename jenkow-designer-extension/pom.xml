@@ -63,7 +63,7 @@ THE SOFTWARE.
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
             </manifest>
             <manifestEntries>
-              <ActivitiDesigner-Extension-Name>Jenkins</ActivitiDesigner-Extension-Name>
+              <ActivitiDesigner-Extension-Name>Jenkow</ActivitiDesigner-Extension-Name>
             </manifestEntries>
           </archive>
         </configuration>

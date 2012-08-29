@@ -13,6 +13,8 @@ import org.activiti.designer.integration.servicetask.CustomServiceTask;
 import org.activiti.designer.integration.servicetask.CustomServiceTaskDescriptor;
 import org.activiti.designer.eclipse.extension.palette.IPaletteProvider;
 
+import com.cisco.step.jenkins.plugins.jenkow.designer.JenkinsTask;
+
 public class PaletteProvider implements IPaletteProvider {
 	private String jenkinsTaskExtensionJarPath;
 

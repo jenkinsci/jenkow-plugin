@@ -18,3 +18,4 @@
 * 20120504-08: Integrate Activiti Web UIs into Jenkins?
 * 20120504-09: Jenkow Designer Perspective for Eclipse
 * 20120606-01: can the designer extension Jar file sit physically in the workflow repository project?
+* 20120830-01: Leverage [Eclipse Update Site Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Eclipse+Update+Site+Plugin)

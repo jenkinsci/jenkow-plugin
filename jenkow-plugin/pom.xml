@@ -51,6 +51,11 @@ THE SOFTWARE.
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>com.cisco.step.jenkins.plugins</groupId>
+      <artifactId>jenkow-repository-seed</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.activiti</groupId>
       <artifactId>activiti-engine</artifactId>
     </dependency>
@@ -126,6 +131,7 @@ THE SOFTWARE.
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.5.1</version>
         <executions>
           <execution>
             <id>copy</id>
@@ -142,6 +148,18 @@ THE SOFTWARE.
                   <type>jar</type>
                   <overWrite>true</overWrite>
                   <outputDirectory>${project.build.directory}/classes/activiti-designer-extensions</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.cisco.step.jenkins.plugins</groupId>
+                  <artifactId>jenkow-repository-seed</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>seed</classifier>
+                  <type>tar</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                  <destFileName>jenkow-repository-seed.tar</destFileName>
                 </artifactItem>
               </artifactItems>
             </configuration>

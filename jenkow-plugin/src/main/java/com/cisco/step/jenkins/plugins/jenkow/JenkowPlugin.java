@@ -25,26 +25,25 @@ package com.cisco.step.jenkins.plugins.jenkow;
 
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
+
 import com.cisco.step.jenkins.plugins.jenkow.JenkowBuilder.DescriptorImpl;
 
 import jenkins.model.Jenkins;
 
+import hudson.Extension;
 import hudson.Plugin;
 
 public class JenkowPlugin extends Plugin{
     private static final Logger LOG = Logger.getLogger(JenkowPlugin.class.getName());
     
-    EclipseResources eclipseResources = new EclipseResources();
-
+    JenkowWorkflowRepository repo;
+    
 	@Override
     public void start() throws Exception {
 		instance = this;
 	    LOG.info("JenkowPlugin.start()");
 		// TODO 8: need to open workflow engine automatically here,
-		
-		String rsc = "/project-template";
-        System.out.println("EclipseResources.class.getResource("+rsc+") -> "+EclipseResources.class.getResource(rsc));
-
     }
 
 	@Override

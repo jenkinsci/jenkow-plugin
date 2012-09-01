@@ -26,9 +26,11 @@ THE SOFTWARE.
 
 <!-- TODO 6: for some reason the "convention over configuration" online help approach does not work. I have to give explicit help references instead. -->
 
+<!--
     <f:entry field="workflowRepoRoot" title="${%Workflow Project Directory}" help="${rootURL}/plugin/jenkow-plugin/help-workflowRepoRoot.html">
       <f:textbox name="workflowRepoRoot" value="${it.getWorkflowRepoRoot()}" />
     </f:entry>
+-->
 
 <!-- help: http://activiti.org/userguide/index.html#databaseConfiguration -->
 <!-- ?????? onchange="Form.findMatchingInput(this,'m2release.nexusPassword').onchange()" --> 

@@ -54,6 +54,6 @@ public abstract class JenkowTestCase extends HudsonTestCase{
 	}
 	
 	protected String getWfName(String shortName){
-		return getClass().getResource("/diagrams/"+shortName+EclipseResources.WORKFLOW_EXT).getFile();
+		return getClass().getResource("/diagrams/"+shortName+Consts.WORKFLOW_EXT).getFile();
 	}
 }

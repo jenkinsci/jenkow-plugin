@@ -42,6 +42,7 @@ THE SOFTWARE.
   <modules>
     <module>eclipse</module>
     <module>jenkow-designer-extension</module>
+    <module>jenkow-repository-seed</module>
     <module>jenkow-plugin</module>
   </modules>
   

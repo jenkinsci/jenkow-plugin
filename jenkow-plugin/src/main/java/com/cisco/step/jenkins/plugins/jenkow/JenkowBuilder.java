@@ -40,6 +40,7 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 
 import jenkins.model.Jenkins;
@@ -54,6 +55,7 @@ import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.jgit.lib.Repository;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -66,8 +68,8 @@ public class JenkowBuilder extends Builder{
     public JenkowBuilder(String workflowName) {
         this.workflowName = workflowName;
         JenkowPlugin jpl = JenkowPlugin.getInstance();
-        if (jpl != null){
-            jpl.eclipseResources.ensureWorkflowDefinition(getDescriptor().getEffectiveWorkflowRepoRoot(),workflowName);        
+        if (jpl != null && jpl.repo != null){
+        	jpl.repo.ensureWorkflowDefinition(workflowName);        
         }
     }
 
@@ -80,6 +82,7 @@ public class JenkowBuilder extends Builder{
         PrintStream log = listener.getLogger();
         BuildLoggerMap.put(build,log);
         
+        // TODO 5: remove later
         try {
             // just so we have a chance to click the progress bar
             log.println("sleep 5");
@@ -96,13 +99,10 @@ public class JenkowBuilder extends Builder{
         
         String procId = null;
         try {
-            File wff = getDescriptor().getWorkflowFile(workflowName);
+            File wff = JenkowPlugin.getInstance().repo.getWorkflowFile(workflowName);
             if (!wff.exists()) log.println("error: "+wff+" does not exist");
             String wfn = wff+"20.xml"; // TODO 9: workaround for http://forums.activiti.org/en/viewtopic.php?f=8&t=3745&start=10
             DeploymentBuilder db = repoSvc.createDeployment().addInputStream(wfn,new FileInputStream(wff));
-
-            // skip XML Schema validation as documents produced by Activiti designer doesn't seem to conform to them
-//            ((DeploymentBuilderImpl)db).getDeployment().setValidatingSchema(false);
 
             // TODO 7: We should avoid redeploying here, if workflow is already deployed?
             Deployment d = db.deploy();
@@ -154,14 +154,14 @@ public class JenkowBuilder extends Builder{
 
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
+
         // TODO 8: make workflowRepoRoot optional in config UI, similar to "External Database"
-        private String workflowRepoRoot;
+//        private String workflowRepoRoot;
         private JenkowEngineConfig engineConfig;
         
         public DescriptorImpl(){
             super(JenkowBuilder.class);
             load();
-            ensureWorkflowProject();
         }
 
         public FormValidation doCheckWorkflowRepoRoot(@QueryParameter String value) throws IOException, ServletException {
@@ -169,7 +169,7 @@ public class JenkowBuilder extends Builder{
         }
 
         public FormValidation doCheckWorkflowName(@QueryParameter String value) throws IOException, ServletException {
-            return checkFile(value,getWorkflowFile(value));
+            return checkFile(value,JenkowPlugin.getInstance().repo.getWorkflowFile(value));
         }
         
         private static FormValidation checkFile(String value, File f){
@@ -193,7 +193,7 @@ public class JenkowBuilder extends Builder{
 //            System.out.println("formData="+formData);
         	
         	JenkowEngineConfig oldEngineConfig = engineConfig;
-            workflowRepoRoot = formData.getString("workflowRepoRoot");
+//            workflowRepoRoot = formData.getString("workflowRepoRoot");
             if (!formData.containsKey("useExternalDB")){
             	engineConfig = null;
             }else{
@@ -213,31 +213,9 @@ public class JenkowBuilder extends Builder{
             // TODO 8: close engine also if there's a change in engineConfig
             if (engineConfig != oldEngineConfig) JenkowEngine.closeEngine();
             
-            ensureWorkflowProject();
             return super.configure(req,formData);
         }
 
-        public String getWorkflowRepoRoot() {
-            ensureWorkflowProject();
-            return workflowRepoRoot;
-        }
-        
-        private File getEffectiveWorkflowRepoRoot() {
-            if (!StringUtils.isEmpty(workflowRepoRoot)) return new File(workflowRepoRoot);
-            
-            File wfd = new File(Jenkins.getInstance().getRootDir(),"workflows");
-            JenkowPlugin.getInstance().eclipseResources.prepareProject(wfd);
-            return wfd.getAbsoluteFile();
-        }
-        
-        void ensureWorkflowProject(){
-            // TODO 7: improve this wiring up
-            JenkowPlugin jpl = JenkowPlugin.getInstance();
-            if (jpl != null){
-                jpl.eclipseResources.prepareProject(getEffectiveWorkflowRepoRoot());
-            }
-        }
-        
         public boolean getUseExternalDB() {
         	return (engineConfig != null);
         }
@@ -258,15 +236,6 @@ public class JenkowBuilder extends Builder{
         	return (engineConfig == null)? null : engineConfig.getDsDriverClass();
         }
 
-		File getWorkflowFile(String wfName){
-            File wff = new File(wfName);
-			if (wff.isAbsolute()){
-				return wff;
-            }else{
-            	return new File(getEffectiveWorkflowRepoRoot(),EclipseResources.mkWfPath(wfName)).getAbsoluteFile();
-            }
-        }
-		
 		public JenkowEngineConfig getEngineConfig(){
 			return engineConfig;
 		}

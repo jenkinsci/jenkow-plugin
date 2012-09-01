@@ -73,14 +73,17 @@ public class JenkowWorkflowRepository extends HttpGitRepository implements RootA
 	}
     
 	File getWorkflowFile(String wfName){
-		String relName = mkWfPath(wfName);
-		File f = new File(getRepositoryDir(),relName);
+		File f = new File(wfName);
+		if (!f.isAbsolute() || !f.exists()){
+			String relName = mkWfPath(wfName);
+			f = new File(getRepositoryDir(),relName);
+		}
 		System.out.println("getWorkflowFile: f="+f);
 		return f;
     }
 	
     void ensureWorkflowDefinition(String wfName){
-		File dir = getRepositoryDir();
+    	File dir = getRepositoryDir();
 		
 		System.out.println("ensureWorkflowDefinition "+dir+" "+wfName);
 		String relName = mkWfPath(wfName);

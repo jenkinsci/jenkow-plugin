@@ -23,30 +23,25 @@
  */
 package com.cisco.step.jenkins.plugins.jenkow;
 
-import java.io.Serializable;
-import java.util.Map;
-
-public class JenkowProcessData implements Serializable{
-	private static final String JENKOW_DATA_NAME = "jenkow_data";
-	private String parentJobName;
-	private Integer buildNumber;
+class WfUtil {
 	
-	// TODO 9: make JobMD part of this hierarchy
-	
-	public String getParentJobName() {
-    	return parentJobName;
-    }
-	public void setParentJobName(String parentJobName) {
-    	this.parentJobName = parentJobName;
-    }
-	public Integer getBuildNumber() {
-    	return buildNumber;
-    }
-	public void setBuildNumber(Integer buildNumber) {
-    	this.buildNumber = buildNumber;
-    }
-	
-	static void saveTo(Map<String,Object> varMap, JenkowProcessData jpd){
-		varMap.put(JENKOW_DATA_NAME,jpd);
+	/**
+	 * Produces a valid workflow ID out of a given string.
+	 * Replaces each invalid character with an underscore.
+	 */
+	static String mkWorkflowId(String s){
+		if (s == null || s.length() < 1) return s;
+		
+		// TODO 5: figure out what's the actual definition for valid workflow IDs
+		StringBuffer sb = new StringBuffer();
+		
+		char c = s.charAt(0);
+		sb.append(Character.isJavaIdentifierStart(c)? c : '_');
+		for (int i=1,n=s.length(); i<n; i++){
+			c = s.charAt(i);
+			sb.append(Character.isJavaIdentifierPart(c)? c : '_');
+		}
+				
+		return sb.toString();
 	}
 }

@@ -25,10 +25,14 @@ package com.cisco.step.jenkins.plugins.jenkow;
 
 import hudson.Extension;
 import hudson.FilePath;
+import hudson.Util;
 import hudson.model.RootAction;
+import hudson.util.IOUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -78,63 +82,26 @@ public class JenkowWorkflowRepository extends HttpGitRepository implements RootA
 			String relName = mkWfPath(wfName);
 			f = new File(getRepositoryDir(),relName);
 		}
-		System.out.println("getWorkflowFile: f="+f);
 		return f;
     }
 	
     void ensureWorkflowDefinition(String wfName){
-    	File dir = getRepositoryDir();
+    	String relName = mkWfPath(wfName);
+		File wff = new File(getRepositoryDir(),relName);
+		if (wff.exists()) return;
 		
-		System.out.println("ensureWorkflowDefinition "+dir+" "+wfName);
-		String relName = mkWfPath(wfName);
+		LOGGER.info("generating workflow definition "+wff);
 		
-		File f = new File(dir,relName);
-		if (f.exists()) return;
-		
-		// TODO 9: read template as resource and use Util.replaceMacro(s, properties)
-		LOGGER.info("generating workflow definition "+f);
-		dir.mkdirs();
 		try {
-			FileUtils.writeStringToFile(f
-					, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-							+ "<definitions xmlns=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:activiti=\"http://activiti.org/bpmn\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:omgdc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:omgdi=\"http://www.omg.org/spec/DD/20100524/DI\" typeLanguage=\"http://www.w3.org/2001/XMLSchema\" expressionLanguage=\"http://www.w3.org/1999/XPath\" targetNamespace=\"http://www.activiti.org/test\">\n"
-							+ "  <process id=\""+wfName+"\" name=\""+wfName+"\">\n"
-							+ "    <startEvent id=\"startevent1\" name=\"Start\"></startEvent>\n"
-							+ "    <endEvent id=\"endevent1\" name=\"End\"></endEvent>\n"
-							+ "    <scriptTask id=\"scripttask1\" name=\"Script Task\" scriptFormat=\"groovy\">\n"
-							+ "      <script><![CDATA[console.println(\"Script Task says 'hello world'\");\n"
-							+ "]]></script>\n"
-							+ "    </scriptTask>\n"
-							+ "    <sequenceFlow id=\"flow1\" name=\"\" sourceRef=\"startevent1\" targetRef=\"scripttask1\"></sequenceFlow>\n"
-							+ "    <sequenceFlow id=\"flow2\" name=\"\" sourceRef=\"scripttask1\" targetRef=\"endevent1\"></sequenceFlow>\n"
-							+ "  </process>\n"
-							+ "  <bpmndi:BPMNDiagram id=\"BPMNDiagram_"+wfName+"\">\n"
-							+ "    <bpmndi:BPMNPlane bpmnElement=\""+wfName+"\" id=\"BPMNPlane_"+wfName+"\">\n"
-							+ "      <bpmndi:BPMNShape bpmnElement=\"startevent1\" id=\"BPMNShape_startevent1\">\n"
-							+ "        <omgdc:Bounds height=\"35\" width=\"35\" x=\"410\" y=\"60\"></omgdc:Bounds>\n"
-							+ "      </bpmndi:BPMNShape>\n"
-							+ "      <bpmndi:BPMNShape bpmnElement=\"endevent1\" id=\"BPMNShape_endevent1\">\n"
-							+ "        <omgdc:Bounds height=\"35\" width=\"35\" x=\"410\" y=\"240\"></omgdc:Bounds>\n"
-							+ "      </bpmndi:BPMNShape>\n"
-							+ "      <bpmndi:BPMNShape bpmnElement=\"scripttask1\" id=\"BPMNShape_scripttask1\">\n"
-							+ "        <omgdc:Bounds height=\"55\" width=\"105\" x=\"375\" y=\"140\"></omgdc:Bounds>\n"
-							+ "      </bpmndi:BPMNShape>\n"
-							+ "      <bpmndi:BPMNEdge bpmnElement=\"flow1\" id=\"BPMNEdge_flow1\">\n"
-							+ "        <omgdi:waypoint x=\"427\" y=\"95\"></omgdi:waypoint>\n"
-							+ "        <omgdi:waypoint x=\"427\" y=\"140\"></omgdi:waypoint>\n"
-							+ "      </bpmndi:BPMNEdge>\n"
-							+ "      <bpmndi:BPMNEdge bpmnElement=\"flow2\" id=\"BPMNEdge_flow2\">\n"
-							+ "        <omgdi:waypoint x=\"427\" y=\"195\"></omgdi:waypoint>\n"
-							+ "        <omgdi:waypoint x=\"427\" y=\"240\"></omgdi:waypoint>\n"
-							+ "      </bpmndi:BPMNEdge>\n"
-							+ "    </bpmndi:BPMNPlane>\n"
-							+ "  </bpmndi:BPMNDiagram>\n"
-							+ "</definitions>\n"
-					);
-			System.out.println("relName="+relName);
+			Map<String,String> vars = new HashMap<String,String>();
+			vars.put("WORKFLOW_ID",WfUtil.mkWorkflowId(wfName));
+			vars.put("WORKFLOW_NAME",wfName);
+			String wfd = IOUtils.toString(getClass().getResourceAsStream("/templates/new.bpmn"));
+			wfd = Util.replaceMacro(wfd,vars);
+			FileUtils.writeStringToFile(wff,wfd);
 			
 			Repository r = openRepository();
-			addAndCommit(r,relName,"added "+wfName);
+			addAndCommit(r,relName,"added generated workflow definition "+wfName);
 			r.close();
 		} catch (IOException e) {
             LOGGER.log(Level.SEVERE,e.getMessage(),e);

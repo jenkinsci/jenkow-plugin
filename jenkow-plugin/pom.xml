@@ -200,19 +200,20 @@ THE SOFTWARE.
           </execution>
         </executions>
       </plugin>
+<!-- This is needed, because the generated-resources approach doesn't work. -->
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
         <version>2.5</version>
         <configuration>
           <filesets>
             <fileset>
-              <directory>${basedir}/src/main/webapp/site</directory>
+              <directory>${basedir}/src/main/webapp/eclipse.site</directory>
               <followSymlinks>false</followSymlinks>
             </fileset>
           </filesets>
         </configuration>
       </plugin>
-<!-- TODO: this makes the generated-resources show up in the .hpi, but Jenkins doesn't serve it out.  Why?
+<!-- TODO: this makes the generated-resources show up in the .hpi, but Jenkins doesn't serve it out.  Why?  File a Jira.
       <plugin>
         <groupId>org.jenkins-ci.tools</groupId>
         <artifactId>maven-hpi-plugin</artifactId>

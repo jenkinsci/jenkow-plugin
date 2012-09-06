@@ -91,6 +91,12 @@ THE SOFTWARE.
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-exec</artifactId>
+      <version>1.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.jenkins-ci.modules</groupId>
       <artifactId>sshd</artifactId>
       <version>1.1</version>
@@ -226,6 +232,7 @@ THE SOFTWARE.
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/ExecLoggerTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/WaitsForeverTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/JobResultConsumptionTest.java</exclude>
+            <exclude>**/com/cisco/step/jenkins/plugins/jenkow/git/GitTest.java</exclude>
 -->
           </excludes>
         </configuration>

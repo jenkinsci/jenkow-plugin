@@ -12,7 +12,8 @@ import org.apache.commons.io.output.TeeOutputStream;
 public class GitTest extends TestCase{
 	
 	public void testGitItself() throws Exception{
-		CommandLine cli = CommandLine.parse("git --version");
+		String git = System.getProperty("jenkow.test.git","git");
+		CommandLine cli = CommandLine.parse(git+" --version");
 		DefaultExecutor executor = new DefaultExecutor();
 		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();

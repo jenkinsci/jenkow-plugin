@@ -42,6 +42,7 @@ THE SOFTWARE.
   <properties>
     <build_id>${buildId}</build_id>
     <mdep.stripVersion>true</mdep.stripVersion>
+    <jenkow.test.git>git</jenkow.test.git>
   </properties>
 
   <dependencies>
@@ -229,6 +230,12 @@ THE SOFTWARE.
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.12</version>
         <configuration>
+          <systemProperties>
+            <property>
+              <name>jenkow.test.git</name>
+              <value>${jenkow.test.git}</value>
+            </property>
+          </systemProperties>
           <excludes>
 <!--
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/SimpleWfRunTest.java</exclude>

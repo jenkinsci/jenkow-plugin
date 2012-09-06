@@ -189,7 +189,10 @@ THE SOFTWARE.
                   <version>${project.version}</version>
                   <type>zip</type>
                   <overWrite>true</overWrite>
+<!--
                   <outputDirectory>${project.build.directory}/generated-resources/eclipse.site</outputDirectory>
+-->
+                  <outputDirectory>${basedir}/src/main/webapp/eclipse.site</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -208,6 +211,7 @@ THE SOFTWARE.
           </filesets>
         </configuration>
       </plugin>
+<!-- TODO: this makes the generated-resources show up in the .hpi, but Jenkins doesn't serve it out.  Why?
       <plugin>
         <groupId>org.jenkins-ci.tools</groupId>
         <artifactId>maven-hpi-plugin</artifactId>
@@ -219,6 +223,7 @@ THE SOFTWARE.
           </webResources>
         </configuration>
       </plugin>
+-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>

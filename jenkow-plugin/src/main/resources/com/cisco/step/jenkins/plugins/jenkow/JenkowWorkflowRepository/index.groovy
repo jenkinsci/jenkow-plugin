@@ -9,7 +9,7 @@ l.layout {
         }
         pre {
             def url = "${app.rootUrl}jenkow-repository.git"
-            raw "git clone <a href='${url}'>${url}</a>"
+            raw "git clone ${url}"
 
             if (my.sshd.actualPort>0) {
                 raw "\ngit clone ssh://${new URL(app.rootUrl).host}:${my.sshd.actualPort}/jenkow-repository.git"

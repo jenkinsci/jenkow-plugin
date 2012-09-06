@@ -41,6 +41,6 @@ public class JenkowMgmtLink implements RootAction{
 
 	@Override
 	public String getUrlName() {
-		return "jenkow";
+		return Consts.REPO_NAME+".git/";
 	}
 }

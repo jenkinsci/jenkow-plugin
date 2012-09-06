@@ -18,3 +18,4 @@
 * 20120504-08: Integrate Activiti Web UIs into Jenkins?
 * 20120504-09: Jenkow Designer Perspective for Eclipse
 * 20120606-01: can the designer extension Jar file sit physically in the workflow repository project?
+* 20120906-01: sign the Eclipse update site \([eclipse-maven-signing-plugin](http://aniszczyk.org/2011/05/18/eclipse-org-signing-support-for-maven-tycho/)\)

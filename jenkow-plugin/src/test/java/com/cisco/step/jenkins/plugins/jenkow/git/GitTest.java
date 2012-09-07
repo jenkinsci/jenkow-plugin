@@ -62,7 +62,7 @@ public class GitTest extends JenkowTestCase{
         + "EOF\n"
         + "chmod +x $GIT_SSH\n"
         + "\n"
-        + "git clone ssh://localhost:"+port+"/jenkow-repository.git\n"
+        + git+" clone ssh://localhost:"+port+"/jenkow-repository.git\n"
 		;
 		
 		FreeStyleProject launcher = createFreeStyleProject("git-clone");

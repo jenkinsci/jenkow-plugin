@@ -8,18 +8,15 @@ import hudson.tasks.Builder;
 import hudson.tasks.Shell;
 import hudson.util.DescribableList;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
 
 import javax.inject.Inject;
 
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecutor;
-import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.output.TeeOutputStream;
 import org.jenkinsci.main.modules.sshd.SSHD;
 
 import com.cisco.step.jenkins.plugins.jenkow.JenkowTestCase;
+import com.cisco.step.jenkins.plugins.jenkow.JenkowWorkflowRepository;
 
 public class GitTest extends JenkowTestCase{
 	@Inject
@@ -32,40 +29,39 @@ public class GitTest extends JenkowTestCase{
     	super.setUp();
 		jenkins.getInjector().injectMembers(this);
     }
-
-	public void testGitVersion() throws Exception{
-		CommandLine cli = CommandLine.parse(git+" --version");
-		DefaultExecutor executor = new DefaultExecutor();
+    
+    // Several git-related test cases in one Jenkins instance
+    public void testGit() throws Exception{
+	    // Just to see whether there's a git we can run.
+	    // It'll barf if we don't.
+	    runTest("version",git+" --version");
 		
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		TeeOutputStream tos = new TeeOutputStream(baos,System.out);
-		
-		PumpStreamHandler sh = new PumpStreamHandler(tos);
-		executor.setStreamHandler(sh);
-		executor.execute(cli);
-		tos.close();
-		
-		String output = baos.toString();
-        System.out.println("<output>\n"+output+"</output>");
+		String tag = "<added by unit test/>";
+		runTest("clone-modify-commit-push"
+			   , git+" clone ssh://localhost:"+sshd.getActualPort()+"/jenkow-repository.git\n"
+			   + "cd jenkow-repository\n"
+			   + "echo \""+tag+"\" >>readme\n"
+			   + git+" commit -am \"changed readme\"\n"
+			   + git+" push\n"
+			   );
+		String readme = FileUtils.readFileToString(new File(JenkowWorkflowRepository.getRepositoryDir(),"readme"));
+        assertTrue(readme.contains(tag));
 	}
 
-	public void testGitClone() throws Exception{
-		int port = sshd.getActualPort();
-		System.out.println("***** sshd.getActualPort = "+port);
+	private void runTest(String id, String cmd) throws Exception{
+        // The GIT_SSH is needed so we can do the StrictHostKeyChecking=no, 
+	    // otherwise ssh would prompt for the "new" host key.
+	    String script = "export GIT_SSH=$WORKSPACE/run-ssh.sh\n"
+	                  + "\n"
+	                  + "cat >$GIT_SSH <<EOF\n" 
+	                  + "#!/bin/sh\n"
+	                  + "exec ssh -oStrictHostKeyChecking=no \"\\$@\"\n" 
+	                  + "EOF\n"
+	                  + "chmod +x $GIT_SSH\n" 
+                      + "\n" 
+	                  + cmd+"\n";
 		
-		String script 
-		= "export GIT_SSH=$WORKSPACE/run-ssh.sh\n"
-        + "\n"
-        + "cat >$GIT_SSH <<EOF\n"
-        + "#!/bin/sh\n"
-        + "exec ssh -oStrictHostKeyChecking=no \"\\$@\"\n"
-        + "EOF\n"
-        + "chmod +x $GIT_SSH\n"
-        + "\n"
-        + git+" clone ssh://localhost:"+port+"/jenkow-repository.git\n"
-		;
-		
-		FreeStyleProject launcher = createFreeStyleProject("git-clone");
+		FreeStyleProject launcher = createFreeStyleProject(id);
         DescribableList<Builder,Descriptor<Builder>> bl = launcher.getBuildersList();
 		bl.add(new Shell(script));
         

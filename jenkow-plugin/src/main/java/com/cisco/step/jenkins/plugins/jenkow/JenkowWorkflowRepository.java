@@ -108,7 +108,7 @@ public class JenkowWorkflowRepository extends HttpGitRepository implements RootA
 		}
     }
     
-    File getRepositoryDir(){
+    public static File getRepositoryDir(){
     	return new File(Jenkins.getInstance().root,Consts.REPO_NAME);
     }
     

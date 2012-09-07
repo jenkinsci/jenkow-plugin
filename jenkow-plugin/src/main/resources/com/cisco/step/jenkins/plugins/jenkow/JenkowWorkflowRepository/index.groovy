@@ -15,5 +15,14 @@ l.layout {
                 raw "\ngit clone ssh://${new URL(app.rootUrl).host}:${my.sshd.actualPort}/jenkow-repository.git"
             }
         }
+
+        h1 "Jenkow Eclipse Update Site"
+
+        p {
+            raw _("jeus",app.rootUrl)
+        }
+        pre {
+            raw "${app.rootUrl}plugin/jenkow-plugin/eclipse.site"
+        }
     }
 }

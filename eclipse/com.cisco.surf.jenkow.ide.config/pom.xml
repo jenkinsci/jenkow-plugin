@@ -44,7 +44,7 @@ THE SOFTWARE.
     <dependency>
       <groupId>com.cisco.step.jenkins.plugins</groupId>
       <artifactId>jenkow-designer-extension</artifactId>
-      <version>${project.version}</version>
+      <version>0.2.0</version>
     </dependency>
   </dependencies>
 

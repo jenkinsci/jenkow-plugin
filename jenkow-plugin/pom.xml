@@ -28,13 +28,12 @@ THE SOFTWARE.
   <parent>
     <groupId>com.cisco.step.jenkins.plugins</groupId>
     <artifactId>jenkow-parent</artifactId>
-    <version>0.2.1-SNAPSHOT</version>
+    <version>0.2.2-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
 
   <groupId>com.cisco.step.jenkins.plugins</groupId>
   <artifactId>jenkow-plugin</artifactId>
-  <version>0.2.1</version>
   <packaging>hpi</packaging>
   <name>Jenkow Plugin</name>
   <description>Integrates with the Activiti BPMN Workflow</description>

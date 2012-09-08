@@ -33,7 +33,7 @@ THE SOFTWARE.
   </parent>
 
   <artifactId>com.cisco.surf.jenkow.site</artifactId>
-  <version>0.2.1-SNAPSHOT</version>
+  <version>0.2.2-SNAPSHOT</version>
   <packaging>eclipse-repository</packaging>
   <name>eclipse/${project.artifactId}</name>
   

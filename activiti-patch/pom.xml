@@ -28,7 +28,7 @@ THE SOFTWARE.
   <parent>
     <groupId>com.cisco.step.jenkins.plugins</groupId>
     <artifactId>jenkow-parent</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.2.2</version>
     <relativePath>..</relativePath>
   </parent>
 

@@ -1,3 +1,7 @@
+# 20120912
+
+* Allowed unprotected read-access to Eclipse update site.
+
 # 20120906
 * Done 20120713-01: make designer extension part of Activiti Designer, so no need to install a separate designer extension
   [Activiti Form Thread](http://forums.activiti.org/en/viewtopic.php?f=8&t=4234)

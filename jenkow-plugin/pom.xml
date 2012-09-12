@@ -240,7 +240,6 @@ THE SOFTWARE.
           <excludes>
 <!--
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/test/eclipse/UpdateSiteTest.java</exclude>
--->
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/SimpleWfRunTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/SimpleWfCallsJobTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/ParallelJobsTest.java</exclude>
@@ -248,6 +247,7 @@ THE SOFTWARE.
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/WaitsForeverTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/JobResultConsumptionTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/git/GitTest.java</exclude>
+-->
           </excludes>
         </configuration>
       </plugin>

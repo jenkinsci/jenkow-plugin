@@ -24,6 +24,7 @@
 package com.cisco.step.jenkins.plugins.jenkow;
 
 class Consts {
+    static final String PLUGIN_NAME = "jenkow-plugin";
 	static final String UI_PREFIX = "BPMN Workflow";
     static final String REPO_NAME = "jenkow-repository";
     static final String WF_PROJ_NAME = "jenkow-workflows";

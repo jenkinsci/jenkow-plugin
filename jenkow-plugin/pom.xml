@@ -39,6 +39,33 @@ THE SOFTWARE.
   <description>Integrates with the Activiti BPMN Workflow</description>
   <url>https://wiki.jenkins-ci.org/display/JENKINS/Jenkow+Plugin</url>
 
+  <developers>
+    <developer>
+      <id>m2spring</id>
+      <name>Max Spring</name>
+      <email>mspring@cisco.com</email>
+    </developer>
+    <developer>
+      <id>chikkala</id>
+      <name>Srinivasan Chikkala</name>
+      <email>schikkal@cisco.com</email>
+    </developer>
+  </developers>
+
+  <licenses>
+    <license>
+      <name>The MIT License (MIT)</name>
+      <url>http://www.opensource.org/licenses/mit-license.php</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <scm>
+    <connection>scm:git:ssh://github.com/jenkinsci/jenkow-plugin.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/jenkinsci/jenkow-plugin.git</developerConnection>
+    <url>https://github.com/jenkinsci/jenkow-plugin</url>
+  </scm>
+
   <properties>
     <build_id>${buildId}</build_id>
     <mdep.stripVersion>true</mdep.stripVersion>

@@ -41,6 +41,11 @@ case $NEW_VERSION in
 esac
 
 x=${XML:=/usr/cisco/bin/xml}
+if [ ! -x $XML ]; then
+    echo "unable to find XML tool under $XML"
+    exit 1
+fi 
+
 TS=`date +%Y%m%d-%H%M%S`
 
 function updateAnyVersion ()

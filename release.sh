@@ -50,7 +50,7 @@ $GIT commit -am "new trunk $NEXTVER"
 $MVN $MVN_OPTIONS clean install -Dmaven.test.skip=true || exit 1
 
 $GIT checkout -f v$RELVER
-$MVN $MVN_OPTIONS -f jenkow-plugin deploy -Dmaven.test.skip=true || exit 1
+$MVN $MVN_OPTIONS -f jenkow-plugin/pom.xml deploy -Dmaven.test.skip=true || exit 1
 $GIT checkout -f master
 
 $GIT push --all

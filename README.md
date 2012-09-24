@@ -3,6 +3,6 @@
 [CI Build](https://buildhive.cloudbees.com/job/jenkinsci/job/jenkow-plugin/),
 [Maven Repository](http://maven.jenkins-ci.org:8081/content/repositories/releases/com/cisco/step/jenkins/plugins/jenkow-plugin/)
 
-## Build Instructions
+## Caveats
 
-Until the Jenkow enhancements to the Activiti Designer is in place \(see [Activiti Forum: bundling Designer Extension with Designer?](http://forums.activiti.org/en/viewtopic.php?f=8&t=4234)\), the Jenkow plugin project builds its own Activiti Designer and the build needs to be done in two steps: "mvn package; mvn install"
+* Jenkins task unable to launch a Maven project.  Jenkins task currently launches only items of type [Project](http://javadoc.jenkins-ci.org/hudson/model/Project.html), but a [MavenModuleSet](http://javadoc.jenkins-ci.org/hudson/maven/MavenModuleSet.html) is not a Project, but just an [AbstractProject](http://javadoc.jenkins-ci.org/hudson/model/AbstractProject.html).

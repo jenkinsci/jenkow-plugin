@@ -24,7 +24,6 @@
 package com.cisco.step.jenkins.plugins.jenkow;
 
 import hudson.model.TopLevelItem;
-import hudson.model.AbstractProject;
 import hudson.model.Project;
 import hudson.util.DescribableList;
 
@@ -64,8 +63,11 @@ public class JenkinsTaskDelegate extends ReceiveTaskActivityBehavior{
 		if (jn != null){
 			Jenkins jenkins = Jenkins.getInstance();
 			TopLevelItem it = jenkins.getItem(jn);
-			if (it instanceof Project){
-				Project p = (Project)it;
+			if (!(it instanceof Project)){
+			    LOG.info("unable to launch job "+jn+", because it's not a Project, but just "+it.getClass());
+			}else{
+				// TODO 8: would like to have AbstractProject here, but it doesn't have BuildWrappers.
+			    Project p = (Project)it;
 				
 				DescribableList wrappers = p.getBuildWrappersList();
 				JenkowBuildWrapper wrapper = new JenkowBuildWrapper();

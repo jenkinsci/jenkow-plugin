@@ -25,6 +25,10 @@ package com.cisco.step.jenkins.plugins.jenkow;
 
 import hudson.model.Action;
 
+/**
+ * Allows to associate a Jenkins build back to the Jenkins BPMN task,
+ * if the build was started by a BPMN task.
+ */
 public class JenkowAction implements Action{
 	private String taskId;
 	private String taskExecId;

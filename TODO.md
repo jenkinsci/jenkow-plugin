@@ -13,3 +13,4 @@
 * 20120504-08: Integrate Activiti Web UIs into Jenkins?
 * 20120504-09: Jenkow Designer Perspective for Eclipse
 * 20120906-01: sign the Eclipse update site \([eclipse-maven-signing-plugin](http://aniszczyk.org/2011/05/18/eclipse-org-signing-support-for-maven-tycho/)\)
+* 20120924-01: Jenkins task should be able to launch Maven projects

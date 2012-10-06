@@ -25,6 +25,7 @@ package com.cisco.step.jenkins.plugins.jenkow;
 
 import hudson.Extension;
 import hudson.Launcher;
+import hudson.Main;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
@@ -82,13 +83,10 @@ public class JenkowBuilder extends Builder{
         PrintStream log = listener.getLogger();
         BuildLoggerMap.put(build,log);
         
-        // TODO 5: remove later
-        try {
+        if (SLEEP5) {
             // just so we have a chance to click the progress bar
             log.println("sleep 5");
             Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
         
         ClassLoader previous = Thread.currentThread().getContextClassLoader();
@@ -240,4 +238,6 @@ public class JenkowBuilder extends Builder{
 			return engineConfig;
 		}
     }
+
+    public static boolean SLEEP5 = Main.isUnitTest;
 }

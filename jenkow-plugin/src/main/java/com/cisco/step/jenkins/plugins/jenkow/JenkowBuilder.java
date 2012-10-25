@@ -40,7 +40,6 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.servlet.ServletException;
 
 import jenkins.model.Jenkins;
@@ -55,7 +54,6 @@ import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jgit.lib.Repository;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -67,10 +65,6 @@ public class JenkowBuilder extends Builder{
     @DataBoundConstructor
     public JenkowBuilder(String workflowName) {
         this.workflowName = workflowName;
-        JenkowPlugin jpl = JenkowPlugin.getInstance();
-        if (jpl != null && jpl.repo != null){
-        	jpl.repo.ensureWorkflowDefinition(workflowName);        
-        }
     }
 
     public String getWorkflowName() {
@@ -100,7 +94,10 @@ public class JenkowBuilder extends Builder{
         String procId = null;
         try {
             File wff = JenkowPlugin.getInstance().repo.getWorkflowFile(workflowName);
-            if (!wff.exists()) log.println("error: "+wff+" does not exist");
+            if (!wff.exists()){
+                log.println("error: "+wff+" does not exist");
+                return false;
+            }
             String wfn = wff+"20.xml"; // TODO 9: workaround for http://forums.activiti.org/en/viewtopic.php?f=8&t=3745&start=10
             DeploymentBuilder db = repoSvc.createDeployment().addInputStream(wfn,new FileInputStream(wff));
 
@@ -151,7 +148,7 @@ public class JenkowBuilder extends Builder{
     public static DescriptorImpl descriptor() {
         return Jenkins.getInstance().getDescriptorByType(JenkowBuilder.DescriptorImpl.class);
     }
-
+    
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
@@ -174,10 +171,35 @@ public class JenkowBuilder extends Builder{
         
         private static FormValidation checkFile(String value, File f){
             if (!StringUtils.isEmpty(value)){
-                if (!f.exists()) return FormValidation.warning("workflow "+value+" does not exist");
-                if (!f.canRead()) return FormValidation.warning("workflow "+value+" is not readable");
+                if (!f.exists()){
+                    String url = "descriptorByName/"+JenkowBuilder.class.getName()+"/createWorkflow?wfn="+value;
+                    String msg = "Workflow "+value+" does not exist. "
+                               + "<button type=\"button\""
+                               + " onclick=\"javascript:"
+                               +    "var e=this;"
+                               +    "new Ajax.Request"
+                               +    "("
+                               +      "'"+url+"',"
+                               +      "{onSuccess:function(x)"
+                               +        "{notificationBar.show('Workflow created.',notificationBar.OK);"
+                               +         "fireEvent($(e).up('TR.validation-error-area').previous().down('INPUT'),'change');"
+                               +        "}"
+                               +      "}"
+                               +    ")"
+                               +   "\""
+                               + ">"
+                               + "Create it now"
+                               + "</button>"
+                               ;
+                    return FormValidation.errorWithMarkup(msg);
+                }
+                if (!f.canRead()) return FormValidation.warning("Workflow "+value+" is not readable.");
             }
             return FormValidation.ok();
+        }
+
+        public void doCreateWorkflow(@QueryParameter String wfn){
+            JenkowPlugin.getInstance().repo.ensureWorkflowDefinition(wfn);
         }
 
         public boolean isApplicable(Class<? extends AbstractProject> aClass) {

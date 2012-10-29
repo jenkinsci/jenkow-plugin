@@ -24,6 +24,7 @@
 package com.cisco.step.jenkins.plugins.jenkow;
 
 import org.activiti.engine.impl.bpmn.parser.AbstractBpmnParseListener;
+import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.impl.pvm.process.ScopeImpl;
 import org.activiti.engine.impl.util.xml.Element;
@@ -70,8 +71,13 @@ class JenkowBpmnParseListener extends AbstractBpmnParseListener{
     public void parseReceiveTask(Element el, ScopeImpl scope, ActivityImpl activity) {
 		addLogger(el,activity);
     }
+	
+	@Override
+    public void parseProcess(Element el, ProcessDefinitionEntity processDefinition) {
+        processDefinition.addExecutionListener("end",new ProcessExecLogger(el.attribute("id")));
+    }
 
-	private void addLogger(Element el, ActivityImpl activity){
+    private void addLogger(Element el, ActivityImpl activity){
         TaskExecLogger logger = new TaskExecLogger(el.attribute("id"));
 		activity.addExecutionListener("start",logger);
         activity.addExecutionListener("end",logger);

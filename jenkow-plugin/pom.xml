@@ -140,6 +140,11 @@ THE SOFTWARE.
       <artifactId>eclipse-update-site</artifactId>
       <version>1.2</version>
     </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins</groupId>
+      <artifactId>async-job</artifactId>
+      <version>1.1</version>
+    </dependency>
   </dependencies>
 
   <profiles>

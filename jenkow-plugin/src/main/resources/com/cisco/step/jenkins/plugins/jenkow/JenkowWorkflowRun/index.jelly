@@ -1,0 +1,16 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+  <l:layout title="${it.fullDisplayName}">
+    <st:include page="sidepanel.jelly"/>
+    <l:main-panel>
+      <j:if test="${!it.isAsyncCompleted()}">
+        <p>
+          Click <a href="complete">this link</a> to complete this build.
+        </p>
+      </j:if>
+      <p>
+        Click to <a href="writeLog">write one more line to console log</a>.
+      </p>
+    </l:main-panel>
+  </l:layout>
+</j:jelly>

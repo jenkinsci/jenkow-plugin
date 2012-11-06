@@ -1,0 +1,7 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:x="jelly:xml" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+  <l:side-panel>
+    <l:task icon="images/24x24/up.png" href=".." title="Up"  />
+    <l:task icon="images/24x24/terminal.png" href="console" title="Console"  />
+  </l:side-panel>
+</j:jelly>

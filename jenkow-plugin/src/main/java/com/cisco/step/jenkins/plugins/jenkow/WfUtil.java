@@ -23,8 +23,9 @@
  */
 package com.cisco.step.jenkins.plugins.jenkow;
 
+
 class WfUtil {
-	
+    
 	/**
 	 * Produces a valid workflow ID out of a given string.
 	 * Replaces each invalid character with an underscore.

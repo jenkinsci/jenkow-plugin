@@ -274,6 +274,7 @@ THE SOFTWARE.
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/test/eclipse/UpdateSiteTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/SimpleWfRunTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/SimpleWfCallsJobTest.java</exclude>
+            <exclude>**/com/cisco/step/jenkins/plugins/jenkow/ManualTriggerTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/ParallelJobsTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/ExecLoggerTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/WaitsForeverTest.java</exclude>

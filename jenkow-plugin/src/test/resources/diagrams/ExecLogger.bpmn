@@ -13,6 +13,9 @@ System.out.println("scripttask end");
         <activiti:field name="jobName">
           <activiti:string>launchy</activiti:string>
         </activiti:field>
+        <activiti:field name="isManualJobLaunchMode">
+          <activiti:string>false</activiti:string>
+        </activiti:field>
       </extensionElements>
     </serviceTask>
     <endEvent id="endevent1" name="End"></endEvent>

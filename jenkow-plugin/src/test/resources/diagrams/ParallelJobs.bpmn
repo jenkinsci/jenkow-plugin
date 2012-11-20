@@ -40,6 +40,9 @@ THE SOFTWARE.
         <activiti:field name="jobName">
           <activiti:string>one</activiti:string>
         </activiti:field>
+        <activiti:field name="isManualJobLaunchMode">
+          <activiti:string>false</activiti:string>
+        </activiti:field>
       </extensionElements>
     </serviceTask>
     <serviceTask id="servicetask2" name="Jenkins Task" activiti:class="com.cisco.step.jenkins.plugins.jenkow.JenkinsTaskDelegate">
@@ -47,12 +50,18 @@ THE SOFTWARE.
         <activiti:field name="jobName">
           <activiti:string>two</activiti:string>
         </activiti:field>
+        <activiti:field name="isManualJobLaunchMode">
+          <activiti:string>false</activiti:string>
+        </activiti:field>
       </extensionElements>
     </serviceTask>
     <serviceTask id="servicetask3" name="Jenkins Task" activiti:class="com.cisco.step.jenkins.plugins.jenkow.JenkinsTaskDelegate">
       <extensionElements>
         <activiti:field name="jobName">
           <activiti:string>three</activiti:string>
+        </activiti:field>
+        <activiti:field name="isManualJobLaunchMode">
+          <activiti:string>false</activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>

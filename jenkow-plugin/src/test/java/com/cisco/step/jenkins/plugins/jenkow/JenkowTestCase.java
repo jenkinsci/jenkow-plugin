@@ -23,6 +23,8 @@
  */
 package com.cisco.step.jenkins.plugins.jenkow;
 
+import java.io.IOException;
+
 import org.jvnet.hudson.test.HudsonTestCase;
 
 public abstract class JenkowTestCase extends HudsonTestCase{
@@ -55,5 +57,10 @@ public abstract class JenkowTestCase extends HudsonTestCase{
 	
 	protected String getWfName(String shortName){
 		return getClass().getResource("/diagrams/"+shortName+Consts.WORKFLOW_EXT).getFile();
+	}
+	
+	protected void setNumExecutors(int n) throws IOException{
+        jenkins.setNumExecutors(n);
+        jenkins.setNodes(jenkins.getNodes());
 	}
 }

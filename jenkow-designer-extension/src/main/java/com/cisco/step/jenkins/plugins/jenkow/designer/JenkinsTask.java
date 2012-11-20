@@ -27,6 +27,7 @@ import org.activiti.designer.integration.servicetask.AbstractCustomServiceTask;
 import org.activiti.designer.integration.servicetask.PropertyType;
 import org.activiti.designer.integration.servicetask.annotation.Help;
 import org.activiti.designer.integration.servicetask.annotation.Property;
+import org.activiti.designer.integration.servicetask.annotation.PropertyItems;
 import org.activiti.designer.integration.servicetask.annotation.Runtime;
 
 @Runtime(delegationClass = "com.cisco.step.jenkins.plugins.jenkow.JenkinsTaskDelegate")
@@ -36,8 +37,12 @@ public class JenkinsTask extends AbstractCustomServiceTask {
     @Property(type = PropertyType.TEXT, displayName = "Job Name")
     @Help(displayHelpShort = "Name of the Jenkins job to execute.\n"
                            + "Job must exist at the time of task activation.\n"
-                           + "If job does not exist, task will complete without error.")
+                           + "If job does not exist, task will complete without error.\n")
     private String jobName = "${executionContext.host}";
+
+    @Property(type = PropertyType.BOOLEAN_CHOICE, displayName = "Manual Job Launch")
+    @Help(displayHelpShort = "In manual job launch mode, the user needs to manually launch the Jenkins job.\n")
+    private Boolean isManualJobLaunchMode;
 
     @Override
     public String contributeToPaletteDrawer() {

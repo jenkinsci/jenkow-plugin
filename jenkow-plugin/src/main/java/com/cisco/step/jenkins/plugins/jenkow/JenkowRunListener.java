@@ -24,6 +24,7 @@
 package com.cisco.step.jenkins.plugins.jenkow;
 
 import java.io.PrintStream;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -35,9 +36,11 @@ import org.apache.commons.lang.StringUtils;
 import hudson.Extension;
 import hudson.model.TaskListener;
 import hudson.model.TopLevelItem;
+import hudson.model.Job;
 import hudson.model.Project;
 import hudson.model.Run;
 import hudson.model.listeners.RunListener;
+import hudson.tasks.Builder;
 
 @Extension
 public class JenkowRunListener extends RunListener<Run>{
@@ -50,7 +53,10 @@ public class JenkowRunListener extends RunListener<Run>{
 		PrintStream log;
 		
 		private JenkowExecContext(Run r) {
-			JenkowAction ja = r.getAction(JenkowAction.class);
+			// TODO 8 is it possible that we have both JenkowActions?
+		    JenkowAction ja = r.getAction(JenkowAction.class);
+			if (ja == null) ja = JenkowAction.findDeferredAction(r);
+			
 			if (ja != null){
 				execId = ja.getTaskExecId();
 				if (execId != null){
@@ -75,7 +81,7 @@ public class JenkowRunListener extends RunListener<Run>{
 				}
 			}
         }
-
+		
 		private void onStarted(Run r, TaskListener listener){
 			// TODO 8: make console entries pointing to other builds a hyperlink
 			log(Consts.UI_PREFIX+": "+r.getFullDisplayName()+" started");
@@ -112,11 +118,13 @@ public class JenkowRunListener extends RunListener<Run>{
 	
 	@Override
     public void onStarted(Run r, TaskListener listener) {
-		new JenkowExecContext(r).onStarted(r,listener);
+		LOG.finer("JenkowRunListener.onStarted: "+r.getParent().getDisplayName()+" "+r.getDisplayName());
+	    new JenkowExecContext(r).onStarted(r,listener);
     }
 
 	@Override
     public void onFinalized(Run r) {
+	    LOG.finer("JenkowRunListener.onFinalized: "+r.getParent().getDisplayName()+" "+r.getDisplayName());
 		new JenkowExecContext(r).onFinalized(r);
     }
 }

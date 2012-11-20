@@ -24,18 +24,31 @@
 package com.cisco.step.jenkins.plugins.jenkow;
 
 import hudson.model.Action;
+import hudson.model.TopLevelItem;
+import hudson.model.Project;
+import hudson.model.Run;
+import hudson.tasks.Builder;
+
+import java.util.List;
+import java.util.logging.Logger;
+
+import jenkins.model.Jenkins;
 
 /**
  * Allows to associate a Jenkins build back to the Jenkins BPMN task,
  * if the build was started by a BPMN task.
  */
 public class JenkowAction implements Action{
+    private final static Logger LOG = Logger.getLogger(JenkowAction.class.getName());
+    
 	private String taskId;
 	private String taskExecId;
+	private String calleeJobName;
 	
-	public JenkowAction(String taskId, String taskExecId) {
+	public JenkowAction(String taskId, String taskExecId, String calleeJobName) {
 		this.taskId = taskId;
 		this.taskExecId = taskExecId;
+		this.calleeJobName = calleeJobName;
 	}
 	
 	public String getTaskId() {
@@ -45,8 +58,12 @@ public class JenkowAction implements Action{
 	public String getTaskExecId() {
 		return taskExecId;
 	}
+	
+	public String getCalleeJobName() {
+        return calleeJobName;
+    }
 
-	@Override
+    @Override
 	public String getIconFileName() {
 		return null;
 	}
@@ -63,6 +80,41 @@ public class JenkowAction implements Action{
 
 	@Override
     public String toString() {
-	    return "task="+taskId+",exec="+taskExecId;
+	    return "task="+taskId+",exec="+taskExecId+",callee="+calleeJobName;
+    }
+	
+	static void setDeferredAction(String callerJobName, JenkowAction ja){
+	    LOG.finer("JenkowAction.setDeferredAction: caller="+callerJobName+" ja="+ja);
+        for (TopLevelItem it : Jenkins.getInstance().getItems()){
+            if (it instanceof Project){
+                Project proj = (Project)it;
+                LOG.finer("  proj="+proj.getDisplayName());
+                if (proj.getDisplayName().equals(callerJobName)){
+                    for (Builder b : (List<Builder>)proj.getBuilders()){
+                        LOG.finer("    builder="+b.getDescriptor().getDisplayName());
+                        if (b instanceof JenkowBuilder){
+                            JenkowBuilder jb = (JenkowBuilder)b;
+                            jb.addDeferredAction(ja);
+                        }
+                    }
+                }
+            }
+        }
+	}
+
+    static JenkowAction findDeferredAction(Run r){
+        for (TopLevelItem it : Jenkins.getInstance().getItems()){
+            if (it instanceof Project){
+                Project proj = (Project)it;
+                LOG.finer("proj="+proj.getDisplayName());
+                for (Builder b : (List<Builder>)proj.getBuilders()){
+                    LOG.finer("  builder="+b.getDescriptor().getDisplayName());
+                    if (b instanceof JenkowBuilder){
+                        return ((JenkowBuilder)b).getDeferredAction(r);
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

@@ -28,6 +28,7 @@ import hudson.Launcher;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
+import hudson.model.Run;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.FormValidation;
@@ -60,6 +61,7 @@ import org.kohsuke.stapler.StaplerRequest;
 
 public class JenkowBuilder extends Builder{
     private String workflowName;
+    private Map<String,JenkowAction> deferredActions;
     
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     @DataBoundConstructor
@@ -69,6 +71,15 @@ public class JenkowBuilder extends Builder{
 
     public String getWorkflowName() {
         return workflowName;
+    }
+    
+    public void addDeferredAction(JenkowAction ja){
+        if (deferredActions == null) deferredActions = new HashMap<String,JenkowAction>();
+        deferredActions.put(ja.getCalleeJobName(),ja);
+    }
+    
+    public JenkowAction getDeferredAction(Run r){
+        return (deferredActions == null)? null : deferredActions.get(r.getParent().getDisplayName());
     }
     
     @Override

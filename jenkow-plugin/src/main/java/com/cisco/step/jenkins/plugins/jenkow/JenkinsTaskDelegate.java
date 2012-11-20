@@ -38,6 +38,7 @@ import org.activiti.engine.impl.pvm.delegate.ActivityExecution;
 public class JenkinsTaskDelegate extends ReceiveTaskActivityBehavior{
     private static final Logger LOG = Logger.getLogger(JenkinsTaskDelegate.class.getName());
     private Expression jobName;
+    private Expression isManualJobLaunchMode;
 
 	@Override
 	public final void execute(ActivityExecution exec) throws Exception {
@@ -58,12 +59,28 @@ public class JenkinsTaskDelegate extends ReceiveTaskActivityBehavior{
 		Integer loopCounter = (Integer)exec.getVariable("loopCounter");
 		
 		String jn = (jobName == null)? null : jobName.getValue(exec).toString();
-		System.out.println("jobName="+jn);
+		LOG.finer("jobName="+jn);
 		
+        boolean isManual = (isManualJobLaunchMode != null && Boolean.parseBoolean(isManualJobLaunchMode.getValue(exec).toString()));
+        LOG.finer("isManual="+isManual);
+        
+        JenkowAction ja = new JenkowAction(aid,exec.getId(),jn);
+        LOG.finer("ja="+ja);
+        
+        if (isManual){
+            // TODO 9: move jenkow variables into JenkowProcessData
+            Object jbp = exec.getVariable("jenkow_build_parent");
+            JenkowAction.setDeferredAction((jbp == null)? null : jbp.toString(),ja);
+            // TODO 9: log to build console "awaiting completion of job xyz"
+            return;
+        }
+        
 		if (jn != null){
 			Jenkins jenkins = Jenkins.getInstance();
 			TopLevelItem it = jenkins.getItem(jn);
-			if (!(it instanceof Project)){
+			if (it == null){
+                LOG.info("unable to launch job "+jn+", it=null");
+			}else if (!(it instanceof Project)){
 			    LOG.info("unable to launch job "+jn+", because it's not a Project, but just "+it.getClass());
 			}else{
 				// TODO 8: would like to have AbstractProject here, but it doesn't have BuildWrappers.
@@ -73,7 +90,6 @@ public class JenkinsTaskDelegate extends ReceiveTaskActivityBehavior{
 				JenkowBuildWrapper wrapper = new JenkowBuildWrapper();
 				if (!wrappers.contains(wrapper.getDescriptor())) wrappers.add(wrapper);
 				
-				JenkowAction ja = new JenkowAction(aid,exec.getId());
 				p.scheduleBuild2(jenkins.getQuietPeriod(),new WorkflowCause("triggered by workflow"),ja);
 				return;
 			}

@@ -143,7 +143,7 @@ THE SOFTWARE.
     <dependency>
       <groupId>com.cloudbees</groupId>
       <artifactId>vietnam4j-core</artifactId>
-      <version>1.3</version>
+      <version>1.4</version>
     </dependency>
   </dependencies>
 
@@ -193,8 +193,6 @@ THE SOFTWARE.
                   <overWrite>true</overWrite>
                   <outputDirectory>${project.build.directory}/classes/activiti-designer-extensions</outputDirectory>
                 </artifactItem>
-              </artifactItems>
-              <artifactItems>
                 <artifactItem>
                   <groupId>com.cisco.step.jenkins.plugins</groupId>
                   <artifactId>jenkow-repository-seed</artifactId>
@@ -204,6 +202,22 @@ THE SOFTWARE.
                   <overWrite>true</overWrite>
                   <outputDirectory>${project.build.directory}/classes</outputDirectory>
                   <destFileName>jenkow-repository-seed.tar</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.activiti</groupId>
+                  <artifactId>activiti-webapp-explorer2</artifactId>
+                  <type>war</type>
+                  <version>5.10</version>
+                  <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                  <destFileName>activiti-explorer.war</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>activiti-explorer-override</artifactId>
+                  <type>jar</type>
+                  <version>${project.version}</version>
+                  <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                  <destFileName>activiti-explorer-override.jar</destFileName>
                 </artifactItem>
               </artifactItems>
             </configuration>

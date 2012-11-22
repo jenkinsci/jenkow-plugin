@@ -44,6 +44,7 @@ THE SOFTWARE.
     <module>jenkow-designer-extension</module>
     <module>jenkow-repository-seed</module>
     <module>jenkow-plugin</module>
+    <module>activiti-explorer-override</module>
   </modules>
   
   <developers>

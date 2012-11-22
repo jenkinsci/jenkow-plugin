@@ -5,6 +5,8 @@
     <endEvent id="endevent1" name="End"></endEvent>
     <scriptTask id="scripttask1" name="Script Task" scriptFormat="groovy">
       <script><![CDATA[console.println("Script Task says 'hello world'");
+Thread.sleep(10000);
+console.println("Script Task finished work");
 ]]></script>
     </scriptTask>
     <sequenceFlow id="flow1" name="" sourceRef="startevent1" targetRef="scripttask1"></sequenceFlow>

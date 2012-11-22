@@ -96,51 +96,27 @@ public class JenkowBuilder extends Builder{
             e.printStackTrace();
         }
         
-        ClassLoader previous = Thread.currentThread().getContextClassLoader();
-        
         ProcessEngine eng = JenkowEngine.getEngine();
         RuntimeService rtSvc = eng.getRuntimeService();
-        RepositoryService repoSvc = eng.getRepositoryService();
-        
         String procId = null;
         try {
-            File wff = JenkowPlugin.getInstance().repo.getWorkflowFile(workflowName);
-            if (!wff.exists()){
-                log.println("error: "+wff+" does not exist");
-                return false;
-            }
-            String wfn = wff+"20.xml"; // TODO 9: workaround for http://forums.activiti.org/en/viewtopic.php?f=8&t=3745&start=10
-            DeploymentBuilder db = repoSvc.createDeployment().addInputStream(wfn,new FileInputStream(wff));
-
-            // TODO 7: We should avoid redeploying here, if workflow is already deployed?
-            Deployment d = db.deploy();
-            ProcessDefinition pDef = repoSvc.createProcessDefinitionQuery().deploymentId(d.getId()).singleResult();
-
-            Map<String,Object> varMap = new HashMap<String,Object>();
-            // TODO 9: move jenkow variables into JenkowProcessData
-            varMap.put("jenkow_build_parent",build.getParent().getName());
-            varMap.put("jenkow_build_number",Integer.valueOf(build.getNumber()));
-            varMap.put("console",new ConsoleLogger(build.getParent().getName(),Integer.valueOf(build.getNumber())));
-            JobMD.setJobs(varMap,JobMD.newJobs());
-            // varMap.put("log",log); // can't put a non-serializable variable here
+            procId = WfUtil.launchWf(log,workflowName,build.getParent().getName(),build.getNumber());
             
-            log.println(Consts.UI_PREFIX+": \""+workflowName+"\" started");
-            procId = rtSvc.startProcessInstanceById(pDef.getId(),varMap).getId();
-            
-            // TODO 5: is there a better way than polling to detect the termination of a process?
-            HistoryService hstSvc = eng.getHistoryService();
-            while (true){
-            	// TODO 8: can we get a hold of any exception the engine is throwing and show it at least in the log?
-                // TODO 8: builder should log each time the process makes a state change
-            	HistoricProcessInstance hProcInst = hstSvc.createHistoricProcessInstanceQuery().processInstanceId(procId).singleResult();
-                if (hProcInst.getEndTime() != null){
-                    log.println(Consts.UI_PREFIX+": \""+workflowName+"\" ended");
-                    break;
+            if (procId != null){
+                // TODO 5: is there a better way than polling to detect the termination of a process?
+                HistoryService hstSvc = eng.getHistoryService();
+                while (true){
+                    // TODO 8: can we get a hold of any exception the engine is throwing and show it at least in the log?
+                    // TODO 8: builder should log each time the process makes a state change
+                    HistoricProcessInstance hProcInst = hstSvc.createHistoricProcessInstanceQuery().processInstanceId(procId).singleResult();
+                    if (hProcInst.getEndTime() != null){
+                        log.println(Consts.UI_PREFIX+": \""+workflowName+"\" ended");
+                        break;
+                    }
+                    Thread.sleep(1000);
                 }
-                Thread.sleep(1000);
             }
         } finally {
-        	Thread.currentThread().setContextClassLoader(previous);
         	BuildLoggerMap.remove(build);
             if (procId != null && rtSvc.createExecutionQuery().processInstanceId(procId).singleResult() != null){
             	// should kick in when the current build is aborted
@@ -163,8 +139,6 @@ public class JenkowBuilder extends Builder{
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
-        // TODO 8: make workflowRepoRoot optional in config UI, similar to "External Database"
-//        private String workflowRepoRoot;
         private JenkowEngineConfig engineConfig;
         
         public DescriptorImpl(){
@@ -172,43 +146,10 @@ public class JenkowBuilder extends Builder{
             load();
         }
 
-        public FormValidation doCheckWorkflowRepoRoot(@QueryParameter String value) throws IOException, ServletException {
-            return checkFile(value,new File(value));
-        }
-
         public FormValidation doCheckWorkflowName(@QueryParameter String value) throws IOException, ServletException {
-            return checkFile(value,JenkowPlugin.getInstance().repo.getWorkflowFile(value));
+            return WfUtil.checkWorkflowName(value);
         }
         
-        private static FormValidation checkFile(String value, File f){
-            if (!StringUtils.isEmpty(value)){
-                if (!f.exists()){
-                    String url = "descriptorByName/"+JenkowBuilder.class.getName()+"/createWorkflow?wfn="+value;
-                    String msg = "Workflow "+value+" does not exist. "
-                               + "<button type=\"button\""
-                               + " onclick=\"javascript:"
-                               +    "var e=this;"
-                               +    "new Ajax.Request"
-                               +    "("
-                               +      "'"+url+"',"
-                               +      "{onSuccess:function(x)"
-                               +        "{notificationBar.show('Workflow created.',notificationBar.OK);"
-                               +         "fireEvent($(e).up('TR.validation-error-area').previous().down('INPUT'),'change');"
-                               +        "}"
-                               +      "}"
-                               +    ")"
-                               +   "\""
-                               + ">"
-                               + "Create it now"
-                               + "</button>"
-                               ;
-                    return FormValidation.errorWithMarkup(msg);
-                }
-                if (!f.canRead()) return FormValidation.warning("Workflow "+value+" is not readable.");
-            }
-            return FormValidation.ok();
-        }
-
         public void doCreateWorkflow(@QueryParameter String wfn){
             JenkowPlugin.getInstance().repo.ensureWorkflowDefinition(wfn);
         }
@@ -226,7 +167,6 @@ public class JenkowBuilder extends Builder{
 //            System.out.println("formData="+formData);
         	
         	JenkowEngineConfig oldEngineConfig = engineConfig;
-//            workflowRepoRoot = formData.getString("workflowRepoRoot");
             if (!formData.containsKey("useExternalDB")){
             	engineConfig = null;
             }else{

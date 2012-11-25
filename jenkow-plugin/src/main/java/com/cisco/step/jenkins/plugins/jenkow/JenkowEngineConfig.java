@@ -23,9 +23,17 @@
  */
 package com.cisco.step.jenkins.plugins.jenkow;
 
+import hudson.util.Secret;
+import org.jenkinsci.plugins.database.Database;
+import org.jenkinsci.plugins.database.GenericDatabase;
+
 import java.io.Serializable;
 import java.util.logging.Logger;
 
+/**
+ * @deprecated
+ *      Use {@link Database}
+ */
 public class JenkowEngineConfig implements Serializable{
     private static final long serialVersionUID = 877564473385436859L;
 	private static final Logger LOG = Logger.getLogger(JenkowEngineConfig.class.getName());
@@ -169,5 +177,9 @@ public class JenkowEngineConfig implements Serializable{
     	cfg.setMailServerPort(25);
     	
     	return cfg;
+    }
+
+    public Database toDatabase() {
+        return new GenericDatabase(dsUrl,dsDriverClass,dsUsername, Secret.fromString(dsPassword));
     }
 }

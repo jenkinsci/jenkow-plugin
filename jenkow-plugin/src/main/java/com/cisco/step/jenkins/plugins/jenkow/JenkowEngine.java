@@ -25,6 +25,7 @@ package com.cisco.step.jenkins.plugins.jenkow;
 
 import hudson.tasks.Mailer;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +42,7 @@ import org.activiti.engine.impl.pvm.process.ScopeImpl;
 import org.activiti.engine.impl.pvm.process.TransitionImpl;
 import org.activiti.engine.impl.util.xml.Element;
 import org.activiti.engine.impl.variable.VariableDeclaration;
+import org.jenkinsci.plugins.database.Database;
 
 class JenkowEngine {
     private static final Logger LOG = Logger.getLogger(JenkowEngine.class.getName());
@@ -48,15 +50,15 @@ class JenkowEngine {
 	
 	static ProcessEngine getEngine(){
 		if (engine == null){
-			JenkowEngineConfig ec = JenkowBuilder.descriptor().getEngineConfig();
+			Database ec = JenkowBuilder.descriptor().getDatabase();
 			LOG.info("engineConfig="+ec);
 
-			ProcessEngineConfiguration cfg = null;
+			ProcessEngineConfiguration cfg;
 			// context for *all* processes. available in exppressions and scripts in the process.
 			Map<Object,Object> ctxBeans = new HashMap<Object,Object>();
 			ctxBeans.put("log",LOG);
 			
-			if (ec == null){
+			if (ec instanceof H2DemoDatabase) {
 				cfg = ProcessEngineConfiguration.createStandaloneInMemProcessEngineConfiguration();
 			} else {
 				
@@ -69,13 +71,14 @@ class JenkowEngine {
 				System.out.println("md.getReplyToAddress() -> "+md.getReplyToAddress());
 				System.out.println("md.getSmtpPort()       -> "+md.getSmtpPort());
 				
-				// set database config				
-				cfg.setJdbcDriver(ec.getDsDriverClass());
-				cfg.setJdbcUrl(ec.getDsUrl());
-				cfg.setJdbcUsername(ec.getDsUsername());
-				cfg.setJdbcPassword(ec.getDsPassword());
-				
-				// set other engin config
+				// set database config
+                try {
+                    cfg.setDataSource(ec.getDataSource());
+                } catch (SQLException e) {
+                    throw new Error(e); // TODO: what's the error handling strategy in this method?
+                }
+
+                // set other engine config
 				cfg.setDatabaseSchemaUpdate("true");
 				cfg.setHistory("full");
 				cfg.setJobExecutorActivate(true);

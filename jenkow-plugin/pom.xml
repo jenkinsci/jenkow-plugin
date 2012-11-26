@@ -148,13 +148,12 @@ THE SOFTWARE.
     <dependency>
       <groupId>com.cloudbees</groupId>
       <artifactId>vietnam4j-core</artifactId>
-      <version>1.4</version>
+      <version>1.5-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>activiti-explorer-override</artifactId>
       <version>${project.version}</version>
-      <scope>test</scope><!-- only used by the maven-dependency-plugin, but added here to force ordering in reactor -->
     </dependency>
   </dependencies>
 

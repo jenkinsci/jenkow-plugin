@@ -11,4 +11,14 @@
 
   <artifactId>activiti-explorer-override</artifactId>
   <description>Additional code to be injected into Activiti Explorer to tweak its behaviour</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <version>3.0.5.RELEASE</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
 </project>

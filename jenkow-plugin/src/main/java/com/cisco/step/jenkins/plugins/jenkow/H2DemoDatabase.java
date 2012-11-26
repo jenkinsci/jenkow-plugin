@@ -1,6 +1,7 @@
 package com.cisco.step.jenkins.plugins.jenkow;
 
-import org.activiti.engine.ProcessEngineConfiguration;
+import org.h2.Driver;
+import org.jenkinsci.plugins.database.BasicDataSource2;
 import org.jenkinsci.plugins.database.Database;
 import org.jenkinsci.plugins.database.DatabaseDescriptor;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -20,11 +21,10 @@ public class H2DemoDatabase extends Database {
 
     @Override
     public DataSource getDataSource() throws SQLException {
-//        BasicDataSource2 ds = new BasicDataSource2();
-//        ds.setUrl("jdbc:h2:mem:activiti");
-//        ds.setDriverClass(Driver.class);
-//        return ds;
-        return ProcessEngineConfiguration.createStandaloneInMemProcessEngineConfiguration().getDataSource();
+        BasicDataSource2 ds = new BasicDataSource2();
+        ds.setUrl("jdbc:h2:mem:activiti");
+        ds.setDriverClass(Driver.class);
+        return ds;
     }
 
     @Override

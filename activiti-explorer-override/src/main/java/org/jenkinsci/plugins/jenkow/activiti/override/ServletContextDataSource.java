@@ -23,7 +23,10 @@ public class ServletContextDataSource implements FactoryBean, ServletContextAwar
 
     @Override
     public Object getObject() throws Exception {
-        return servletContext.getAttribute(ServletContextDataSource.class.getName());
+        Object o = servletContext.getAttribute(ServletContextDataSource.class.getName());
+        if (o==null)
+            throw new IllegalStateException("ServletContext doesn't contain a DataSource");
+        return o;
     }
 
     @Override

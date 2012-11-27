@@ -32,16 +32,22 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.runtime.ProcessInstanceQuery;
 import org.apache.commons.lang.StringUtils;
 
 class WfUtil {
@@ -79,7 +85,7 @@ class WfUtil {
         return FormValidation.ok();
     }
     
-    static String launchWf(PrintStream log, String workflowName, String parentName, Integer buildNo) throws FileNotFoundException{
+    static String launchWf(PrintStream log, String workflowName, String parentName, Integer buildNo) throws FileNotFoundException, InterruptedException{
         System.out.println("WfUtil.launchWf: workflowName="+workflowName);
         
         ClassLoader previous = Thread.currentThread().getContextClassLoader();
@@ -110,15 +116,63 @@ class WfUtil {
             
             log.println(Consts.UI_PREFIX+": \""+workflowName+"\" started");
 long t = System.currentTimeMillis();            
-System.out.println("starting process");            
+System.out.println("starting process "+pDef.getId());
 // TODO 9: why is this blocking????
-            String procId = rtSvc.startProcessInstanceById(pDef.getId(),varMap).getId();
+            ProcessInstance proc = rtSvc.startProcessInstanceById(pDef.getId(),varMap);
+//            String procId = startProcess(pDef.getId(),varMap);
+            String procId = proc.getId();
 System.out.println("process started procId="+procId+" ("+(System.currentTimeMillis()-t)+")");            
             return procId;
         } finally {
             Thread.currentThread().setContextClassLoader(previous);
         }
     }
+
+    // experimental
+//    synchronized static String startProcess(final String pDefId, final Map<String,Object> vars) throws InterruptedException{
+//        ProcessEngine eng = JenkowEngine.getEngine();
+//        final RuntimeService rtSvc = eng.getRuntimeService();
+//        
+//        System.out.println("current ids:");
+//        Set<String> ids = new HashSet<String>();
+//        for (ProcessInstance proc : rtSvc.createProcessInstanceQuery().list()){
+//            String id = proc.getId();
+//            System.out.println(" rId="+id);
+//            ids.add(id);
+//        }
+//        for (HistoricProcessInstance proc : eng.getHistoryService().createHistoricProcessInstanceQuery().list()){
+//            String id = proc.getId();
+//            System.out.println(" hId="+id);
+//            ids.add(id);
+//        }
+//        
+//        System.out.println("starting process");
+//        new Thread(new Runnable(){
+//            @Override
+//            public void run() {
+//                rtSvc.startProcessInstanceById(pDefId,vars);
+//            }
+//        }).start();
+//        System.out.println("process started");
+//        
+//        while (true){
+//            for (ProcessInstance proc : rtSvc.createProcessInstanceQuery().list()){
+//                String id = proc.getId();
+//                System.out.println("  found running id="+id);
+//                if (!ids.contains(id)){
+//                    return id;
+//                }
+//            }
+//            for (HistoricProcessInstance proc : eng.getHistoryService().createHistoricProcessInstanceQuery().list()){
+//                String id = proc.getId();
+//                System.out.println("  found historic id="+id);
+//                if (!ids.contains(id)){
+//                    return id;
+//                }
+//            }
+//            Thread.sleep(100);
+//        }
+//    }
 
 	/**
 	 * Produces a valid workflow ID out of a given string.

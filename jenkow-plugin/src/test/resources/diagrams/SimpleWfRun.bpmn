@@ -31,11 +31,10 @@ THE SOFTWARE.
       <script><![CDATA[System.out.println("SimpleWfRun doing...");
 System.out.println("jenkow_build_parent="+jenkow_build_parent);
 System.out.println("jenkow_build_number="+jenkow_build_number);
-Thread.sleep(2000);
+//Thread.sleep(2000);
 
-//System.out.println("out="+out);
-//out.println("should be in the console");
-//log.println("Hello Jenkins job console!!");
+console.println("should be in the console");
+System.out.println("Hello Jenkins job console!!");
 ]]></script>
     </scriptTask>
     <sequenceFlow id="flow1" name="" sourceRef="startevent1" targetRef="scripttask1"></sequenceFlow>

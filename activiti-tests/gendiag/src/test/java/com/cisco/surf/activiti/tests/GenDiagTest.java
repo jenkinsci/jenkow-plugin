@@ -18,23 +18,23 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.apache.commons.io.IOUtils;
 
 public class GenDiagTest extends TestCase{
-	
-	public void testGenDiag() throws Exception{
-		ProcessEngine eng = ProcessEngineConfiguration
-							.createStandaloneInMemProcessEngineConfiguration()
-							.buildProcessEngine();
-		
-		System.out.println("engine version: "+eng.VERSION);
-		
-		RepositoryService repoSvc = eng.getRepositoryService();
-		RuntimeService rtSvc = eng.getRuntimeService();
-		
-		String wfn = "/diagrams/GenDiag.bpmn";
-		String wffn = wfn+"20.xml"; // workaround for http://forums.activiti.org/en/viewtopic.php?f=8&t=3745&start=10
+    
+    public void testGenDiag() throws Exception{
+        ProcessEngine eng = ProcessEngineConfiguration
+                            .createStandaloneInMemProcessEngineConfiguration()
+                            .buildProcessEngine();
+        
+        System.out.println("engine version: "+eng.VERSION);
+        
+        RepositoryService repoSvc = eng.getRepositoryService();
+        RuntimeService rtSvc = eng.getRuntimeService();
+        
+        String wfn = "/diagrams/GenDiag.bpmn";
+        String wffn = wfn+"20.xml"; // workaround for http://forums.activiti.org/en/viewtopic.php?f=8&t=3745&start=10
         DeploymentBuilder db = repoSvc
-							   .createDeployment()
-							   .addInputStream(wffn,this.getClass().getResourceAsStream(wfn));
-		
+                               .createDeployment()
+                               .addInputStream(wffn,this.getClass().getResourceAsStream(wfn));
+        
         Deployment d = db.deploy();
         ProcessDefinition pDef = repoSvc
                                  .createProcessDefinitionQuery()
@@ -42,12 +42,13 @@ public class GenDiagTest extends TestCase{
                                  .singleResult();
         
         try {
-			InputStream ds = ProcessDiagramGenerator.generatePngDiagram((ProcessDefinitionEntity)pDef);
-			OutputStream os = new FileOutputStream("diag.png");
-			IOUtils.copy(ds,os);
-			os.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+            InputStream ds = ProcessDiagramGenerator.generatePngDiagram((ProcessDefinitionEntity)pDef);
+            OutputStream os = new FileOutputStream("diag.png");
+            IOUtils.copy(ds,os);
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }

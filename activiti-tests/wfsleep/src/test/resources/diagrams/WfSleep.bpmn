@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
-  <process id="wfsleep" name="WfSleep" isExecutable="true">
+  <process id="wfsleep" name="WfSleep">
     <startEvent id="startevent1" name="Start"></startEvent>
     <endEvent id="endevent1" name="End"></endEvent>
     <scriptTask id="scripttask1" name="1" scriptFormat="groovy">
       <script><![CDATA[System.out.println("script task 1");]]></script>
     </scriptTask>
-    <scriptTask id="scripttask2" name="Script Task" scriptFormat="groovy">
+    <scriptTask id="scripttask2" name="2" scriptFormat="groovy">
       <script><![CDATA[System.out.println("script task 2");]]></script>
     </scriptTask>
     <intermediateCatchEvent id="timerintermediatecatchevent1" name="TimerCatchEvent">
@@ -22,35 +22,35 @@
   <bpmndi:BPMNDiagram id="BPMNDiagram_wfsleep">
     <bpmndi:BPMNPlane bpmnElement="wfsleep" id="BPMNPlane_wfsleep">
       <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
-        <omgdc:Bounds height="35" width="35" x="350" y="30"></omgdc:Bounds>
+        <omgdc:Bounds height="35" width="35" x="10" y="30"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
-        <omgdc:Bounds height="35" width="35" x="350" y="360"></omgdc:Bounds>
+        <omgdc:Bounds height="35" width="35" x="350" y="30"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scripttask1" id="BPMNShape_scripttask1">
-        <omgdc:Bounds height="55" width="105" x="315" y="100"></omgdc:Bounds>
+        <omgdc:Bounds height="55" width="105" x="60" y="20"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scripttask2" id="BPMNShape_scripttask2">
-        <omgdc:Bounds height="55" width="105" x="315" y="270"></omgdc:Bounds>
+        <omgdc:Bounds height="55" width="105" x="230" y="20"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="timerintermediatecatchevent1" id="BPMNShape_timerintermediatecatchevent1">
-        <omgdc:Bounds height="35" width="35" x="350" y="200"></omgdc:Bounds>
+        <omgdc:Bounds height="35" width="35" x="180" y="30"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
-        <omgdi:waypoint x="367" y="65"></omgdi:waypoint>
-        <omgdi:waypoint x="367" y="100"></omgdi:waypoint>
+        <omgdi:waypoint x="45" y="47"></omgdi:waypoint>
+        <omgdi:waypoint x="60" y="47"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
-        <omgdi:waypoint x="367" y="155"></omgdi:waypoint>
-        <omgdi:waypoint x="367" y="200"></omgdi:waypoint>
+        <omgdi:waypoint x="165" y="47"></omgdi:waypoint>
+        <omgdi:waypoint x="180" y="47"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
-        <omgdi:waypoint x="367" y="235"></omgdi:waypoint>
-        <omgdi:waypoint x="367" y="270"></omgdi:waypoint>
+        <omgdi:waypoint x="215" y="47"></omgdi:waypoint>
+        <omgdi:waypoint x="230" y="47"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
-        <omgdi:waypoint x="367" y="325"></omgdi:waypoint>
-        <omgdi:waypoint x="367" y="360"></omgdi:waypoint>
+        <omgdi:waypoint x="335" y="47"></omgdi:waypoint>
+        <omgdi:waypoint x="350" y="47"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

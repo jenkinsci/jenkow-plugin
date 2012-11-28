@@ -1,5 +1,7 @@
 package com.cisco.surf.activiti.tests;
 
+import java.util.concurrent.TimeoutException;
+
 import junit.framework.TestCase;
 
 import org.activiti.engine.HistoryService;
@@ -42,8 +44,10 @@ public class WfSleepTest extends TestCase{
         String procId = proc.getId();
         System.out.println("procId="+procId);
         
+        long timeout = System.currentTimeMillis()+15*1000;
         HistoryService hstSvc = eng.getHistoryService();
         while (true){
+            if (System.currentTimeMillis() > timeout) throw new TimeoutException();
             HistoricProcessInstance hProcInst = hstSvc.createHistoricProcessInstanceQuery().processInstanceId(procId).singleResult();
             if (hProcInst.getEndTime() != null){
                 System.out.println(wfn+" ended");

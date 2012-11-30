@@ -43,7 +43,7 @@ public class GenDiagTest extends TestCase{
         
         try {
             InputStream ds = ProcessDiagramGenerator.generatePngDiagram((ProcessDefinitionEntity)pDef);
-            OutputStream os = new FileOutputStream("diag.png");
+            OutputStream os = new FileOutputStream("target/diag.png");
             IOUtils.copy(ds,os);
             os.close();
         } catch (Exception e) {

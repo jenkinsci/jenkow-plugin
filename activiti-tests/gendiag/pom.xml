@@ -36,4 +36,12 @@ THE SOFTWARE.
   <packaging>jar</packaging>
   <name>activiti-tests/${project.artifactId}</name>
 
+  <dependencies>
+    <dependency>
+      <groupId>org.activiti</groupId>
+      <artifactId>activiti-engine</artifactId>
+      <version>5.11</version>
+    </dependency>
+  </dependencies>
+
 </project>

@@ -1,12 +1,13 @@
 package com.cisco.surf.activiti.tests;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import junitx.framework.FileAssert;
+
 import org.activiti.engine.RepositoryService;
-import org.activiti.engine.impl.bpmn.diagram.ProcessDiagramGenerator;
-import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.ProcessDefinition;
@@ -21,8 +22,12 @@ public class GenDiagTest{
     public ActivitiRule activitiRule = new ActivitiRule();
     
     @Test
-    public void tstGenDiag() {
-        String wffn = "/diagrams/GenDiag.bpmn20.xml";
+    public void tstGenDiag() throws Exception {
+        String wfd = "diagrams";
+        String wfn = "GenDiag";
+        String wfbn = "/"+wfd+"/"+wfn;
+        String wffn = wfbn+".bpmn20.xml";
+        
         RepositoryService repoSvc = activitiRule.getRepositoryService();
         DeploymentBuilder db = repoSvc
                                .createDeployment()
@@ -32,13 +37,15 @@ public class GenDiagTest{
                                  .createProcessDefinitionQuery()
                                  .deploymentId(d.getId())
                                  .singleResult();
-        try {
-            InputStream ds = ProcessDiagramGenerator.generatePngDiagram((ProcessDefinitionEntity)pDef);
-            OutputStream os = new FileOutputStream("target/diag.png");
-            IOUtils.copy(ds,os);
-            os.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        
+        String pn = wfn+"."+pDef.getKey()+".png";
+        File tpf = new File("target/"+pn);
+        
+        InputStream ds = repoSvc.getResourceAsStream(d.getId(),"/"+wfd+"/"+pn);
+        OutputStream os = new FileOutputStream(tpf);
+        IOUtils.copy(ds,os);
+        os.close();
+        
+        FileAssert.assertBinaryEquals(new File("src/test/resources/baseline/"+pn),tpf);
     }
 }

@@ -20,6 +20,7 @@ public class WfSleepTest extends TestCase{
 	public void testWfSleep() throws Exception{
 		ProcessEngine eng = ProcessEngineConfiguration
 							.createStandaloneInMemProcessEngineConfiguration()
+							.setJobExecutorActivate(true)
 							.buildProcessEngine();
 		
 		System.out.println("engine version: "+eng.VERSION);

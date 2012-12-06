@@ -14,3 +14,4 @@
 * 20120504-09: Jenkow Designer Perspective for Eclipse
 * 20120906-01: sign the Eclipse update site \([eclipse-maven-signing-plugin](http://aniszczyk.org/2011/05/18/eclipse-org-signing-support-for-maven-tycho/)\)
 * 20120924-01: Jenkins task should be able to launch Maven projects
+* 20121205-01: Maven plugin to wrap the Activiti engine to generate workflow diagrams from .bpmn files at build time to package them with documentation (javadoc of test classes?)

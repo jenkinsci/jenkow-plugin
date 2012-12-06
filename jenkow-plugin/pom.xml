@@ -166,6 +166,17 @@ THE SOFTWARE.
   </profiles>
 
   <build>
+    <testResources>
+      <testResource>
+        <directory>${basedir}/src/test/resources</directory>
+      </testResource>
+      <testResource>
+        <directory>${basedir}/src/test/java</directory>
+        <includes>
+          <include>**/*.bpmn</include>
+        </includes>
+      </testResource>
+    </testResources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -265,6 +276,7 @@ THE SOFTWARE.
             </property>
           </systemProperties>
           <excludes>
+<!--
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/test/eclipse/UpdateSiteTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/SimpleWfRunTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/SimpleWfCallsJobTest.java</exclude>
@@ -272,10 +284,8 @@ THE SOFTWARE.
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/ParallelJobsTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/ExecLoggerTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/WaitsForeverTest.java</exclude>
-            <exclude>**/com/cisco/step/jenkins/plugins/jenkow/JobResultConsumptionTest.java</exclude>
+            <exclude>**/com/cisco/surf/jenkins/plugins/jenkow/JobResultConsumption/ActualTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/git/GitTest.java</exclude>
-<!--
-            <exclude>**/com/cisco/surf/activiti/tests/WfSleepTest.java</exclude>
 -->
           </excludes>
         </configuration>

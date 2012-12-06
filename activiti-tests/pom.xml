@@ -34,7 +34,7 @@ THE SOFTWARE.
   <modules>
     <module>scriptscript</module>
     <module>wfsleep</module>
-    <module>gendiag</module>
+    <module>gendiag2</module>
   </modules>
   
   <properties>

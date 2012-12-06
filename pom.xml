@@ -52,11 +52,6 @@ THE SOFTWARE.
       <name>Max Spring</name>
       <email>mspring@cisco.com</email>
     </developer>
-    <developer>
-      <id>chikkala</id>
-      <name>Srinivasan Chikkala</name>
-      <email>schikkal@cisco.com</email>
-    </developer>
   </developers>
 
   <licenses>

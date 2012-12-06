@@ -45,11 +45,6 @@ THE SOFTWARE.
       <name>Max Spring</name>
       <email>mspring@cisco.com</email>
     </developer>
-    <developer>
-      <id>chikkala</id>
-      <name>Srinivasan Chikkala</name>
-      <email>schikkal@cisco.com</email>
-    </developer>
   </developers>
 
   <licenses>
@@ -270,7 +265,6 @@ THE SOFTWARE.
             </property>
           </systemProperties>
           <excludes>
-<!--
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/test/eclipse/UpdateSiteTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/SimpleWfRunTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/SimpleWfCallsJobTest.java</exclude>
@@ -280,6 +274,8 @@ THE SOFTWARE.
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/WaitsForeverTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/JobResultConsumptionTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/git/GitTest.java</exclude>
+<!--
+            <exclude>**/com/cisco/surf/activiti/tests/WfSleepTest.java</exclude>
 -->
           </excludes>
         </configuration>

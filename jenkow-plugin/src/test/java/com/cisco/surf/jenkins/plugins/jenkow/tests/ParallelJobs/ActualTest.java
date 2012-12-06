@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.cisco.step.jenkins.plugins.jenkow;
+package com.cisco.surf.jenkins.plugins.jenkow.tests.ParallelJobs;
 
 import jenkins.model.Jenkins;
 import hudson.model.FreeStyleBuild;
@@ -33,7 +33,10 @@ import hudson.util.DescribableList;
 
 import org.apache.commons.io.FileUtils;
 
-public class ParallelJobsTest extends JenkowTestCase{
+import com.cisco.step.jenkins.plugins.jenkow.JenkowBuilder;
+import com.cisco.step.jenkins.plugins.jenkow.JenkowTestCase;
+
+public class ActualTest extends JenkowTestCase{
 
 	public void testParallelJobs() throws Exception{
 		Jenkins.getInstance().setNumExecutors(3);
@@ -50,7 +53,7 @@ public class ParallelJobsTest extends JenkowTestCase{
         FreeStyleProject launcher = createFreeStyleProject("launcher");
         DescribableList<Builder,Descriptor<Builder>> bl = launcher.getBuildersList();
 		// TODO 4: if we have a way a script task can print into the job console, we no longer need the Shell build step
-        bl.add(new JenkowBuilder(getWfName("ParallelJobs")));
+        bl.add(new JenkowBuilder(getWfName("workflow")));
 		bl.add(new Shell("echo wf.done"));
         
         FreeStyleBuild build = launcher.scheduleBuild2(0).get();

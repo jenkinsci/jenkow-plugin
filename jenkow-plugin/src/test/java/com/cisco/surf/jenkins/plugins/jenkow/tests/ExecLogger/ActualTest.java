@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.cisco.step.jenkins.plugins.jenkow;
+package com.cisco.surf.jenkins.plugins.jenkow.tests.ExecLogger;
 
 import hudson.model.FreeStyleBuild;
 import hudson.model.Descriptor;
@@ -32,19 +32,29 @@ import hudson.util.DescribableList;
 
 import org.apache.commons.io.FileUtils;
 
-public class SimpleWfRunTest extends JenkowTestCase{
-	
-	public void testSimpleWfRun() throws Exception{
+import com.cisco.step.jenkins.plugins.jenkow.Consts;
+import com.cisco.step.jenkins.plugins.jenkow.JenkowBuilder;
+import com.cisco.step.jenkins.plugins.jenkow.JenkowTestCase;
+
+public class ActualTest extends JenkowTestCase{
+
+	public void testExecLogger() throws Exception{
+		FreeStyleProject launchy = createFreeStyleProject("launchy");
+        launchy.getBuildersList().add(new Shell("echo \"launchy running\"; sleep 1; exit 0"));
+        
 		FreeStyleProject launcher = createFreeStyleProject("launcher");
         DescribableList<Builder,Descriptor<Builder>> bl = launcher.getBuildersList();
 		// TODO 4: if we have a way a script task can print into the job console, we no longer need the Shell build step
-        bl.add(new JenkowBuilder(getWfName("SimpleWfRun")));
-		bl.add(new Shell("echo wf.done"));
+        bl.add(new JenkowBuilder(getWfName("workflow")));
         
         FreeStyleBuild build = launcher.scheduleBuild2(0).get();
         System.out.println(build.getDisplayName()+" completed");
 
         String s = FileUtils.readFileToString(build.getLogFile());
-        assertTrue(s.contains("+ echo wf.done"));
+        System.out.println("<console>\n"+s+"</console>");
+        assertTrue(s.contains(Consts.UI_PREFIX+": scripttask1 started"));
+        assertTrue(s.contains(Consts.UI_PREFIX+": scripttask1 ended"));
+        assertTrue(s.contains(Consts.UI_PREFIX+": servicetask1 started"));
+        assertTrue(s.contains(Consts.UI_PREFIX+": servicetask1 ended"));
 	}
 }

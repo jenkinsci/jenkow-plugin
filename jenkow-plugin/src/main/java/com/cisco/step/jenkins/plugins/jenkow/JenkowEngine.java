@@ -42,11 +42,11 @@ import org.activiti.engine.impl.pvm.process.TransitionImpl;
 import org.activiti.engine.impl.util.xml.Element;
 import org.activiti.engine.impl.variable.VariableDeclaration;
 
-class JenkowEngine {
+public class JenkowEngine {
     private static final Logger LOG = Logger.getLogger(JenkowEngine.class.getName());
 	private static ProcessEngine engine;
 	
-	static ProcessEngine getEngine(){
+	public static ProcessEngine getEngine(){
 		if (engine == null){
 			JenkowEngineConfig ec = JenkowBuilder.descriptor().getEngineConfig();
 			LOG.info("engineConfig="+ec);

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.cisco.step.jenkins.plugins.jenkow;
+package com.cisco.surf.jenkins.plugins.jenkow.tests.ManualTrigger;
 
 import hudson.model.FreeStyleBuild;
 import hudson.model.Descriptor;
@@ -36,7 +36,10 @@ import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.io.FileUtils;
 
-public class ManualTriggerTest extends JenkowTestCase{
+import com.cisco.step.jenkins.plugins.jenkow.JenkowBuilder;
+import com.cisco.step.jenkins.plugins.jenkow.JenkowTestCase;
+
+public class ActualTest extends JenkowTestCase{
     
     public void testManualTriggerSuccess() throws Exception{
         setNumExecutors(10);
@@ -49,7 +52,7 @@ public class ManualTriggerTest extends JenkowTestCase{
         
         FreeStyleProject launcher = createFreeStyleProject("launcher");
         DescribableList<Builder,Descriptor<Builder>> bl = launcher.getBuildersList();
-        bl.add(new JenkowBuilder(getWfName("ManualTrigger")));
+        bl.add(new JenkowBuilder(getWfName("workflow")));
         bl.add(new Shell("echo wf.done"));
         
         Future<FreeStyleBuild> launcherBF = launcher.scheduleBuild2(0);
@@ -74,7 +77,7 @@ public class ManualTriggerTest extends JenkowTestCase{
         
         FreeStyleProject launcher = createFreeStyleProject("launcher");
         DescribableList<Builder,Descriptor<Builder>> bl = launcher.getBuildersList();
-        bl.add(new JenkowBuilder(getWfName("ManualTrigger")));
+        bl.add(new JenkowBuilder(getWfName("workflow")));
         bl.add(new Shell("echo wf.done"));
         
         Future<FreeStyleBuild> launcherBF = launcher.scheduleBuild2(0);

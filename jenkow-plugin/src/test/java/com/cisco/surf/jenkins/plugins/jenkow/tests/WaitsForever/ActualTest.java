@@ -21,17 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.cisco.step.jenkins.plugins.jenkow;
+package com.cisco.surf.jenkins.plugins.jenkow.tests.WaitsForever;
 
 import hudson.model.FreeStyleProject;
 
 import org.activiti.engine.RuntimeService;
 
-public class WaitsForeverTest extends JenkowTestCase{
+import com.cisco.step.jenkins.plugins.jenkow.JenkowBuilder;
+import com.cisco.step.jenkins.plugins.jenkow.JenkowEngine;
+import com.cisco.step.jenkins.plugins.jenkow.JenkowTestCase;
+
+public class ActualTest extends JenkowTestCase{
 
 	public void testAbortJob() throws Exception{
 		FreeStyleProject launcher = createFreeStyleProject("launcher");
-        launcher.getBuildersList().add(new JenkowBuilder(getWfName("WaitsForever")));
+        launcher.getBuildersList().add(new JenkowBuilder(getWfName("workflow")));
         
         launcher.scheduleBuild2(0);
         

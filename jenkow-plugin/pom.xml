@@ -278,14 +278,14 @@ THE SOFTWARE.
           <excludes>
 <!--
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/test/eclipse/UpdateSiteTest.java</exclude>
-            <exclude>**/com/cisco/step/jenkins/plugins/jenkow/SimpleWfRunTest.java</exclude>
-            <exclude>**/com/cisco/step/jenkins/plugins/jenkow/SimpleWfCallsJobTest.java</exclude>
-            <exclude>**/com/cisco/step/jenkins/plugins/jenkow/ManualTriggerTest.java</exclude>
-            <exclude>**/com/cisco/step/jenkins/plugins/jenkow/ParallelJobsTest.java</exclude>
-            <exclude>**/com/cisco/step/jenkins/plugins/jenkow/ExecLoggerTest.java</exclude>
-            <exclude>**/com/cisco/step/jenkins/plugins/jenkow/WaitsForeverTest.java</exclude>
-            <exclude>**/com/cisco/surf/jenkins/plugins/jenkow/JobResultConsumption/ActualTest.java</exclude>
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/git/GitTest.java</exclude>
+            <exclude>**/com/cisco/surf/jenkins/plugins/jenkow/SimpleWfRunTest/ActualTest.java</exclude>
+            <exclude>**/com/cisco/surf/jenkins/plugins/jenkow/SimpleWfCallsJob/ActualTest.java</exclude>
+            <exclude>**/com/cisco/surf/jenkins/plugins/jenkow/ManualTrigger/ActualTest.java</exclude>
+            <exclude>**/com/cisco/surf/jenkins/plugins/jenkow/ParallelJobs/ActualTest.java</exclude>
+            <exclude>**/com/cisco/surf/jenkins/plugins/jenkow/ExecLogger/ActualTest.java</exclude>
+            <exclude>**/com/cisco/surf/jenkins/plugins/jenkow/WaitsForever/ActualTest.java</exclude>
+            <exclude>**/com/cisco/surf/jenkins/plugins/jenkow/JobResultConsumption/ActualTest.java</exclude>
 -->
           </excludes>
         </configuration>

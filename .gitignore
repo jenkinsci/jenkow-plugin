@@ -4,6 +4,7 @@
 .ws/
 target/
 mvn.out*
+.bpmn/
 .settings/
 .repository/
 .settings.xml

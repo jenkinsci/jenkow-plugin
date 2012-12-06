@@ -24,7 +24,7 @@
 export PRJ="$(cd `dirname $0`; pwd)"
 
 mvn hpi:run \
-    -Djava.util.logging.config.file=$PRJ/src/main/resources/logging.properties \
+    -Djava.util.logging.config.file=$PRJ/debug-logging.properties \
     -Djava.awt.headless=true \
     -Djetty.port=8090 \
     $@

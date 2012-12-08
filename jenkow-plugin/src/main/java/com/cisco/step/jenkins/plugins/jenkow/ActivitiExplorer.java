@@ -134,11 +134,11 @@ public class ActivitiExplorer implements UnprotectedRootAction {
         ds.addAttribute("class", ServletContextDataSource.class.getName());
 
         // patch login handler
-        Element lh = (Element)dom.selectSingleNode("/*/*[@id='activitiLoginHandler']");
-        if (lh==null)
-            throw new IllegalStateException("Can't find the login handler bean in "+xml);
-        lh.elements().clear();
-        lh.addAttribute("class", "org.jenkinsci.plugins.jenkow.activiti.override.JenkinsLoginHandler");
+//        Element lh = (Element)dom.selectSingleNode("/*/*[@id='activitiLoginHandler']");
+//        if (lh==null)
+//            throw new IllegalStateException("Can't find the login handler bean in "+xml);
+//        lh.elements().clear();
+//        lh.addAttribute("class", "org.jenkinsci.plugins.jenkow.activiti.override.JenkinsLoginHandler");
 
         FileOutputStream out = new FileOutputStream(xml);
         try {

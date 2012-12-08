@@ -60,6 +60,9 @@ class JenkowEngine {
 			
 			if (ec instanceof H2DemoDatabase) {
 				cfg = ProcessEngineConfiguration.createStandaloneInMemProcessEngineConfiguration();
+                // we will be sharing this database with Activiti Explorer, so don't force re-creation of the whole DB
+                // and honor what's already there
+                cfg.setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE);
 			} else {
 				
 				cfg = ProcessEngineConfiguration.createStandaloneProcessEngineConfiguration();

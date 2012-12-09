@@ -38,7 +38,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -55,6 +57,9 @@ import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.jgit.lib.Repository;
+import org.jenkinsci.plugins.database.Database;
+import org.jenkinsci.plugins.database.DatabaseDescriptor;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -139,11 +144,19 @@ public class JenkowBuilder extends Builder{
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
-        private JenkowEngineConfig engineConfig;
-        
+        private Database database;
+        // TODO 8: make workflowRepoRoot optional in config UI, similar to "External Database"
+//        private String workflowRepoRoot;
+        @Deprecated
+        private transient JenkowEngineConfig engineConfig;
+
         public DescriptorImpl(){
             super(JenkowBuilder.class);
             load();
+            if (engineConfig!=null) {
+                database = engineConfig.toDatabase();
+                engineConfig = null;
+            }
         }
 
         public FormValidation doCheckWorkflowName(@QueryParameter String value) throws IOException, ServletException {
@@ -164,53 +177,21 @@ public class JenkowBuilder extends Builder{
         
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
-//            System.out.println("formData="+formData);
-        	
-        	JenkowEngineConfig oldEngineConfig = engineConfig;
-            if (!formData.containsKey("useExternalDB")){
-            	engineConfig = null;
-            }else{
-            	// TODO 9: add online help to global.jelly after attributes have been settled
-            	JSONObject extDB = formData.getJSONObject("useExternalDB");
-            	engineConfig = new JenkowEngineConfig();
-            	engineConfig.setDsUrl(extDB.getString("jdbcUrl"));
-            	engineConfig.setDsUsername(extDB.getString("jdbcUsername"));
-            	// TODO 7: need to find a way to store DB password encrypted
-            	engineConfig.setDsPassword(extDB.getString("jdbcPassword"));
-            	// TODO 7: should be a drop-down of available drivers
-            	engineConfig.setDsDriverClass(extDB.getString("jdbcDriver"));
-            	// TODO 6: can we have a validate DB function here?
-            }
+            req.bindJSON(this,formData);
             save();
-            
-            // TODO 8: close engine also if there's a change in engineConfig
-            if (engineConfig != oldEngineConfig) JenkowEngine.closeEngine();
-            
-            return super.configure(req,formData);
+            return true;
         }
 
-        public boolean getUseExternalDB() {
-        	return (engineConfig != null);
-        }
-        
-        public String getJdbcUrl(){
-        	return (engineConfig == null)? null : engineConfig.getDsUrl();
-        }
-
-        public String getJdbcUsername(){
-        	return (engineConfig == null)? null : engineConfig.getDsUsername();
-        }
-
-        public String getJdbcPassword(){
-        	return (engineConfig == null)? null : engineConfig.getDsPassword();
-        }
-
-        public String getJdbcDriver(){
-        	return (engineConfig == null)? null : engineConfig.getDsDriverClass();
-        }
-
-		public JenkowEngineConfig getEngineConfig(){
-			return engineConfig;
+		public Database getDatabase() {
+            if (database==null) return new H2DemoDatabase();
+			return database;
 		}
+
+        public List<DatabaseDescriptor> getDatabaseDescriptors() {
+            List<DatabaseDescriptor> r = new ArrayList<DatabaseDescriptor>();
+            r.add(H2DemoDatabase.DESCRIPTOR);
+            r.addAll(DatabaseDescriptor.all());
+            return r;
+        }
     }
 }

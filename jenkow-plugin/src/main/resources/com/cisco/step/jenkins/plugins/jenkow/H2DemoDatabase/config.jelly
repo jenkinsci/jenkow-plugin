@@ -1,7 +1,7 @@
 <!--
 The MIT License
 
-Copyright (c) 2012, Cisco Systems, Inc., Max Spring
+Copyright (c) 2012, CloudBees, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-  <f:section title="${%BPMN Workflow}">
-
-<!-- TODO 6: for some reason the "convention over configuration" online help approach does not work. I have to give explicit help references instead. -->
-
-<!--
-    <f:entry field="workflowRepoRoot" title="${%Workflow Project Directory}" help="${rootURL}/plugin/jenkow-plugin/help-workflowRepoRoot.html">
-      <f:textbox name="workflowRepoRoot" value="${it.getWorkflowRepoRoot()}" />
-    </f:entry>
--->
-
-<!-- help: http://activiti.org/userguide/index.html#databaseConfiguration -->
-<!-- ?????? onchange="Form.findMatchingInput(this,'m2release.nexusPassword').onchange()" --> 
-
-    <f:dropdownDescriptorSelector title="${%Database}" field="database" descriptors="${instance.databaseDescriptors}"/>
-  </f:section>
+  <f:description>
+    ${%blurb}
+  </f:description>
 </j:jelly>

@@ -308,6 +308,7 @@ THE SOFTWARE.
             <exclude>**/com/cisco/surf/jenkins/plugins/jenkow/WaitsForever/ActualTest.java</exclude>
             <exclude>**/com/cisco/surf/jenkins/plugins/jenkow/JobResultConsumption/ActualTest.java</exclude>
 -->
+            <exclude>**/com/cisco/surf/jenkins/plugins/jenkow/SimpleUserTask/ActualTest.java</exclude>
           </excludes>
         </configuration>
       </plugin>

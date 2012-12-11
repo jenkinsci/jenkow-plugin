@@ -84,8 +84,8 @@ public class JenkowEngine {
                 // set other engine config
 				cfg.setDatabaseSchemaUpdate("true");
 				cfg.setHistory("full");
-				cfg.setJobExecutorActivate(true);
 			}
+			cfg.setJobExecutorActivate(true);
 			
 			ClassLoader peCL = JenkowEngine.class.getClassLoader();
 			Thread.currentThread().setContextClassLoader(peCL);

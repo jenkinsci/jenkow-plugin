@@ -35,6 +35,7 @@ THE SOFTWARE.
     <module>scriptscript</module>
     <module>wfsleep</module>
     <module>gendiag2</module>
+    <module>sleepWithConsole</module>
   </modules>
   
   <properties>

@@ -1,5 +1,6 @@
 package com.cisco.step.jenkins.plugins.jenkow.identity;
 
+import jenkins.model.Jenkins;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.identity.Group;
 import org.activiti.engine.identity.GroupQuery;
@@ -20,6 +21,8 @@ import java.util.Map;
  * @author Kohsuke Kawaguchi
  */
 public class IdentityServiceImpl implements IdentityService {
+    private final Jenkins jenkins = Jenkins.getInstance();
+
     @Override
     public User newUser(String userId) {
         throw new UnsupportedOperationException();
@@ -32,7 +35,10 @@ public class IdentityServiceImpl implements IdentityService {
 
     @Override
     public UserQuery createUserQuery() {
-        return new JenkowUserQueryImpl();
+        if (jenkins.isUseSecurity())
+            return new JenkowUserQueryImpl(jenkins.getSecurityRealm());
+        else
+            return new AnonymousUserQueryImpl();
     }
 
     @Override

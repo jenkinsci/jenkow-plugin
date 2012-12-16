@@ -9,6 +9,13 @@ import org.activiti.engine.identity.User;
 class ImmutableUser implements User {
     private final String id,firstName,lastName,email;
 
+    ImmutableUser(String id, String firstName, String lastName, String email) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+
     public ImmutableUser(hudson.model.User u) {
         this.id = u.getId();
         String f = u.getFullName();

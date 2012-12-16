@@ -1,5 +1,6 @@
 package com.cisco.step.jenkins.plugins.jenkow.identity;
 
+import hudson.Util;
 import hudson.tasks.Mailer.UserProperty;
 import org.activiti.engine.identity.User;
 
@@ -46,7 +47,7 @@ class ImmutableUser implements User {
     }
 
     public String getFirstName() {
-        return firstName;
+        return Util.fixNull(firstName);
     }
 
     public void setFirstName(String firstName) {
@@ -58,7 +59,7 @@ class ImmutableUser implements User {
     }
 
     public String getLastName() {
-        return lastName;
+        return Util.fixNull(lastName);
     }
 
     public void setEmail(String email) {
@@ -66,7 +67,7 @@ class ImmutableUser implements User {
     }
 
     public String getEmail() {
-        return email;
+        return Util.fixNull(email);
     }
 
     public String getPassword() {

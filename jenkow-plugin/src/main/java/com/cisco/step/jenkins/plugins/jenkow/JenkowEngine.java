@@ -23,7 +23,13 @@
  */
 package com.cisco.step.jenkins.plugins.jenkow;
 
+import com.cisco.step.jenkins.plugins.jenkow.identity.IdentityServiceImpl;
 import hudson.tasks.Mailer;
+import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.ProcessEngineConfiguration;
+import org.activiti.engine.impl.bpmn.parser.BpmnParseListener;
+import org.activiti.engine.impl.cfg.ProcessEngineConfigurationImpl;
+import org.jenkinsci.plugins.database.Database;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -31,18 +37,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.ProcessEngineConfiguration;
-import org.activiti.engine.impl.bpmn.parser.BpmnParseListener;
-import org.activiti.engine.impl.cfg.ProcessEngineConfigurationImpl;
-import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
-import org.activiti.engine.impl.pvm.process.ActivityImpl;
-import org.activiti.engine.impl.pvm.process.ScopeImpl;
-import org.activiti.engine.impl.pvm.process.TransitionImpl;
-import org.activiti.engine.impl.util.xml.Element;
-import org.activiti.engine.impl.variable.VariableDeclaration;
-import org.jenkinsci.plugins.database.Database;
 
 public class JenkowEngine {
     private static final Logger LOG = Logger.getLogger(JenkowEngine.class.getName());
@@ -91,6 +85,7 @@ public class JenkowEngine {
 			Thread.currentThread().setContextClassLoader(peCL);
 			// set common cfg here.
 			ProcessEngineConfigurationImpl peCfg = (ProcessEngineConfigurationImpl)cfg;
+            peCfg.setIdentityService(new IdentityServiceImpl());
 			peCfg.setBeans(ctxBeans);
 			List<BpmnParseListener> preParseListeners = peCfg.getPreParseListeners();
 			if (preParseListeners == null){

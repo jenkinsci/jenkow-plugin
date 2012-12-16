@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import hudson.security.SecurityRealm;
+import jenkins.model.Jenkins;
 import org.activiti.engine.identity.User;
 import org.activiti.engine.identity.UserQuery;
 import org.activiti.engine.impl.Page;
@@ -20,7 +21,10 @@ import java.util.regex.Pattern;
  * @author Kohsuke Kawaguchi
  */
 class AnonymousUserQueryImpl extends UserQueryImpl {
+    private final User ANONYMOUS;
+
     AnonymousUserQueryImpl() {
+        ANONYMOUS = new ImmutableUser(Jenkins.ANONYMOUS.getName(),Jenkins.ANONYMOUS.getName(),"","");
     }
 
     @Override
@@ -33,8 +37,6 @@ class AnonymousUserQueryImpl extends UserQueryImpl {
         return executeList(_,null).size();
     }
     
-    User ANONYMOUS = new ImmutableUser("anonymous","Anonymous","","");
-
     public List<User> query() {
         return query(Predicates.and(
                 checker(new Function<User, String>() {

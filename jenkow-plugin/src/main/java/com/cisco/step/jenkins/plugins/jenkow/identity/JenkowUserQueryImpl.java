@@ -111,7 +111,7 @@ class JenkowUserQueryImpl extends UserQueryImpl {
         };
     }
 
-    private List<User> query(Predicate<hudson.model.User> pred) {
+    private List<User> query(Predicate<? super hudson.model.User> pred) {
         List<User> r = new ArrayList<User>();
         for (hudson.model.User u : hudson.model.User.getAll())
             if (pred.apply(u))

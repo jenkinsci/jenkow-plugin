@@ -84,7 +84,7 @@ class AnonymousUserQueryImpl extends UserQueryImpl {
         };
     }
 
-    private List<User> query(Predicate<User> pred) {
+    private List<User> query(Predicate<? super User> pred) {
         if (pred.apply(ANONYMOUS))
             return Collections.singletonList(ANONYMOUS);
         else

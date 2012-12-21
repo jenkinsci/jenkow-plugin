@@ -25,6 +25,7 @@ package com.cisco.step.jenkins.plugins.jenkow;
 
 import hudson.Extension;
 import hudson.Launcher;
+import hudson.model.Action;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
@@ -131,7 +132,12 @@ public class JenkowBuilder extends Builder{
         }
         return true;
     }
-    
+
+    @Override
+    public Action getProjectAction(AbstractProject<?, ?> project) {
+        return new JenkowWorkflowPicture(this);
+    }
+
     @Override
     public DescriptorImpl getDescriptor() {
         return (DescriptorImpl)super.getDescriptor();

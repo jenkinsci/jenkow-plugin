@@ -68,11 +68,13 @@ THE SOFTWARE.
   </properties>
 
   <dependencies>
+<!--
     <dependency>
       <groupId>com.cisco.step.jenkins.plugins</groupId>
       <artifactId>jenkow-designer-extension</artifactId>
       <version>${project.version}</version>
     </dependency>
+-->
     <dependency>
       <groupId>com.cisco.step.jenkins.plugins</groupId>
       <artifactId>jenkow-repository-seed</artifactId>
@@ -130,11 +132,13 @@ THE SOFTWARE.
       <artifactId>git-server</artifactId>
       <version>1.1</version>
     </dependency>
+<!--
     <dependency>
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>eclipse-update-site</artifactId>
       <version>1.2</version>
     </dependency>
+-->
     <dependency>
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>async-job</artifactId>
@@ -196,6 +200,7 @@ THE SOFTWARE.
             </goals>
             <configuration>
               <artifactItems>
+<!--
                 <artifactItem>
                   <groupId>com.cisco.step.jenkins.plugins</groupId>
                   <artifactId>jenkow-designer-extension</artifactId>
@@ -204,6 +209,7 @@ THE SOFTWARE.
                   <overWrite>true</overWrite>
                   <outputDirectory>${project.build.directory}/classes/activiti-designer-extensions</outputDirectory>
                 </artifactItem>
+-->
                 <artifactItem>
                   <groupId>com.cisco.step.jenkins.plugins</groupId>
                   <artifactId>jenkow-repository-seed</artifactId>
@@ -235,6 +241,7 @@ THE SOFTWARE.
               </artifactItems>
             </configuration>
           </execution>
+<!--
           <execution>
             <id>unpack</id>
             <phase>generate-resources</phase>
@@ -249,14 +256,17 @@ THE SOFTWARE.
                   <version>${project.version}</version>
                   <type>zip</type>
                   <overWrite>true</overWrite>
+-->
 <!--
                   <outputDirectory>${project.build.directory}/generated-resources/eclipse.site</outputDirectory>
 -->
+<!--
                   <outputDirectory>${basedir}/src/main/webapp/eclipse.site</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
           </execution>
+-->
         </executions>
       </plugin>
 <!-- This is needed, because the generated-resources approach doesn't work. -->

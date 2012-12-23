@@ -95,7 +95,8 @@ public class JenkowEngine {
 			preParseListeners.add(new JenkowBpmnParseListener());
 			cfg.setClassLoader(peCL);
 			// build engine
-			engine = cfg.buildProcessEngine();			
+			engine = cfg.buildProcessEngine();
+			LOG.info("created Activiti workflow engine v"+engine.VERSION);
 		}
 		
 		return engine;

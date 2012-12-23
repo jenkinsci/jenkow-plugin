@@ -58,7 +58,6 @@ public class JenkowEngine {
                 // and honor what's already there
                 cfg.setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE);
 			} else {
-				
 				cfg = ProcessEngineConfiguration.createStandaloneProcessEngineConfiguration();
 				
 				Mailer.DescriptorImpl md = Mailer.descriptor();
@@ -95,7 +94,8 @@ public class JenkowEngine {
 			preParseListeners.add(new JenkowBpmnParseListener());
 			cfg.setClassLoader(peCL);
 			// build engine
-			engine = cfg.buildProcessEngine();			
+			engine = cfg.buildProcessEngine();
+			JenkowPlugin.getInstance().repo.deployAllToEngine();
 		}
 		
 		return engine;

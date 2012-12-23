@@ -308,6 +308,7 @@ THE SOFTWARE.
             <exclude>**/WaitsForever/ActualTest.java</exclude>
             <exclude>**/JobResultConsumption/ActualTest.java</exclude>
             <exclude>**/ScriptSleepScript/ActualTest.java</exclude>
+            <exclude>**/DeploymentTest.java</exclude>
 -->
             <exclude>**/SimpleUserTask/ActualTest.java</exclude>
           </excludes>

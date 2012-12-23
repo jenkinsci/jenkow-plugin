@@ -67,6 +67,8 @@ import org.kohsuke.stapler.StaplerRequest;
 
 public class JenkowBuilder extends Builder{
     private String workflowName;
+    
+    // TODO 8: make this a singleton which can be persisted
     private Map<String,JenkowAction> deferredActions;
     
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
@@ -169,7 +171,7 @@ public class JenkowBuilder extends Builder{
             return WfUtil.checkWorkflowName(value);
         }
         
-        public void doCreateWorkflow(@QueryParameter String wfn){
+        public void doCreateWorkflow(@QueryParameter String wfn) throws Exception{
             JenkowPlugin.getInstance().repo.ensureWorkflowDefinition(wfn);
         }
 

@@ -24,6 +24,7 @@
 package com.cisco.step.jenkins.plugins.jenkow;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 
@@ -57,15 +58,17 @@ public abstract class JenkowTestCase extends HudsonTestCase{
 		}
 	}
 	
-	protected String getWfName(String shortName){
-	    String suffix = "/"+shortName+Consts.WORKFLOW_EXT;
+	protected String getWfName(String shortName) throws FileNotFoundException{
+	    String suffix = "/"+shortName+Consts.WORKFLOW_DOT_EXT;
 	    String cn = getClass().getName();
 	    int p = cn.lastIndexOf('.');
 	    if (p > -1) cn = cn.substring(0,p);
 	    URL rsc = getClass().getResource("/"+cn.replace('.','/')+suffix);
 	    // TODO 2: fallback: old location for .bpmn files, should remove once all tests are in their own directory
 	    if (rsc == null) rsc = getClass().getResource("/diagrams"+suffix);
-        return rsc.getFile();
+        String fn = rsc.getFile();
+        JenkowPlugin.getInstance().repo.deployToEngine(new File(fn));
+        return fn;
 	}
 	
 	protected void setNumExecutors(int n) throws IOException{

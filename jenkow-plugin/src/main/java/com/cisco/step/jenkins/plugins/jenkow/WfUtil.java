@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 
@@ -51,6 +52,7 @@ import org.activiti.engine.runtime.ProcessInstanceQuery;
 import org.apache.commons.lang.StringUtils;
 
 class WfUtil {
+    private static final Logger LOGGER = Logger.getLogger(WfUtil.class.getName());
     
     static FormValidation checkWorkflowName(String value) throws IOException, ServletException {
         return checkFile(value,JenkowPlugin.getInstance().repo.getWorkflowFile(value));
@@ -85,27 +87,23 @@ class WfUtil {
         return FormValidation.ok();
     }
     
-    static String launchWf(PrintStream log, String workflowName, String parentName, Integer buildNo) throws FileNotFoundException, InterruptedException{
-        System.out.println("WfUtil.launchWf: workflowName="+workflowName);
+    static String launchWf(PrintStream log, String wfName, String parentName, Integer buildNo){
+        // test wfNames are full paths, doesn't work as workflow name
+        int p = wfName.lastIndexOf('/');
+        if (p > -1){
+            wfName = wfName.substring(p+1);
+            p = wfName.lastIndexOf('.');
+            if (p > -1) wfName = wfName.substring(0,p);
+        }
+        
+        LOGGER.finer("WfUtil.launchWf: workflowName="+wfName);
         
         ClassLoader previous = Thread.currentThread().getContextClassLoader();
-        
-        ProcessEngine eng = JenkowEngine.getEngine();
-        RuntimeService rtSvc = eng.getRuntimeService();
-        RepositoryService repoSvc = eng.getRepositoryService();
+        RuntimeService rtSvc = JenkowEngine.getEngine().getRuntimeService();
         
         try {
-            File wff = JenkowPlugin.getInstance().repo.getWorkflowFile(workflowName);
-            if (!wff.exists()){
-                log.println("error: "+wff+" does not exist");
-                return null;
-            }
-            String wfn = wff+"20.xml"; // TODO 9: workaround for http://forums.activiti.org/en/viewtopic.php?f=8&t=3745&start=10
-            DeploymentBuilder db = repoSvc.createDeployment().addInputStream(wfn,new FileInputStream(wff));
-
-            // TODO 7: We should avoid redeploying here, if workflow is already deployed?
-            Deployment d = db.deploy();
-            ProcessDefinition pDef = repoSvc.createProcessDefinitionQuery().deploymentId(d.getId()).singleResult();
+            ProcessDefinition pDef = JenkowPlugin.getInstance().repo.getDeployedWf(wfName);
+            if (pDef == null) throw new RuntimeException("no deployed process definition for "+wfName);
 
             Map<String,Object> varMap = new HashMap<String,Object>();
             // TODO 9: move jenkow variables into JenkowProcessData
@@ -114,7 +112,7 @@ class WfUtil {
             varMap.put("console",new ConsoleLogger(parentName,buildNo));
             JobMD.setJobs(varMap,JobMD.newJobs());
             
-            log.println(Consts.UI_PREFIX+": \""+workflowName+"\" started");
+            log.println(Consts.UI_PREFIX+": \""+wfName+"\" started");
 long t = System.currentTimeMillis();            
 System.out.println("starting process "+pDef.getId());
 // TODO 9: why is this blocking????

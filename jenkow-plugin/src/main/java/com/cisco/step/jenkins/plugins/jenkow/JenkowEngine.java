@@ -95,6 +95,7 @@ public class JenkowEngine {
 			cfg.setClassLoader(peCL);
 			// build engine
 			engine = cfg.buildProcessEngine();
+			LOG.info("created Activiti workflow engine v"+engine.VERSION);
 			JenkowPlugin.getInstance().repo.deployAllToEngine();
 		}
 		

@@ -307,8 +307,8 @@ THE SOFTWARE.
             </property>
           </systemProperties>
           <excludes>
-<!--
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/test/eclipse/UpdateSiteTest.java</exclude>
+<!--
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/git/GitTest.java</exclude>
             <exclude>**/SimpleWfRun/ActualTest.java</exclude>
             <exclude>**/SimpleWfCallsJob/ActualTest.java</exclude>

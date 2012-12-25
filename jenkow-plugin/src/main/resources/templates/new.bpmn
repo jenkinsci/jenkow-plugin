@@ -5,31 +5,42 @@
     <endEvent id="endevent1" name="End"></endEvent>
     <scriptTask id="scripttask1" name="Script Task" scriptFormat="groovy">
       <script><![CDATA[console.println("Script Task says 'hello world'");
-Thread.sleep(10000);
-console.println("Script Task finished work");
 ]]></script>
     </scriptTask>
-    <sequenceFlow id="flow1" name="" sourceRef="startevent1" targetRef="scripttask1"></sequenceFlow>
+    <sequenceFlow id="flow1" name="" sourceRef="startevent1" targetRef="timerintermediatecatchevent1"></sequenceFlow>
     <sequenceFlow id="flow2" name="" sourceRef="scripttask1" targetRef="endevent1"></sequenceFlow>
+    <intermediateCatchEvent id="timerintermediatecatchevent1" name="TimerCatchEvent">
+      <timerEventDefinition>
+        <timeDuration>PT5S</timeDuration>
+      </timerEventDefinition>
+    </intermediateCatchEvent>
+    <sequenceFlow id="flow3" name="" sourceRef="timerintermediatecatchevent1" targetRef="scripttask1"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_${WORKFLOW_ID}">
     <bpmndi:BPMNPlane bpmnElement="${WORKFLOW_ID}" id="BPMNPlane_${WORKFLOW_ID}">
       <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
-        <omgdc:Bounds height="35" width="35" x="410" y="60"></omgdc:Bounds>
+        <omgdc:Bounds height="35" width="35" x="30" y="40"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
-        <omgdc:Bounds height="35" width="35" x="410" y="240"></omgdc:Bounds>
+        <omgdc:Bounds height="35" width="35" x="320" y="40"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scripttask1" id="BPMNShape_scripttask1">
-        <omgdc:Bounds height="55" width="105" x="375" y="140"></omgdc:Bounds>
+        <omgdc:Bounds height="55" width="105" x="180" y="30"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="timerintermediatecatchevent1" id="BPMNShape_timerintermediatecatchevent1">
+        <omgdc:Bounds height="35" width="35" x="100" y="40"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
-        <omgdi:waypoint x="427" y="95"></omgdi:waypoint>
-        <omgdi:waypoint x="427" y="140"></omgdi:waypoint>
+        <omgdi:waypoint x="65" y="57"></omgdi:waypoint>
+        <omgdi:waypoint x="100" y="57"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
-        <omgdi:waypoint x="427" y="195"></omgdi:waypoint>
-        <omgdi:waypoint x="427" y="240"></omgdi:waypoint>
+        <omgdi:waypoint x="285" y="57"></omgdi:waypoint>
+        <omgdi:waypoint x="320" y="57"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="135" y="57"></omgdi:waypoint>
+        <omgdi:waypoint x="180" y="57"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

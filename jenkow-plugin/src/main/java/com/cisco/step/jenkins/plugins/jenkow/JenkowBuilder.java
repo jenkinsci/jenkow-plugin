@@ -95,15 +95,6 @@ public class JenkowBuilder extends Builder{
         PrintStream log = listener.getLogger();
         BuildLoggerMap.put(build,log);
         
-        // TODO 5: remove later
-        try {
-            // just so we have a chance to click the progress bar
-            log.println("sleep 5");
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
         ProcessEngine eng = JenkowEngine.getEngine();
         RuntimeService rtSvc = eng.getRuntimeService();
         String procId = null;

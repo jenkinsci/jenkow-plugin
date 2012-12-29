@@ -67,7 +67,7 @@ public abstract class JenkowTestCase extends HudsonTestCase{
 	    // TODO 2: fallback: old location for .bpmn files, should remove once all tests are in their own directory
 	    if (rsc == null) rsc = getClass().getResource("/diagrams"+suffix);
         String fn = rsc.getFile();
-        JenkowPlugin.getInstance().repo.deployToEngine(new File(fn));
+        WfUtil.deployToEngine(new File(fn));
         return fn;
 	}
 	

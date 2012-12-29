@@ -96,7 +96,7 @@ public class JenkowEngine {
 			// build engine
 			engine = cfg.buildProcessEngine();
 			LOG.info("created Activiti workflow engine v"+engine.VERSION);
-			JenkowPlugin.getInstance().repo.deployAllToEngine();
+			WfUtil.deployAllToEngine();
 		}
 		
 		return engine;

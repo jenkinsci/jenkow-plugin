@@ -23,19 +23,21 @@
  */
 package com.cisco.step.jenkins.plugins.jenkow;
 
-import hudson.model.Result;
+import hudson.Util;
 import hudson.util.FormValidation;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -43,12 +45,11 @@ import javax.servlet.ServletException;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
-import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.runtime.ProcessInstanceQuery;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
 class WfUtil {
@@ -102,7 +103,7 @@ class WfUtil {
         RuntimeService rtSvc = JenkowEngine.getEngine().getRuntimeService();
         
         try {
-            ProcessDefinition pDef = JenkowPlugin.getInstance().repo.getDeployedWf(wfName);
+            ProcessDefinition pDef = getDeployedWf(wfName);
             if (pDef == null) throw new RuntimeException("no deployed process definition for "+wfName);
 
             Map<String,Object> varMap = new HashMap<String,Object>();
@@ -124,6 +125,85 @@ System.out.println("process started procId="+procId+" ("+(System.currentTimeMill
         } finally {
             Thread.currentThread().setContextClassLoader(previous);
         }
+    }
+    
+    static void deployAllToEngine(){
+        File repoDir = JenkowWorkflowRepository.getRepositoryDir();
+        if (!repoDir.exists()){
+            LOGGER.info("no workflow source repository");
+            return;
+        }
+        
+        LOGGER.info("deploying all workflow engine");
+        
+        RepositoryService repoSvc = JenkowEngine.getEngine().getRepositoryService();
+        Map<String,Date> deplTimes = new HashMap<String,Date>();
+        for (Deployment depl : repoSvc.createDeploymentQuery().list()){
+            //System.out.println("  depl: id="+depl.getId()+" name="+depl.getName()+" time="+depl.getDeploymentTime());
+            deplTimes.put(depl.getId(),depl.getDeploymentTime());
+        }
+        Map<String,Date> pDefTimes = new HashMap<String,Date>();
+        for (ProcessDefinition pDef : repoSvc.createProcessDefinitionQuery().latestVersion().list()){
+            //System.out.println(" pDef:"+pDef+" deplId="+pDef.getDeploymentId()+" key="+pDef.getKey());
+            Date t = deplTimes.get(pDef.getDeploymentId());
+            if (t != null) pDefTimes.put(pDef.getKey(),t);
+        }
+        
+        for (Iterator it=FileUtils.iterateFiles(repoDir,new String[]{Consts.WORKFLOW_EXT},/*recursive=*/true); it.hasNext(); ){
+            File wff = (File)it.next();
+            String wfn = wff.getName();
+            int p = wfn.lastIndexOf('.');
+            if (p > -1) wfn = wfn.substring(0,p);
+            Date prevDeplTime = pDefTimes.get(wfn);
+            //System.out.println("  f="+wff+" wfn="+wfn+" deplTime="+prevDeplTime+" wff.lastModified="+new Date(wff.lastModified()));
+            if (prevDeplTime == null || prevDeplTime.before(new Date(wff.lastModified()))){
+                try {
+                    WfUtil.deployToEngine(wff);
+                } catch (FileNotFoundException e) {
+                    LOGGER.log(Level.SEVERE,"file not found "+wff,e);
+                }
+            }
+        }
+    }
+    
+    static void deployToEngine(File wff) throws FileNotFoundException{
+        LOGGER.info("deploying "+wff+" to workflow engine");
+        
+        ProcessEngine eng = JenkowEngine.getEngine();
+        RuntimeService rtSvc = eng.getRuntimeService();
+        RepositoryService repoSvc = eng.getRepositoryService();
+
+        String wfn = wff+"20.xml"; // TODO 9: workaround for http://forums.activiti.org/en/viewtopic.php?f=8&t=3745&start=10
+        DeploymentBuilder db = repoSvc.createDeployment().addInputStream(wfn,new FileInputStream(wff));
+
+        // TODO 4: We should avoid redeploying here, if workflow file of a given version(?) is already deployed?
+        Deployment d = db.deploy();
+        ProcessDefinition pDef = repoSvc.createProcessDefinitionQuery().deploymentId(d.getId()).singleResult();
+        LOGGER.fine("deployedToEngine("+wff+") --> "+pDef);
+    }
+    
+    static ProcessDefinition getDeployedWf(String wfName){
+        RepositoryService repoSvc = JenkowEngine.getEngine().getRepositoryService();
+        if (LOGGER.isLoggable(Level.FINE)){
+            LOGGER.fine("deployed process definitions:");
+            for (ProcessDefinition pDef : repoSvc.createProcessDefinitionQuery().latestVersion().list()){
+                LOGGER.fine("  pDef:"+pDef+" id="+pDef.getId()+" key="+pDef.getKey()+" name="+pDef.getName()+" resourceName="+pDef.getResourceName()+" version="+pDef.getVersion());
+            }
+        }
+        ProcessDefinition pDef = repoSvc
+                                 .createProcessDefinitionQuery()
+                                 .processDefinitionKey(wfName)
+                                 .latestVersion()
+                                 .singleResult();
+        LOGGER.fine("getDeployedWf("+quoted(wfName)+") --> "+pDef);
+        return pDef;
+    }
+    
+    static void generateWfDiagramTo(String wfName, OutputStream out) throws IOException{
+        ProcessDefinition pDef = getDeployedWf(wfName);
+        InputStream in = JenkowEngine.getEngine().getRepositoryService().getResourceAsStream(pDef.getDeploymentId(),pDef.getDiagramResourceName());
+        // TODO kk? should use copyStreamAndClose here?
+        Util.copyStream(in,out);
     }
 
     // experimental
@@ -191,4 +271,8 @@ System.out.println("process started procId="+procId+" ("+(System.currentTimeMill
 				
 		return sb.toString();
 	}
+
+    static String quoted(String s){
+        return (s == null)? null : "\""+s+"\"";
+    }
 }

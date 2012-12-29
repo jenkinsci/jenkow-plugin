@@ -319,6 +319,7 @@ THE SOFTWARE.
             <exclude>**/JobResultConsumption/ActualTest.java</exclude>
             <exclude>**/ScriptSleepScript/ActualTest.java</exclude>
             <exclude>**/DeploymentTest.java</exclude>
+            <exclude>**/DiagramTest.java</exclude>
 -->
             <exclude>**/SimpleUserTask/ActualTest.java</exclude>
           </excludes>

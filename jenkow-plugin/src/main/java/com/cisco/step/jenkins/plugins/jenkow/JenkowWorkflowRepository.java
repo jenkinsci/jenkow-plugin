@@ -30,14 +30,8 @@ import hudson.model.RootAction;
 import hudson.util.IOUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,14 +42,7 @@ import javax.servlet.http.HttpServletRequest;
 import jenkins.model.Jenkins;
 
 import org.acegisecurity.Authentication;
-import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.repository.Deployment;
-import org.activiti.engine.repository.DeploymentBuilder;
-import org.activiti.engine.repository.ProcessDefinition;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
@@ -118,77 +105,7 @@ public class JenkowWorkflowRepository extends HttpGitRepository implements RootA
 		    addAndCommit(r,relName,"added generated workflow definition "+wfName);
 		    r.close();
 		}
-		deployToEngine(wff);
-    }
-    
-    void deployAllToEngine(){
-        File repoDir = getRepositoryDir();
-        if (!repoDir.exists()){
-            LOGGER.info("no workflow source repository");
-            return;
-        }
-        
-        LOGGER.info("deploying all workflow engine");
-        
-        RepositoryService repoSvc = JenkowEngine.getEngine().getRepositoryService();
-        Map<String,Date> deplTimes = new HashMap<String,Date>();
-        for (Deployment depl : repoSvc.createDeploymentQuery().list()){
-            //System.out.println("  depl: id="+depl.getId()+" name="+depl.getName()+" time="+depl.getDeploymentTime());
-            deplTimes.put(depl.getId(),depl.getDeploymentTime());
-        }
-        Map<String,Date> pDefTimes = new HashMap<String,Date>();
-        for (ProcessDefinition pDef : repoSvc.createProcessDefinitionQuery().latestVersion().list()){
-            //System.out.println(" pDef:"+pDef+" deplId="+pDef.getDeploymentId()+" key="+pDef.getKey());
-            Date t = deplTimes.get(pDef.getDeploymentId());
-            if (t != null) pDefTimes.put(pDef.getKey(),t);
-        }
-        
-        for (Iterator it=FileUtils.iterateFiles(repoDir,new String[]{Consts.WORKFLOW_EXT},/*recursive=*/true); it.hasNext(); ){
-            File wff = (File)it.next();
-            String wfn = wff.getName();
-            int p = wfn.lastIndexOf('.');
-            if (p > -1) wfn = wfn.substring(0,p);
-            Date prevDeplTime = pDefTimes.get(wfn);
-            //System.out.println("  f="+wff+" wfn="+wfn+" deplTime="+prevDeplTime+" wff.lastModified="+new Date(wff.lastModified()));
-            if (prevDeplTime == null || prevDeplTime.before(new Date(wff.lastModified()))){
-                try {
-                    deployToEngine(wff);
-                } catch (FileNotFoundException e) {
-                    LOGGER.log(Level.SEVERE,"file not found "+wff,e);
-                }
-            }
-        }
-    }
-    
-    void deployToEngine(File wff) throws FileNotFoundException{
-        LOGGER.info("deploying "+wff+" to workflow engine");
-        
-        ProcessEngine eng = JenkowEngine.getEngine();
-        RuntimeService rtSvc = eng.getRuntimeService();
-        RepositoryService repoSvc = eng.getRepositoryService();
-
-        String wfn = wff+"20.xml"; // TODO 9: workaround for http://forums.activiti.org/en/viewtopic.php?f=8&t=3745&start=10
-        DeploymentBuilder db = repoSvc.createDeployment().addInputStream(wfn,new FileInputStream(wff));
-
-        // TODO 4: We should avoid redeploying here, if workflow file of a given version(?) is already deployed?
-        Deployment d = db.deploy();
-        ProcessDefinition pDef = repoSvc.createProcessDefinitionQuery().deploymentId(d.getId()).singleResult();
-        LOGGER.fine("deployedToEngine("+wff+") --> "+pDef);
-    }
-    
-    ProcessDefinition getDeployedWf(String wfName){
-        RepositoryService repoSvc = JenkowEngine.getEngine().getRepositoryService();
-        LOGGER.fine("deployed process definitions:");
-        for (ProcessDefinition pDef : repoSvc.createProcessDefinitionQuery().latestVersion().list()){
-            LOGGER.fine("  pDef:"+pDef+" id="+pDef.getId()+" key="+pDef.getKey()+" name="+pDef.getName()+" resourceName="+pDef.getResourceName()+" version="+pDef.getVersion());
-        }
-        ProcessDefinition pDef = repoSvc
-                                 .createProcessDefinitionQuery()
-                                 .processDefinitionKey(wfName)
-                                 .latestVersion()
-                                 .singleResult();
-        LOGGER.fine("getDeployedWf("+quoted(wfName)+") --> "+pDef);
-        return pDef;
+		WfUtil.deployToEngine(wff);
     }
     
     public static File getRepositoryDir(){
@@ -271,9 +188,5 @@ public class JenkowWorkflowRepository extends HttpGitRepository implements RootA
 
     public String getUrlName() {
         return Consts.REPO_NAME+".git";
-    }
-    
-    public static String quoted(String s){
-        return (s == null)? null : "\""+s+"\"";
     }
 }

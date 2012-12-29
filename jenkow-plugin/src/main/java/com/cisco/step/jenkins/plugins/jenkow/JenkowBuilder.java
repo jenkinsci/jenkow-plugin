@@ -34,12 +34,13 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.FormValidation;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,14 +52,8 @@ import net.sf.json.JSONObject;
 
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.repository.Deployment;
-import org.activiti.engine.repository.DeploymentBuilder;
-import org.activiti.engine.repository.ProcessDefinition;
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.jgit.lib.Repository;
 import org.jenkinsci.plugins.database.Database;
 import org.jenkinsci.plugins.database.DatabaseDescriptor;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -127,10 +122,14 @@ public class JenkowBuilder extends Builder{
     }
 
     @Override
-    public Action getProjectAction(AbstractProject<?, ?> project) {
-        return new JenkowWorkflowPicture(this);
+    public Collection<? extends Action> getProjectActions(AbstractProject<?,?> project) {
+        return Collections.singletonList(new JenkowWorkflowPicture(this));
     }
-
+    
+    void generateWfDiagramTo(OutputStream os) throws IOException{
+        WfUtil.generateWfDiagramTo(workflowName,os);
+    }
+    
     @Override
     public DescriptorImpl getDescriptor() {
         return (DescriptorImpl)super.getDescriptor();

@@ -24,15 +24,11 @@
 package com.cisco.step.jenkins.plugins.jenkow;
 
 import hudson.model.Action;
-import org.kohsuke.stapler.HttpResponse;
+
+import java.util.List;
+
 import org.kohsuke.stapler.HttpResponses;
 import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
-
-import javax.servlet.ServletException;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.List;
 
 /**
  * Exposes workflow images at the project level.
@@ -46,24 +42,24 @@ public class JenkowWorkflowPicture implements Action {
         this.builders = builders;
     }
 
-    // invoked with /job/${jobname}/`getUrlName`/graph
+    // three ways to invoke this
+    //   /job/${jobname}/`getUrlName`/graph
+    //   /job/${jobname}/`getUrlName`/graph/${builderNumber}
+    //   /job/${jobname}/`getUrlName`/graph/${workflowName}
     public WorkflowDiagram doGraph(StaplerRequest req) {
         String rest = req.getRestOfPath();
-        if (rest.length()==0)
-            return builders.get(0).getWorkflowDiagram();
+        if (rest.length() == 0) return builders.get(0).getWorkflowDiagram();
 
         String id = rest.substring(1).split("/")[0];  // rest is something like "/FOO"
 
         try {
             // is this a number?
             int i = Integer.parseInt(id);
-            if (0<=i && i<builders.size())
-                return builders.get(i).getWorkflowDiagram();
+            if (0 <= i && i < builders.size()) return builders.get(i).getWorkflowDiagram();
         } catch (NumberFormatException e) {
             // if not is this a workflow name?
             for (JenkowBuilder b : builders) {
-                if (b.getWorkflowName().equals(id))
-                    return b.getWorkflowDiagram();
+                if (id.equals(b.getWorkflowName())) return b.getWorkflowDiagram();
             }
         }
 

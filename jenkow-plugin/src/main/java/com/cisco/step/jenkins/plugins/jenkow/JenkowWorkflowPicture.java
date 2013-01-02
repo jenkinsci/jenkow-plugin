@@ -51,6 +51,7 @@ public class JenkowWorkflowPicture implements Action, HttpResponse {
     @Override
     public void generateResponse(StaplerRequest req, StaplerResponse rsp, Object node) throws IOException, ServletException {
         rsp.setContentType("image/png");
+        // TODO: send out proper HTTP cache
         generateTo(rsp.getOutputStream());
     }
 

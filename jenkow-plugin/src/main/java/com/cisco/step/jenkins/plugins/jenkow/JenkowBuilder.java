@@ -121,13 +121,8 @@ public class JenkowBuilder extends Builder{
         return true;
     }
 
-    @Override
-    public Collection<? extends Action> getProjectActions(AbstractProject<?,?> project) {
-        return Collections.singletonList(new JenkowWorkflowPicture(this));
-    }
-    
-    void generateWfDiagramTo(OutputStream os) throws IOException{
-        WfUtil.generateWfDiagramTo(workflowName,os);
+    public WorkflowDiagram getWorkflowDiagram() {
+        return new WorkflowDiagram(workflowName);
     }
     
     @Override

@@ -56,7 +56,7 @@ class WfUtil {
     private static final Logger LOGGER = Logger.getLogger(WfUtil.class.getName());
     
     static FormValidation checkWorkflowName(String value) throws IOException, ServletException {
-        return checkFile(value,JenkowPlugin.getInstance().repo.getWorkflowFile(value));
+        return checkFile(value,JenkowPlugin.getInstance().getRepo().getWorkflowFile(value));
     }
     
     private static FormValidation checkFile(String value, File f){

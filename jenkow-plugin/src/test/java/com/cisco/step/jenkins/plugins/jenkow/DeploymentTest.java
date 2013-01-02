@@ -5,7 +5,7 @@ import org.activiti.engine.repository.ProcessDefinition;
 public class DeploymentTest extends JenkowTestCase {
     
     public void testDeployment() throws Exception{
-        JenkowWorkflowRepository repo = JenkowPlugin.getInstance().repo;
+        JenkowWorkflowRepository repo = JenkowPlugin.getInstance().getRepo();
         repo.ensureWorkflowDefinition("wf1");
         repo.ensureWorkflowDefinition("wf1");
         repo.ensureWorkflowDefinition("wf2");

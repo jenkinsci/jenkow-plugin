@@ -37,9 +37,17 @@ import hudson.Plugin;
 public class JenkowPlugin extends Plugin{
     private static final Logger LOG = Logger.getLogger(JenkowPlugin.class.getName());
     
-    JenkowWorkflowRepository repo;
+    private JenkowWorkflowRepository repo;
     
-	@Override
+    public void setRepo(JenkowWorkflowRepository repo) {
+        this.repo = repo;
+    }
+
+    public JenkowWorkflowRepository getRepo() {
+        return repo;
+    }
+
+    @Override
     public void start() throws Exception {
 		instance = this;
 	    LOG.info("JenkowPlugin.start()");
@@ -55,7 +63,7 @@ public class JenkowPlugin extends Plugin{
 	// TODO 6: is there a better way to wire up things?
 	private static JenkowPlugin instance;
 	
-	static JenkowPlugin getInstance(){
+	public static JenkowPlugin getInstance(){
 	    return instance;
 	}
 }

@@ -73,7 +73,7 @@ public class JenkowWorkflowRepository extends HttpGitRepository implements RootA
 	JenkowPlugin plugin;
 	
     public JenkowWorkflowRepository() {
-    	JenkowPlugin.getInstance().repo = this;
+    	JenkowPlugin.getInstance().setRepo(this);
 	}
     
 	File getWorkflowFile(String wfName){
@@ -85,7 +85,7 @@ public class JenkowWorkflowRepository extends HttpGitRepository implements RootA
 		return f;
     }
 	
-    void ensureWorkflowDefinition(String wfName) throws Exception{
+    public void ensureWorkflowDefinition(String wfName) throws Exception{
         // due to lazy loading of engine:
         // the engine startup would try to deploy the file we're about to create, leading to a double deploy
         JenkowEngine.getEngine();

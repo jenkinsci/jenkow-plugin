@@ -71,8 +71,24 @@ public abstract class JenkowTestCase extends HudsonTestCase{
         return fn;
 	}
 	
+    protected String getResource(String shortName) throws FileNotFoundException {
+        String cn = getClass().getName();
+        int p = cn.lastIndexOf('.');
+        if (p > -1) cn = cn.substring(0,p);
+        String name = "/"+cn.replace('.','/')+"/"+shortName;
+        URL rsc = getClass().getResource(name);
+        if (rsc == null) throw new FileNotFoundException("resource="+name);
+        return rsc.getFile();
+    }
+    
 	protected void setNumExecutors(int n) throws IOException{
         jenkins.setNumExecutors(n);
         jenkins.setNodes(jenkins.getNodes());
+	}
+	
+	protected String getTestName(){
+	    String s = getClass().getName();
+	    int p = s.lastIndexOf('.');
+	    return (p < 0)? s : s.substring(p+1);
 	}
 }

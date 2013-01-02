@@ -162,7 +162,7 @@ public class JenkowBuilder extends Builder{
         }
         
         public void doCreateWorkflow(@QueryParameter String wfn) throws Exception{
-            JenkowPlugin.getInstance().repo.ensureWorkflowDefinition(wfn);
+            JenkowPlugin.getInstance().getRepo().ensureWorkflowDefinition(wfn);
         }
 
         public boolean isApplicable(Class<? extends AbstractProject> aClass) {

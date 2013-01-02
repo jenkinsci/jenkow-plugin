@@ -122,6 +122,12 @@ THE SOFTWARE.
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>junit-addons</groupId>
+      <artifactId>junit-addons</artifactId>
+      <version>1.4</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.jenkins-ci.modules</groupId>
       <artifactId>sshd</artifactId>
       <version>1.1</version>
@@ -183,6 +189,7 @@ THE SOFTWARE.
         <directory>${basedir}/src/test/java</directory>
         <includes>
           <include>**/*.bpmn</include>
+          <include>**/*.png</include>
         </includes>
       </testResource>
     </testResources>

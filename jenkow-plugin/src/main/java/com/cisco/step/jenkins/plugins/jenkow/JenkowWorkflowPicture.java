@@ -25,33 +25,49 @@ package com.cisco.step.jenkins.plugins.jenkow;
 
 import hudson.model.Action;
 import org.kohsuke.stapler.HttpResponse;
+import org.kohsuke.stapler.HttpResponses;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
-public class JenkowWorkflowPicture implements Action, HttpResponse {
-    JenkowBuilder builder;
+/**
+ * Exposes workflow images at the project level.
+ *
+ * @see TransientProjectActionFactoryImpl
+ */
+public class JenkowWorkflowPicture implements Action {
+    private final List<JenkowBuilder> builders;
 
-    public JenkowWorkflowPicture(JenkowBuilder builder) {
-        this.builder = builder;
+    public JenkowWorkflowPicture(List<JenkowBuilder> builders) {
+        this.builders = builders;
     }
 
     // invoked with /job/${jobname}/`getUrlName`/graph
-    public JenkowWorkflowPicture doGraph(StaplerResponse rsp) {
-        return this;
-    }
+    public WorkflowDiagram doGraph(StaplerRequest req) {
+        String rest = req.getRestOfPath();
+        if (rest.length()==0)
+            return builders.get(0).getWorkflowDiagram();
 
-    private void generateTo(OutputStream os) throws IOException {
-        builder.generateWfDiagramTo(os);
-    }
+        String id = rest.substring(1).split("/")[0];  // rest is something like "/FOO"
 
-    @Override
-    public void generateResponse(StaplerRequest req, StaplerResponse rsp, Object node) throws IOException, ServletException {
-        rsp.setContentType("image/png");
-        generateTo(rsp.getOutputStream());
+        try {
+            // is this a number?
+            int i = Integer.parseInt(id);
+            if (0<=i && i<builders.size())
+                return builders.get(i).getWorkflowDiagram();
+        } catch (NumberFormatException e) {
+            // if not is this a workflow name?
+            for (JenkowBuilder b : builders) {
+                if (b.getWorkflowName().equals(id))
+                    return b.getWorkflowDiagram();
+            }
+        }
+
+        throw HttpResponses.error(404,"No such workflow: "+id);
     }
 
     @Override
@@ -66,9 +82,6 @@ public class JenkowWorkflowPicture implements Action, HttpResponse {
 
     @Override
     public String getUrlName() {
-        // TODO kk?: how to deal with multiple JenkowBuilders in one job here?
-        // have one generic "jenkow" action which returns always the first wf
-        // and have "jenkow/${wfName}" to get the builder with a given wfName?
         return "jenkow";
     }
 }

@@ -61,12 +61,6 @@ THE SOFTWARE.
     <url>https://github.com/jenkinsci/jenkow-plugin</url>
   </scm>
 
-  <properties>
-    <build_id>${buildId}</build_id>
-    <mdep.stripVersion>true</mdep.stripVersion>
-    <jenkow.test.git>git</jenkow.test.git>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>com.cisco.step.jenkins.plugins</groupId>
@@ -142,29 +136,6 @@ THE SOFTWARE.
       <version>1.1</version>
     </dependency>
   </dependencies>
-
-  <profiles>
-    <profile>
-      <id>no-build-number-given</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <properties>
-        <buildId>${maven.build.timestamp}-unknown</buildId>
-      </properties>
-    </profile>
-    <profile>
-      <id>build-number-given</id>
-      <activation>
-        <property>
-          <name>env.BUILD_NUMBER</name>
-        </property>
-      </activation>
-      <properties>
-        <buildId>${maven.build.timestamp}-${env.BUILD_NUMBER}</buildId>
-      </properties>
-    </profile>
-  </profiles>
 
   <build>
     <testResources>

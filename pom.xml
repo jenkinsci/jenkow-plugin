@@ -80,8 +80,11 @@ THE SOFTWARE.
     <groovy.version>1.8.6</groovy.version>
     <spring.framework.version>3.1.2.RELEASE</spring.framework.version>
     <org.ops4j.pax.logging.DefaultServiceLog.level>INFO</org.ops4j.pax.logging.DefaultServiceLog.level>
+    <build_id>${buildId}</build_id>
+    <mdep.stripVersion>true</mdep.stripVersion>
+    <jenkow.test.git>git</jenkow.test.git>
   </properties>
-  
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -281,5 +284,28 @@ THE SOFTWARE.
       <url>http://repo.jenkins-ci.org/public/</url>
     </pluginRepository>
   </pluginRepositories>
+
+  <profiles>
+    <profile>
+      <id>no-build-number-given</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <buildId>${maven.build.timestamp}-unknown</buildId>
+      </properties>
+    </profile>
+    <profile>
+      <id>build-number-given</id>
+      <activation>
+        <property>
+          <name>env.BUILD_NUMBER</name>
+        </property>
+      </activation>
+      <properties>
+        <buildId>${maven.build.timestamp}-${env.BUILD_NUMBER}</buildId>
+      </properties>
+    </profile>
+  </profiles>
 
 </project>

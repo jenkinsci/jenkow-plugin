@@ -81,6 +81,7 @@ public class JenkowEngine {
 			cfg.setJobExecutorActivate(true);
 			
 			ClassLoader peCL = JenkowEngine.class.getClassLoader();
+			ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
 			Thread.currentThread().setContextClassLoader(peCL);
 			// set common cfg here.
 			ProcessEngineConfigurationImpl peCfg = (ProcessEngineConfigurationImpl)cfg;
@@ -95,6 +96,7 @@ public class JenkowEngine {
 			cfg.setClassLoader(peCL);
 			// build engine
 			engine = cfg.buildProcessEngine();
+			Thread.currentThread().setContextClassLoader(oldCL);
 			LOG.info("created Activiti workflow engine v"+engine.VERSION);
 			WfUtil.deployAllToEngine();
 		}

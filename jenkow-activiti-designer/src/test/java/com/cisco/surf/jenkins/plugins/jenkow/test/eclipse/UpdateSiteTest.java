@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.cisco.step.jenkins.plugins.jenkow.test.eclipse;
+package com.cisco.surf.jenkins.plugins.jenkow.test.eclipse;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,17 +34,16 @@ import java.util.zip.ZipEntry;
 import org.apache.commons.io.IOUtils;
 import org.jvnet.hudson.test.HudsonTestCase;
 
-import com.cisco.step.jenkins.plugins.jenkow.Consts;
-
 public class UpdateSiteTest extends HudsonTestCase{
+    private final static String PLUGIN_NAME = "jenkow-activiti-designer";
     
     public void testCompositeSite() throws Exception{
         String s = readUrl("eclipse.site/compositeContent.xml");
-        assertTrue(s.contains("<child location=\"../plugin/jenkow-plugin/eclipse.site/\"/>"));
+        assertTrue(s.contains("<child location=\"../plugin/"+PLUGIN_NAME+"/eclipse.site/\"/>"));
     }
     
     public void testUpdateSite() throws Exception{
-        URL u = new URL(getURL(),"plugin/"+Consts.PLUGIN_NAME+"/eclipse.site/content.jar");
+        URL u = new URL(getURL(),"plugin/"+PLUGIN_NAME+"/eclipse.site/content.jar");
         Set<String> names = new HashSet<String>();
         JarInputStream jis = new JarInputStream(u.openStream());
         try {

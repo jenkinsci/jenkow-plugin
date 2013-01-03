@@ -33,11 +33,11 @@ THE SOFTWARE.
   </parent>
 
   <groupId>com.cisco.step.jenkins.plugins</groupId>
-  <artifactId>jenkow-plugin</artifactId>
+  <artifactId>jenkow-activiti-designer</artifactId>
   <packaging>hpi</packaging>
-  <name>Jenkow Plugin</name>
-  <description>Integrates with the Activiti BPMN Workflow</description>
-  <url>https://wiki.jenkins-ci.org/display/JENKINS/Jenkow+Plugin</url>
+  <name>Jenkow Activiti Designer</name>
+  <description>Provides the Activiti Designer (BPMN workflow editor)</description>
+  <url>https://wiki.jenkins-ci.org/display/JENKINS/Jenkow+Activiti+Designer</url>
 
   <developers>
     <developer>
@@ -70,76 +70,24 @@ THE SOFTWARE.
   <dependencies>
     <dependency>
       <groupId>com.cisco.step.jenkins.plugins</groupId>
-      <artifactId>jenkow-repository-seed</artifactId>
+      <artifactId>jenkow-plugin</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.activiti</groupId>
-      <artifactId>activiti-engine</artifactId>
+      <groupId>com.cisco.step.jenkins.plugins</groupId>
+      <artifactId>jenkow-designer-extension</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.activiti</groupId>
-      <artifactId>activiti-spring</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.groovy</groupId>
-      <artifactId>groovy</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-beans</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>xalan</groupId>
-      <artifactId>xalan</artifactId>
-      <version>2.7.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.ant</groupId>
-      <artifactId>ant-launcher</artifactId>
-      <version>1.8.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-exec</artifactId>
-      <version>1.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit-addons</groupId>
-      <artifactId>junit-addons</artifactId>
-      <version>1.4</version>
-      <scope>test</scope>
+      <groupId>org.jenkins-ci.plugins</groupId>
+      <artifactId>eclipse-update-site</artifactId>
+      <version>1.2</version>
     </dependency>
     <dependency>
       <groupId>org.jenkins-ci.modules</groupId>
       <artifactId>sshd</artifactId>
       <version>1.1</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins</groupId>
-      <artifactId>git-server</artifactId>
-      <version>1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins</groupId>
-      <artifactId>async-job</artifactId>
-      <version>1.3</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins</groupId>
-      <artifactId>database</artifactId>
-      <version>1.1</version>
     </dependency>
   </dependencies>
 
@@ -167,18 +115,6 @@ THE SOFTWARE.
   </profiles>
 
   <build>
-    <testResources>
-      <testResource>
-        <directory>${basedir}/src/test/resources</directory>
-      </testResource>
-      <testResource>
-        <directory>${basedir}/src/test/java</directory>
-        <includes>
-          <include>**/*.bpmn</include>
-          <include>**/*.png</include>
-        </includes>
-      </testResource>
-    </testResources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -195,19 +131,65 @@ THE SOFTWARE.
               <artifactItems>
                 <artifactItem>
                   <groupId>com.cisco.step.jenkins.plugins</groupId>
-                  <artifactId>jenkow-repository-seed</artifactId>
+                  <artifactId>jenkow-designer-extension</artifactId>
                   <version>${project.version}</version>
-                  <classifier>seed</classifier>
-                  <type>tar</type>
+                  <type>jar</type>
                   <overWrite>true</overWrite>
-                  <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                  <destFileName>jenkow-repository-seed.tar</destFileName>
+                  <outputDirectory>${project.build.directory}/classes/activiti-designer-extensions</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+          <execution>
+            <id>unpack</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.cisco.step.jenkins.plugins</groupId>
+                  <artifactId>com.cisco.surf.jenkow.site</artifactId>
+                  <version>${project.version}</version>
+                  <type>zip</type>
+                  <overWrite>true</overWrite>
+<!--
+                  <outputDirectory>${project.build.directory}/generated-resources/eclipse.site</outputDirectory>
+-->
+                  <outputDirectory>${basedir}/src/main/webapp/eclipse.site</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
           </execution>
         </executions>
       </plugin>
+<!-- This is needed, because the generated-resources approach doesn't work. -->
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.5</version>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>${basedir}/src/main/webapp/eclipse.site</directory>
+              <followSymlinks>false</followSymlinks>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+<!-- TODO: this makes the generated-resources show up in the .hpi, but Jenkins doesn't serve it out.  Why?  File a Jira.
+      <plugin>
+        <groupId>org.jenkins-ci.tools</groupId>
+        <artifactId>maven-hpi-plugin</artifactId>
+        <configuration>
+          <webResources>
+            <resource>
+              <directory>${project.build.directory}/generated-resources</directory>
+            </resource>
+          </webResources>
+        </configuration>
+      </plugin>
+-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -221,45 +203,10 @@ THE SOFTWARE.
           </systemProperties>
           <excludes>
 <!--
-            <exclude>**/com/cisco/step/jenkins/plugins/jenkow/git/GitTest.java</exclude>
-            <exclude>**/SimpleWfRun/ActualTest.java</exclude>
-            <exclude>**/SimpleWfCallsJob/ActualTest.java</exclude>
-            <exclude>**/ManualTrigger/ActualTest.java</exclude>
-            <exclude>**/ParallelJobs/ActualTest.java</exclude>
-            <exclude>**/ExecLogger/ActualTest.java</exclude>
-            <exclude>**/WaitsForever/ActualTest.java</exclude>
-            <exclude>**/JobResultConsumption/ActualTest.java</exclude>
-            <exclude>**/ScriptSleepScript/ActualTest.java</exclude>
-            <exclude>**/DeploymentTest.java</exclude>
-            <exclude>**/DiagramTest.java</exclude>
+            <exclude>**/com/cisco/step/jenkins/plugins/jenkow/test/eclipse/UpdateSiteTest.java</exclude>
 -->
-            <exclude>**/SimpleUserTask/ActualTest.java</exclude>
           </excludes>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>

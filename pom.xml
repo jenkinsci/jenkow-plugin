@@ -40,12 +40,11 @@ THE SOFTWARE.
   <url>https://wiki.jenkins-ci.org/display/JENKINS/Jenkow+Plugin</url>
 
   <modules>
-<!--
     <module>eclipse</module>
--->
     <module>jenkow-designer-extension</module>
     <module>jenkow-repository-seed</module>
     <module>jenkow-plugin</module>
+    <module>jenkow-activiti-designer</module>
   </modules>
   
   <developers>

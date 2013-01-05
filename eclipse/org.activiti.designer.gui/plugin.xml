@@ -84,6 +84,13 @@
                id="org.activiti.designer.signalTab"
                label="Signals">
          </propertyTab>
+         <propertyTab
+               afterTab="org.activiti.designer.signalTab"
+               category="Activiti"
+               id="org.activiti.designer.messageTab" 
+               label="Messages">
+         </propertyTab>
+         
       </propertyTabs>
    </extension>
    <extension
@@ -144,6 +151,13 @@
                tab="org.activiti.designer.generalTab">
          </propertySection>
          <propertySection
+               afterSection="org.activiti.designer.generalTab.flowelement"
+               class="org.activiti.designer.property.PropertyDefaultFlowSection"
+               filter="org.activiti.designer.property.PropertyDefaultFlowFilter"
+               id="org.activiti.designer.generalTab.defaultflow"
+               tab="org.activiti.designer.generalTab">
+         </propertySection>
+         <propertySection
                class="org.activiti.designer.property.PropertyExecutionListenerSection"
                filter="org.activiti.designer.property.PropertyExecutionListenerFilter"
                id="org.activiti.designer.listenerTab.ExecutionTab"
@@ -168,6 +182,12 @@
                tab="org.activiti.designer.mainConfigTab">
          </propertySection>
          <propertySection
+               class="org.activiti.designer.property.PropertyMessageStartEventSection"
+               filter="org.activiti.designer.property.PropertyMessageStartEventFilter"
+               id="org.activiti.designer.mainConfigTab.messagestartevent"
+               tab="org.activiti.designer.mainConfigTab">
+         </propertySection>
+         <propertySection
                class="org.activiti.designer.property.PropertyBoundaryTimerSection"
                filter="org.activiti.designer.property.PropertyBoundaryTimerFilter"
                id="org.activiti.designer.mainConfigTab.timerboundaryevent"
@@ -177,6 +197,12 @@
                class="org.activiti.designer.property.PropertyBoundaryErrorSection"
                filter="org.activiti.designer.property.PropertyBoundaryErrorFilter"
                id="org.activiti.designer.mainConfigTab.errorboundaryevent"
+               tab="org.activiti.designer.mainConfigTab">
+         </propertySection>
+         <propertySection
+               class="org.activiti.designer.property.PropertyBoundaryMessageSection"
+               filter="org.activiti.designer.property.PropertyBoundaryMessageFilter"
+               id="org.activiti.designer.mainConfigTab.messageboundaryevent"
                tab="org.activiti.designer.mainConfigTab">
          </propertySection>
          <propertySection
@@ -229,6 +255,12 @@
                tab="org.activiti.designer.mainConfigTab">
          </propertySection>
          <propertySection
+               class="org.activiti.designer.property.PropertyIntermediateCatchMessageSection"
+               filter="org.activiti.designer.property.PropertyIntermediateCatchMessageFilter"
+               id="org.activiti.designer.mainConfigTab.messageintermediatecatchevent"
+               tab="org.activiti.designer.mainConfigTab">
+         </propertySection>
+         <propertySection
                class="org.activiti.designer.property.PropertyIntermediateThrowSignalSection"
                filter="org.activiti.designer.property.PropertyIntermediateThrowSignalFilter"
                id="org.activiti.designer.mainConfigTab.timerintermediatethrowevent"
@@ -276,6 +308,20 @@
                id="org.activiti.designer.signalTab.signals"
                tab="org.activiti.designer.signalTab">
          </propertySection>
+         <propertySection
+               class="org.activiti.designer.property.PropertyMessageSection"
+               filter="org.activiti.designer.property.PropertyDiagramFilter"
+               id="org.activiti.designer.messageTab.messages"
+               tab="org.activiti.designer.messageTab">
+         </propertySection>
+         <propertySection
+               afterSection="org.activiti.designer.generalTab.defaultflow"
+               class="org.activiti.designer.property.PropertyAsyncSection"
+               filter="org.activiti.designer.property.PropertyAsyncFilter"
+               id="org.activiti.designer.generalTab.async"
+               tab="org.activiti.designer.generalTab">
+         </propertySection>
+         
       </propertySections>
    </extension>
    <extension

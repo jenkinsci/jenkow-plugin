@@ -1,12 +1,13 @@
 package org.activiti.designer.features;
 
+import org.activiti.bpmn.model.EndEvent;
+import org.activiti.bpmn.model.Event;
+import org.activiti.bpmn.model.Lane;
+import org.activiti.bpmn.model.MessageEventDefinition;
+import org.activiti.bpmn.model.StartEvent;
+import org.activiti.bpmn.model.SubProcess;
+import org.activiti.bpmn.model.TimerEventDefinition;
 import org.activiti.designer.PluginImage;
-import org.activiti.designer.bpmn2.model.EndEvent;
-import org.activiti.designer.bpmn2.model.Event;
-import org.activiti.designer.bpmn2.model.Lane;
-import org.activiti.designer.bpmn2.model.StartEvent;
-import org.activiti.designer.bpmn2.model.SubProcess;
-import org.activiti.designer.bpmn2.model.TimerEventDefinition;
 import org.activiti.designer.util.eclipse.ActivitiUiUtil;
 import org.activiti.designer.util.style.StyleUtil;
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -87,9 +88,11 @@ public class AddEventFeature extends AbstractAddShapeFeature {
       Image image = null;
       if (startEvent.getEventDefinitions().get(0) instanceof TimerEventDefinition) {
         image = gaService.createImage(shape, PluginImage.IMG_BOUNDARY_TIMER.getImageKey());
-      } else {
+      } else if (startEvent.getEventDefinitions().get(0) instanceof MessageEventDefinition){
+        image = gaService.createImage(shape, PluginImage.IMG_STARTEVENT_MESSAGE.getImageKey());
+      } else
         image = gaService.createImage(shape, PluginImage.IMG_BOUNDARY_ERROR.getImageKey());
-      }
+      
       image.setWidth(IMAGE_SIZE);
       image.setHeight(IMAGE_SIZE);
 

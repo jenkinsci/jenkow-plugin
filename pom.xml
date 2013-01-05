@@ -73,9 +73,9 @@ THE SOFTWARE.
     <jenkow.base.version>0.2.0</jenkow.base.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <tycho.groupid>org.eclipse.tycho</tycho.groupid>
-    <tycho.version>0.15.0</tycho.version>
+    <tycho.version>0.16.0</tycho.version>
     <activiti.version>5.11</activiti.version>
-    <activiti.designer.version>5.9.1</activiti.designer.version>
+    <activiti.designer.version>5.11.1</activiti.designer.version>
     <h2.version>1.3.168</h2.version>
     <groovy.version>1.8.6</groovy.version>
     <spring.framework.version>3.1.2.RELEASE</spring.framework.version>

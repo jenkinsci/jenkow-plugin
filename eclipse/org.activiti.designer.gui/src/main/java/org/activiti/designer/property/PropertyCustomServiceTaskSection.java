@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.activiti.designer.bpmn2.model.ComplexDataType;
-import org.activiti.designer.bpmn2.model.CustomProperty;
-import org.activiti.designer.bpmn2.model.ServiceTask;
+import org.activiti.bpmn.model.ComplexDataType;
+import org.activiti.bpmn.model.CustomProperty;
+import org.activiti.bpmn.model.ServiceTask;
 import org.activiti.designer.integration.servicetask.CustomServiceTask;
 import org.activiti.designer.integration.servicetask.annotation.Help;
 import org.activiti.designer.integration.servicetask.annotation.Property;
@@ -112,7 +112,7 @@ public class PropertyCustomServiceTaskSection extends ActivitiPropertySection im
       CustomServiceTask targetTask = null;
 
       for (final CustomServiceTask customServiceTask : customServiceTasks) {
-        if (customServiceTask.getId().equals(ExtensionUtil.getCustomServiceTaskId(serviceTask))) {
+        if (customServiceTask.getId().equals(serviceTask.getExtensionId())) {
           targetTask = customServiceTask;
           break;
         }
@@ -316,9 +316,20 @@ public class PropertyCustomServiceTaskSection extends ActivitiPropertySection im
             });
           }
         }
+
+        // ensure the model is populated with custom properties if this is the
+        // first time the section is shown for this serviceTask.
+        if (customPropertiesMustBeInitialized(serviceTask)) {
+          storeFieldsToModel();
+        }
+
       }
     }
     this.workParent.getParent().getParent().layout(true, true);
+  }
+
+  private boolean customPropertiesMustBeInitialized(final ServiceTask serviceTask) {
+    return customPropertyFields.size() > 0 && serviceTask.getCustomProperties().size() <= 1;
   }
 
   @Override

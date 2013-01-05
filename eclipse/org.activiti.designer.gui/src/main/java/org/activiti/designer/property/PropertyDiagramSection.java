@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.activiti.designer.property;
 
-import org.activiti.designer.bpmn2.model.Pool;
-import org.activiti.designer.bpmn2.model.Process;
+import org.activiti.bpmn.model.Pool;
+import org.activiti.bpmn.model.Process;
 import org.activiti.designer.util.eclipse.ActivitiUiUtil;
 import org.activiti.designer.util.editor.Bpmn2MemoryModel;
 import org.activiti.designer.util.editor.ModelHandler;
@@ -45,6 +45,9 @@ public class PropertyDiagramSection extends ActivitiPropertySection implements I
 	private Text nameText;
 	private Text namespaceText;
 	private Text documentationText;
+	private Text candidateStarterUsersText;
+	private Text candidateStarterGroupsText;
+	
 
 	@Override
 	public void createControls(Composite parent, TabbedPropertySheetPage tabbedPropertySheetPage) {
@@ -63,15 +66,22 @@ public class PropertyDiagramSection extends ActivitiPropertySection implements I
 		namespaceText = createText(composite, factory, nameText);
 		createLabel(composite, "Namespace:", namespaceText, factory); //$NON-NLS-1$
 		
+    candidateStarterUsersText = createText(composite, factory, namespaceText);
+    createLabel(composite, "Candidate start users (comma separated):",  candidateStarterUsersText, factory);
+    
+    candidateStarterGroupsText = createText(composite, factory, candidateStarterUsersText);
+    createLabel(composite, "Candidate start groups (comma separated):",  candidateStarterGroupsText, factory);
+    
 		documentationText = factory.createText(composite, "", SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL); //$NON-NLS-1$
 		data = new FormData(SWT.DEFAULT, 100);
-		data.left = new FormAttachment(0, 160);
+		data.left = new FormAttachment(0, 250);
 		data.right = new FormAttachment(100, 0);
-		data.top = new FormAttachment(namespaceText, VSPACE);
+		data.top = new FormAttachment(candidateStarterGroupsText, VSPACE);
 		documentationText.setLayoutData(data);
 		documentationText.addFocusListener(listener);
 
 		createLabel(composite, "Documentation:", documentationText, factory); //$NON-NLS-1$
+		
 	}
 
 	@Override
@@ -80,38 +90,85 @@ public class PropertyDiagramSection extends ActivitiPropertySection implements I
 		nameText.removeFocusListener(listener);
 		namespaceText.removeFocusListener(listener);
 		documentationText.removeFocusListener(listener);
+		candidateStarterUsersText.removeFocusListener(listener);
+		candidateStarterGroupsText.removeFocusListener(listener);
 		
 		Bpmn2MemoryModel model = ModelHandler.getModel(EcoreUtil.getURI(getDiagram()));
 		Process process = null;
 		if(getSelectedPictogramElement() instanceof Diagram) {
-		  process = model.getMainProcess();
+		  if (model.getBpmnModel().getPools().size() > 0) {
+		    process = model.getBpmnModel().getProcess(model.getBpmnModel().getPools().get(0).getId());
+		    setEnabled(false);
+		  } else {
+		    process = model.getBpmnModel().getMainProcess();
+		    setEnabled(true);
+		  }
 		
 		} else {
 		  Pool pool = ((Pool) getBusinessObject(getSelectedPictogramElement()));
-		  process = model.getProcess(pool.getId());
+		  process = model.getBpmnModel().getProcess(pool.getId());
+		  setEnabled(true);
 		}
 		
-		idText.setText(process.getId());
-		if(StringUtils.isNotEmpty(process.getName())) {
-		  nameText.setText(process.getName());
-		} else {
-		  nameText.setText("");
-		}
-		if(StringUtils.isNotEmpty(model.getTargetNamespace())) {
-			namespaceText.setText(model.getTargetNamespace());
-		} else {
-			namespaceText.setText("http://www.activiti.org/test");
-		}
-		if(StringUtils.isNotEmpty(process.getDocumentation())) {
-			documentationText.setText(process.getDocumentation());
-		} else {
-			documentationText.setText("");
+		if(StringUtils.isNotEmpty(model.getBpmnModel().getTargetNamespace())) {
+      namespaceText.setText(model.getBpmnModel().getTargetNamespace());
+    } else {
+      namespaceText.setText("http://www.activiti.org/test");
+    }
+		
+		if (process != null) {
+  		idText.setText(process.getId());
+  		if(StringUtils.isNotEmpty(process.getName())) {
+  		  nameText.setText(process.getName());
+  		} else {
+  		  nameText.setText("");
+  		}
+  		if(StringUtils.isNotEmpty(process.getDocumentation())) {
+  			documentationText.setText(process.getDocumentation());
+  		} else {
+  			documentationText.setText("");
+  		}
+  		
+  		candidateStarterUsersText.setText("");
+      if (process.getCandidateStarterUsers().size() > 0) {
+        StringBuffer expressionBuffer = new StringBuffer();
+        for (String user : process.getCandidateStarterUsers()) {
+          if (expressionBuffer.length() > 0) {
+            expressionBuffer.append(",");
+          }
+          expressionBuffer.append(user.trim());
+        }
+        candidateStarterUsersText.setText(expressionBuffer.toString());
+      } 
+  		
+  		candidateStarterGroupsText.setText("");
+  		if (process.getCandidateStarterGroups().size() > 0) {
+  			StringBuffer expressionBuffer = new StringBuffer();
+  			for (String group : process.getCandidateStarterGroups()) {
+  				if (expressionBuffer.length() > 0) {
+  					expressionBuffer.append(",");
+  				}
+  				expressionBuffer.append(group.trim());
+  			}
+  			candidateStarterGroupsText.setText(expressionBuffer.toString());
+  		}
 		}
 		
 		idText.addFocusListener(listener);
 		nameText.addFocusListener(listener);
 		namespaceText.addFocusListener(listener);
 		documentationText.addFocusListener(listener);
+		candidateStarterUsersText.addFocusListener(listener);
+		candidateStarterGroupsText.addFocusListener(listener);
+	}
+	
+	private void setEnabled(boolean enabled) {
+	  idText.setEnabled(enabled);
+    nameText.setEnabled(enabled);
+    namespaceText.setEnabled(enabled);
+    documentationText.setEnabled(enabled);
+    candidateStarterUsersText.setEnabled(enabled);
+    candidateStarterGroupsText.setEnabled(enabled);
 	}
 
 	private FocusListener listener = new FocusListener() {
@@ -131,18 +188,23 @@ public class PropertyDiagramSection extends ActivitiPropertySection implements I
 					
 			    Process process = null;
 			    if(getSelectedPictogramElement() instanceof Diagram) {
-			      process = model.getMainProcess();
+			      process = model.getBpmnModel().getMainProcess();
 			    
 			    } else {
 			      Pool pool = ((Pool) getBusinessObject(getSelectedPictogramElement()));
-			      process = model.getProcess(pool.getId());
+			      process = model.getBpmnModel().getProcess(pool.getId());
 			    }
 					
 					String id = idText.getText();
 					if (id != null) {
-					  process.setId(id);
-					} else {
-					  process.setId("");
+            process.setId(id);
+          } else {
+            process.setId("");
+          }
+					
+					if(getSelectedPictogramElement() instanceof Diagram == false) {
+					  Pool pool = ((Pool) getBusinessObject(getSelectedPictogramElement()));
+					  pool.setProcessRef(process.getId());
 					}
 					
 					String name = nameText.getText();
@@ -154,9 +216,9 @@ public class PropertyDiagramSection extends ActivitiPropertySection implements I
 					
 					String namespace = namespaceText.getText();
 					if (namespace != null) {
-						model.setTargetNamespace(namespace);
+						model.getBpmnModel().setTargetNamespace(namespace);
 					} else {
-					  model.setTargetNamespace("");
+					  model.getBpmnModel().setTargetNamespace("");
 					}
 					
 					String documentation = documentationText.getText();
@@ -165,6 +227,39 @@ public class PropertyDiagramSection extends ActivitiPropertySection implements I
 					} else {
 					  process.setDocumentation("");
 					}
+					
+					// read candidate users from control and insert them to the model
+					process.getCandidateStarterUsers().clear();
+					String candidateStartUsers = candidateStarterUsersText.getText();
+					if (StringUtils.isNotEmpty(candidateStartUsers)) {
+						String[] expressionList = null;
+            if (candidateStartUsers.contains(",")) {
+              expressionList = candidateStartUsers.split(",");
+            } else {
+              expressionList = new String[] { candidateStartUsers };
+            }
+            
+            for (String user : expressionList) {
+              process.getCandidateStarterUsers().add(user.trim());
+            }
+					}
+					
+					// read candidate groups from control and insert them to the model
+					String candidateStartGroups = candidateStarterGroupsText.getText();
+					process.getCandidateStarterGroups().clear();
+					if (StringUtils.isNotEmpty(candidateStartGroups)) {
+						String[] expressionList = null;
+            if (candidateStartGroups.contains(",")) {
+              expressionList = candidateStartGroups.split(",");
+            } else {
+              expressionList = new String[] { candidateStartGroups };
+            }
+            
+            for (String user : expressionList) {
+              process.getCandidateStarterGroups().add(user.trim());
+            }
+					}
+					
 				}
 			}, editingDomain, "Model Update");
 		}
@@ -173,7 +268,7 @@ public class PropertyDiagramSection extends ActivitiPropertySection implements I
 	private Text createText(Composite parent, TabbedPropertySheetWidgetFactory factory, Control top) {
     Text text = factory.createText(parent, ""); //$NON-NLS-1$
     FormData data = new FormData();
-    data.left = new FormAttachment(0, 160);
+    data.left = new FormAttachment(0, 250);
     data.right = new FormAttachment(100, -HSPACE);
     if(top == null) {
       data.top = new FormAttachment(0, VSPACE);
@@ -190,7 +285,7 @@ public class PropertyDiagramSection extends ActivitiPropertySection implements I
     FormData data = new FormData();
     data.left = new FormAttachment(0, 0);
     data.right = new FormAttachment(control, -HSPACE);
-    data.top = new FormAttachment(control, 0, SWT.TOP);
+    data.top = new FormAttachment(control, 0, SWT.CENTER);
     label.setLayoutData(data);
     return label;
   }

@@ -1,44 +1,45 @@
 package org.activiti.designer.diagram;
 
-import org.activiti.designer.bpmn2.model.Activity;
-import org.activiti.designer.bpmn2.model.Association;
-import org.activiti.designer.bpmn2.model.BoundaryEvent;
-import org.activiti.designer.bpmn2.model.BusinessRuleTask;
-import org.activiti.designer.bpmn2.model.CallActivity;
-import org.activiti.designer.bpmn2.model.EndEvent;
-import org.activiti.designer.bpmn2.model.ErrorEventDefinition;
-import org.activiti.designer.bpmn2.model.Event;
-import org.activiti.designer.bpmn2.model.EventDefinition;
-import org.activiti.designer.bpmn2.model.EventGateway;
-import org.activiti.designer.bpmn2.model.EventSubProcess;
-import org.activiti.designer.bpmn2.model.ExclusiveGateway;
-import org.activiti.designer.bpmn2.model.FlowElement;
-import org.activiti.designer.bpmn2.model.Gateway;
-import org.activiti.designer.bpmn2.model.InclusiveGateway;
-import org.activiti.designer.bpmn2.model.IntermediateCatchEvent;
-import org.activiti.designer.bpmn2.model.Lane;
-import org.activiti.designer.bpmn2.model.MailTask;
-import org.activiti.designer.bpmn2.model.ManualTask;
-import org.activiti.designer.bpmn2.model.ParallelGateway;
-import org.activiti.designer.bpmn2.model.Pool;
-import org.activiti.designer.bpmn2.model.ReceiveTask;
-import org.activiti.designer.bpmn2.model.ScriptTask;
-import org.activiti.designer.bpmn2.model.SequenceFlow;
-import org.activiti.designer.bpmn2.model.ServiceTask;
-import org.activiti.designer.bpmn2.model.SignalEventDefinition;
-import org.activiti.designer.bpmn2.model.StartEvent;
-import org.activiti.designer.bpmn2.model.SubProcess;
-import org.activiti.designer.bpmn2.model.Task;
-import org.activiti.designer.bpmn2.model.TextAnnotation;
-import org.activiti.designer.bpmn2.model.ThrowEvent;
-import org.activiti.designer.bpmn2.model.TimerEventDefinition;
-import org.activiti.designer.bpmn2.model.UserTask;
-import org.activiti.designer.bpmn2.model.alfresco.AlfrescoMailTask;
-import org.activiti.designer.bpmn2.model.alfresco.AlfrescoScriptTask;
-import org.activiti.designer.bpmn2.model.alfresco.AlfrescoStartEvent;
-import org.activiti.designer.bpmn2.model.alfresco.AlfrescoUserTask;
+import org.activiti.bpmn.model.Activity;
+import org.activiti.bpmn.model.Association;
+import org.activiti.bpmn.model.BoundaryEvent;
+import org.activiti.bpmn.model.BusinessRuleTask;
+import org.activiti.bpmn.model.CallActivity;
+import org.activiti.bpmn.model.EndEvent;
+import org.activiti.bpmn.model.ErrorEventDefinition;
+import org.activiti.bpmn.model.Event;
+import org.activiti.bpmn.model.EventDefinition;
+import org.activiti.bpmn.model.EventGateway;
+import org.activiti.bpmn.model.EventSubProcess;
+import org.activiti.bpmn.model.ExclusiveGateway;
+import org.activiti.bpmn.model.FieldExtension;
+import org.activiti.bpmn.model.FlowElement;
+import org.activiti.bpmn.model.Gateway;
+import org.activiti.bpmn.model.InclusiveGateway;
+import org.activiti.bpmn.model.IntermediateCatchEvent;
+import org.activiti.bpmn.model.Lane;
+import org.activiti.bpmn.model.ManualTask;
+import org.activiti.bpmn.model.MessageEventDefinition;
+import org.activiti.bpmn.model.ParallelGateway;
+import org.activiti.bpmn.model.Pool;
+import org.activiti.bpmn.model.ReceiveTask;
+import org.activiti.bpmn.model.ScriptTask;
+import org.activiti.bpmn.model.SequenceFlow;
+import org.activiti.bpmn.model.ServiceTask;
+import org.activiti.bpmn.model.SignalEventDefinition;
+import org.activiti.bpmn.model.StartEvent;
+import org.activiti.bpmn.model.SubProcess;
+import org.activiti.bpmn.model.Task;
+import org.activiti.bpmn.model.TextAnnotation;
+import org.activiti.bpmn.model.ThrowEvent;
+import org.activiti.bpmn.model.TimerEventDefinition;
+import org.activiti.bpmn.model.UserTask;
+import org.activiti.bpmn.model.alfresco.AlfrescoScriptTask;
+import org.activiti.bpmn.model.alfresco.AlfrescoStartEvent;
+import org.activiti.bpmn.model.alfresco.AlfrescoUserTask;
 import org.activiti.designer.features.AddAssociationFeature;
 import org.activiti.designer.features.AddBoundaryErrorFeature;
+import org.activiti.designer.features.AddBoundaryMessageFeature;
 import org.activiti.designer.features.AddBoundarySignalFeature;
 import org.activiti.designer.features.AddBoundaryTimerFeature;
 import org.activiti.designer.features.AddBusinessRuleTaskFeature;
@@ -54,6 +55,8 @@ import org.activiti.designer.features.AddInclusiveGatewayFeature;
 import org.activiti.designer.features.AddLaneFeature;
 import org.activiti.designer.features.AddMailTaskFeature;
 import org.activiti.designer.features.AddManualTaskFeature;
+import org.activiti.designer.features.AddMessageCatchingEventFeature;
+import org.activiti.designer.features.AddMessageStartEventFeature;
 import org.activiti.designer.features.AddNoneThrowingEventFeature;
 import org.activiti.designer.features.AddParallelGatewayFeature;
 import org.activiti.designer.features.AddPoolFeature;
@@ -73,6 +76,7 @@ import org.activiti.designer.features.ContainerResizeFeature;
 import org.activiti.designer.features.CopyFlowElementFeature;
 import org.activiti.designer.features.CreateAssociationFeature;
 import org.activiti.designer.features.CreateBoundaryErrorFeature;
+import org.activiti.designer.features.CreateBoundaryMessageFeature;
 import org.activiti.designer.features.CreateBoundarySignalFeature;
 import org.activiti.designer.features.CreateBoundaryTimerFeature;
 import org.activiti.designer.features.CreateBusinessRuleTaskFeature;
@@ -88,6 +92,8 @@ import org.activiti.designer.features.CreateInclusiveGatewayFeature;
 import org.activiti.designer.features.CreateLaneFeature;
 import org.activiti.designer.features.CreateMailTaskFeature;
 import org.activiti.designer.features.CreateManualTaskFeature;
+import org.activiti.designer.features.CreateMessageCatchingEventFeature;
+import org.activiti.designer.features.CreateMessageStartEventFeature;
 import org.activiti.designer.features.CreateNoneThrowingEventFeature;
 import org.activiti.designer.features.CreateParallelGatewayFeature;
 import org.activiti.designer.features.CreatePoolFeature;
@@ -176,7 +182,6 @@ public class ActivitiBPMNFeatureProvider extends DefaultFeatureProvider {
 
 	@Override
 	public IAddFeature getAddFeature(IAddContext context) {
-		// is object for add request a EClass?
 		if (context.getNewObject() instanceof StartEvent) {
 		  if(context.getNewObject() instanceof AlfrescoStartEvent) {
 		    return new AddAlfrescoStartEventFeature(this);
@@ -184,7 +189,9 @@ public class ActivitiBPMNFeatureProvider extends DefaultFeatureProvider {
 		  	if(((StartEvent) context.getNewObject()).getEventDefinitions().size() > 0) {
 		  		if(((StartEvent) context.getNewObject()).getEventDefinitions().get(0) instanceof TimerEventDefinition) {
 		  			return new AddTimerStartEventFeature(this);
-		  		} else {
+		  		} if (((StartEvent) context.getNewObject()).getEventDefinitions().get(0) instanceof MessageEventDefinition) {
+		  		  return new AddMessageStartEventFeature(this);
+		  		}  else {
 		  			return new AddErrorStartEventFeature(this);
 		  		}
 		  	} else {
@@ -208,26 +215,35 @@ public class ActivitiBPMNFeatureProvider extends DefaultFeatureProvider {
 		  } else {
 		    return new AddUserTaskFeature(this);
 		  }
-		} else if (context.getNewObject() instanceof AlfrescoMailTask) {
-      return new AddAlfrescoMailTaskFeature(this);
-		} else if (context.getNewObject() instanceof MailTask) {
-		  return new AddMailTaskFeature(this);
 		} else if (context.getNewObject() instanceof ManualTask) {
 		  return new AddManualTaskFeature(this);
 		} else if (context.getNewObject() instanceof ReceiveTask) {
 		  return new AddReceiveTaskFeature(this);
 		} else if (context.getNewObject() instanceof BusinessRuleTask) {
 		  return new AddBusinessRuleTaskFeature(this);
-		} else if (context.getNewObject() instanceof ScriptTask) {
-		  return new AddScriptTaskFeature(this);
 		} else if (context.getNewObject() instanceof ServiceTask) {
-		  return new AddServiceTaskFeature(this);
-		} else if (context.getNewObject() instanceof AlfrescoScriptTask) {
-      return new AddAlfrescoScriptTaskFeature(this);
+		  ServiceTask serviceTask = (ServiceTask) context.getNewObject();
+		  if (ServiceTask.MAIL_TASK.equalsIgnoreCase(serviceTask.getType())) {
+		    return new AddMailTaskFeature(this);
+		  } else if (AlfrescoScriptTask.ALFRESCO_SCRIPT_DELEGATE.equalsIgnoreCase(serviceTask.getImplementation())) {
+		    boolean isMailTask = false;
+		    for (FieldExtension fieldExtension : serviceTask.getFieldExtensions()) {
+		      if ("script".equalsIgnoreCase(fieldExtension.getFieldName())) {
+		        if (fieldExtension.getStringValue().contains("mail.execute(bpm_package);")) {
+		          isMailTask = true;
+		        }
+		      }
+		    }
+		    if (isMailTask) {
+		      return new AddAlfrescoMailTaskFeature(this);
+		    } else {
+		      return new AddAlfrescoScriptTaskFeature(this);
+		    }
+		  } else {
+		    return new AddServiceTaskFeature(this);
+		  }
     } else if (context.getNewObject() instanceof ScriptTask) {
 		  return new AddScriptTaskFeature(this);
-		} else if (context.getNewObject() instanceof ServiceTask) {
-		  return new AddServiceTaskFeature(this);
 		} else if (context.getNewObject() instanceof ExclusiveGateway) {
 		  return new AddExclusiveGatewayFeature(this);
 		} else if (context.getNewObject() instanceof InclusiveGateway) {
@@ -243,6 +259,8 @@ public class ActivitiBPMNFeatureProvider extends DefaultFeatureProvider {
 		      return new AddBoundaryErrorFeature(this);
 		    } else if(definition instanceof SignalEventDefinition) {
 		    	return new AddBoundarySignalFeature(this);
+		    } else if(definition instanceof MessageEventDefinition) {
+		      return new AddBoundaryMessageFeature(this);
 		    } else {
 		      return new AddBoundaryTimerFeature(this);
 		    }
@@ -252,6 +270,8 @@ public class ActivitiBPMNFeatureProvider extends DefaultFeatureProvider {
 		    EventDefinition definition = ((IntermediateCatchEvent) context.getNewObject()).getEventDefinitions().get(0);
 		    if(definition instanceof SignalEventDefinition) {
 		    	return new AddSignalCatchingEventFeature(this);
+		    } else if(definition instanceof MessageEventDefinition) {
+          return new AddMessageCatchingEventFeature(this);
 		    } else {
 		      return new AddTimerCatchingEventFeature(this);
 		    }
@@ -265,19 +285,13 @@ public class ActivitiBPMNFeatureProvider extends DefaultFeatureProvider {
 		} else if (context.getNewObject() instanceof EventSubProcess) {
       return new AddEventSubProcessFeature(this);
 		} else if (context.getNewObject() instanceof SubProcess) {
-          return new AddEmbeddedSubProcessFeature(this);
+        return new AddEmbeddedSubProcessFeature(this);
 		} else if (context.getNewObject() instanceof Pool) {
-          return new AddPoolFeature(this);
+        return new AddPoolFeature(this);
 		} else if (context.getNewObject() instanceof Lane) {
-          return new AddLaneFeature(this);
-		} else if (context.getNewObject() instanceof Pool) {
-      return new AddPoolFeature(this);
-		} else if (context.getNewObject() instanceof Lane) {
-      return new AddLaneFeature(this);
+        return new AddLaneFeature(this);
 		} else if (context.getNewObject() instanceof CallActivity) {
 			return new AddCallActivityFeature(this);
-		} else if (context.getNewObject() instanceof AlfrescoScriptTask) {
-      return new AddAlfrescoScriptTaskFeature(this);
     } else if (context.getNewObject() instanceof TextAnnotation) {
       return new AddTextAnnotationFeature(this);
     }
@@ -289,6 +303,7 @@ public class ActivitiBPMNFeatureProvider extends DefaultFeatureProvider {
 		return new ICreateFeature[] { new CreateAlfrescoStartEventFeature(this),
 						new CreateStartEventFeature(this),
 						new CreateTimerStartEventFeature(this),
+						new CreateMessageStartEventFeature(this), 
 						new CreateErrorStartEventFeature(this),
 		        new CreateEndEventFeature(this),
 		        new CreateErrorEndEventFeature(this),
@@ -306,9 +321,11 @@ public class ActivitiBPMNFeatureProvider extends DefaultFeatureProvider {
 		        new CreateEventGatewayFeature(this),
 		        new CreateBoundaryTimerFeature(this),
 		        new CreateBoundaryErrorFeature(this),
+		        new CreateBoundaryMessageFeature(this),
 		        new CreateBoundarySignalFeature(this),
 		        new CreateTimerCatchingEventFeature(this),
 		        new CreateSignalCatchingEventFeature(this),
+		        new CreateMessageCatchingEventFeature(this),
 		        new CreateSignalThrowingEventFeature(this),
 		        new CreateNoneThrowingEventFeature(this),
 		        new CreateEventSubProcessFeature(this), 
@@ -325,6 +342,7 @@ public class ActivitiBPMNFeatureProvider extends DefaultFeatureProvider {
 	public IDeleteFeature getDeleteFeature(IDeleteContext context) {
 	  PictogramElement pictogramElement = context.getPictogramElement();
     Object bo = getBusinessObjectForPictogramElement(pictogramElement);
+    
     if(bo instanceof FlowElement) {
       return new DeleteFlowElementFeature(this);
     } else if(bo instanceof Lane || bo instanceof Pool) {

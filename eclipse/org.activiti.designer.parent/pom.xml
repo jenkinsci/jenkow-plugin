@@ -3,16 +3,16 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.activiti.designer</groupId>
 	<artifactId>org.activiti.designer.parent</artifactId>
-	<version>5.9.3</version>
+	<version>5.11.1</version>
 	<packaging>pom</packaging>
 	<name>Activiti Designer - Parent project</name>
 
 	<properties>
-		<tycho-version>0.15.0</tycho-version>
+		<tycho-version>0.16.0</tycho-version>
 	</properties>
 
 	<modules>
-		<module>../org.activiti.designer.model</module>
+		<module>../org.activiti.designer.libs</module>
 		<module>../org.activiti.designer.eclipse</module>
 		<module>../org.activiti.designer.gui</module>
 		<module>../org.activiti.designer.util</module>
@@ -20,7 +20,6 @@
 		<module>../org.activiti.designer.feature</module>
 		<module>../org.activiti.designer.updatesite</module>
 		<module>../org.activiti.designer.integration</module>
-		<module>../org.activiti.designer.export.bpmn20</module>
 		<module>../org.activiti.designer.validation.bpmn20</module>
 	</modules>
 
@@ -34,7 +33,7 @@
 			<id>Graphiti</id>
 			<layout>p2</layout>
 			<!-- <url>http://download.eclipse.org/graphiti/updates/milestones/</url> -->
-			<url>http://download.eclipse.org/graphiti/updates/0.9.0</url>
+			<url>http://download.eclipse.org/graphiti/updates/0.9.1</url>
 		</repository>
 		<repository>
 			<id>Oribit</id>
@@ -89,5 +88,17 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<distributionManagement>
+		<snapshotRepository>
+		  <id>alfresco.snapshot.repo</id>
+		  <url>https://maven.alfresco.com/nexus/content/repositories/activiti-snapshots/</url>
+		  <uniqueVersion>false</uniqueVersion>
+		</snapshotRepository>
+		<repository>
+		  <id>alfresco.release.repo</id>
+		  <url>https://artifacts.alfresco.com/nexus/content/repositories/activiti-releases/</url>
+		</repository>
+  	</distributionManagement>
 
 </project>

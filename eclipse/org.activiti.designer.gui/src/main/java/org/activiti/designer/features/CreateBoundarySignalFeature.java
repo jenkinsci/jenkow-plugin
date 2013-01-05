@@ -1,9 +1,9 @@
 package org.activiti.designer.features;
 
+import org.activiti.bpmn.model.Activity;
+import org.activiti.bpmn.model.BoundaryEvent;
+import org.activiti.bpmn.model.SignalEventDefinition;
 import org.activiti.designer.PluginImage;
-import org.activiti.designer.bpmn2.model.Activity;
-import org.activiti.designer.bpmn2.model.BoundaryEvent;
-import org.activiti.designer.bpmn2.model.SignalEventDefinition;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 
@@ -19,7 +19,6 @@ public class CreateBoundarySignalFeature extends AbstractCreateBPMNFeature {
   public boolean canCreate(ICreateContext context) {
     Object parentObject = getBusinessObjectForPictogramElement(context.getTargetContainer());
     if (parentObject instanceof Activity == true) {
-
       return true;
     }
     return false;
@@ -30,14 +29,11 @@ public class CreateBoundarySignalFeature extends AbstractCreateBPMNFeature {
     SignalEventDefinition signalEvent = new SignalEventDefinition();
     boundaryEvent.getEventDefinitions().add(signalEvent);
 
-    boundaryEvent.setId(getNextId(boundaryEvent));
+    addObjectToContainer(context, boundaryEvent, "Signal");
 
     Object parentObject = getBusinessObjectForPictogramElement(context.getTargetContainer());
     ((Activity) parentObject).getBoundaryEvents().add(boundaryEvent);
     boundaryEvent.setAttachedToRef((Activity) parentObject);
-
-    // do the add
-    addGraphicalRepresentation(context, boundaryEvent);
 
     // return newly created business object(s)
     return new Object[] { boundaryEvent };

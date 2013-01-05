@@ -41,27 +41,19 @@ THE SOFTWARE.
     <module>com.cisco.surf.jenkow.feature</module>
     <module>com.cisco.surf.jenkow.site</module>
 <!-- begin Activiti Designer -->
+    <module>org.activiti.designer.libs</module>
     <module>org.activiti.designer.eclipse</module>
-    <module>org.activiti.designer.export.bpmn20</module>
-    <module>org.activiti.designer.feature</module>
     <module>org.activiti.designer.gui</module>
+    <module>org.activiti.designer.util</module>
     <module>org.activiti.designer.help</module>
-    <module>org.activiti.designer.integration</module>
-    <module>org.activiti.designer.model</module>
+    <module>org.activiti.designer.feature</module>
 <!--
-    <module>org.activiti.designer.parent</module>
     <module>org.activiti.designer.updatesite</module>
 -->
-    <module>org.activiti.designer.util</module>
+    <module>org.activiti.designer.integration</module>
     <module>org.activiti.designer.validation.bpmn20</module>
 <!-- end Activiti Designer -->
   </modules>
-  
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <tycho.groupid>org.eclipse.tycho</tycho.groupid>
-    <tycho.version>0.15.0</tycho.version>
-  </properties>
   
   <repositories>
     <repository>
@@ -74,15 +66,18 @@ THE SOFTWARE.
       <id>activiti</id>
       <layout>p2</layout>
       <url>http://activiti.org/designer/update/</url>
+-->
+<!--
+      <url>file://${basedir}/../designer-site/target/site</url>
+      <url>https://maven.alfresco.com/nexus/content/groups/public/org/activiti/designer/org.activiti.designer.updatesite/5.11.1/org.activiti.designer.updatesite-5.11.1.zip</url>
       <url>file:///scratch/jenkow/activiti-designer/org.activiti.designer.updatesite/target/repository</url>
-      <url>file://${basedir}/../../activiti-patch/target/activiti/org.activiti.designer.updatesite/target/repository</url>
     </repository>
 -->
 <!-- begin Activiti Designer -->
     <repository>
       <id>Graphiti</id>
       <layout>p2</layout>
-      <url>http://download.eclipse.org/graphiti/updates/0.9.0</url>
+      <url>http://download.eclipse.org/graphiti/updates/0.9.1</url>
     </repository>
     <repository>
       <id>Oribit</id>

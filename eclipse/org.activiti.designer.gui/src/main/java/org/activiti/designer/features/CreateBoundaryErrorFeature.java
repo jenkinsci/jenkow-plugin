@@ -1,12 +1,12 @@
 package org.activiti.designer.features;
 
+import org.activiti.bpmn.model.Activity;
+import org.activiti.bpmn.model.BoundaryEvent;
+import org.activiti.bpmn.model.CallActivity;
+import org.activiti.bpmn.model.ErrorEventDefinition;
+import org.activiti.bpmn.model.ServiceTask;
+import org.activiti.bpmn.model.SubProcess;
 import org.activiti.designer.PluginImage;
-import org.activiti.designer.bpmn2.model.Activity;
-import org.activiti.designer.bpmn2.model.BoundaryEvent;
-import org.activiti.designer.bpmn2.model.CallActivity;
-import org.activiti.designer.bpmn2.model.ErrorEventDefinition;
-import org.activiti.designer.bpmn2.model.ServiceTask;
-import org.activiti.designer.bpmn2.model.SubProcess;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICreateContext;
 
@@ -31,15 +31,12 @@ public class CreateBoundaryErrorFeature extends AbstractCreateBPMNFeature {
     BoundaryEvent boundaryEvent = new BoundaryEvent();
     ErrorEventDefinition errorEvent = new ErrorEventDefinition();
     boundaryEvent.getEventDefinitions().add(errorEvent);
-
-    boundaryEvent.setId(getNextId(boundaryEvent));
+    
+    addObjectToContainer(context, boundaryEvent, "Error");
 
     Object parentObject = getBusinessObjectForPictogramElement(context.getTargetContainer());
     ((Activity) parentObject).getBoundaryEvents().add(boundaryEvent);
     boundaryEvent.setAttachedToRef((Activity) parentObject);
-
-    // do the add
-    addGraphicalRepresentation(context, boundaryEvent);
 
     // return newly created business object(s)
     return new Object[] { boundaryEvent };

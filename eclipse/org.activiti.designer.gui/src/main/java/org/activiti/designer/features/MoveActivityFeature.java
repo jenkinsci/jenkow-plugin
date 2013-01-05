@@ -2,12 +2,13 @@ package org.activiti.designer.features;
 
 import java.util.List;
 
-import org.activiti.designer.bpmn2.model.Activity;
-import org.activiti.designer.bpmn2.model.BoundaryEvent;
-import org.activiti.designer.bpmn2.model.FlowElement;
-import org.activiti.designer.bpmn2.model.Lane;
-import org.activiti.designer.bpmn2.model.SequenceFlow;
-import org.activiti.designer.bpmn2.model.SubProcess;
+import org.activiti.bpmn.model.Activity;
+import org.activiti.bpmn.model.BoundaryEvent;
+import org.activiti.bpmn.model.FlowElement;
+import org.activiti.bpmn.model.Lane;
+import org.activiti.bpmn.model.Process;
+import org.activiti.bpmn.model.SequenceFlow;
+import org.activiti.bpmn.model.SubProcess;
 import org.activiti.designer.util.editor.Bpmn2MemoryModel;
 import org.activiti.designer.util.editor.ModelHandler;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -68,22 +69,25 @@ public class MoveActivityFeature extends DefaultMoveShapeFeature {
 		    Object containerBo = getFeatureProvider().getBusinessObjectForPictogramElement(context.getSourceContainer());
 		    if (containerBo instanceof SubProcess) {
 		      SubProcess subProcess = (SubProcess) containerBo;
-		      subProcess.getFlowElements().remove(activity);
-		      for (SequenceFlow flow : activity.getOutgoing()) {
-		        subProcess.getFlowElements().remove(flow);
+		      subProcess.removeFlowElement(activity.getId());
+		      for (SequenceFlow flow : activity.getOutgoingFlows()) {
+		        subProcess.removeFlowElement(flow.getId());
 		      }
 		    } else if (containerBo instanceof Lane) {
 		      Lane lane = (Lane) containerBo;
           lane.getFlowReferences().remove(activity.getId());
-          lane.getParentProcess().getFlowElements().remove(activity);
-          for (SequenceFlow flow : activity.getOutgoing()) {
-            lane.getParentProcess().getFlowElements().remove(flow);
+          lane.getParentProcess().removeFlowElement(activity.getId());
+          for (SequenceFlow flow : activity.getOutgoingFlows()) {
+            lane.getParentProcess().removeFlowElement(flow.getId());
           }
         }
 		  } else {
-		    model.getMainProcess().getFlowElements().remove(activity);
-		    for (SequenceFlow flow : activity.getOutgoing()) {
-		      model.getMainProcess().getFlowElements().remove(flow);
+		    if (model.getBpmnModel().getMainProcess() == null) {
+		      model.addMainProcess();
+		    }
+		    model.getBpmnModel().getMainProcess().removeFlowElement(activity.getId());
+		    for (SequenceFlow flow : activity.getOutgoingFlows()) {
+		      model.getBpmnModel().getMainProcess().removeFlowElement(flow.getId());
         }
 		  }
 		  
@@ -91,22 +95,25 @@ public class MoveActivityFeature extends DefaultMoveShapeFeature {
         Object containerBo = getFeatureProvider().getBusinessObjectForPictogramElement(context.getTargetContainer());
         if (containerBo instanceof SubProcess) {
           SubProcess subProcess = (SubProcess) containerBo;
-          subProcess.getFlowElements().add(activity);
-          for (SequenceFlow flow : activity.getOutgoing()) {
-            subProcess.getFlowElements().add(flow);
+          subProcess.addFlowElement(activity);
+          for (SequenceFlow flow : activity.getOutgoingFlows()) {
+            subProcess.addFlowElement(flow);
           }
         } else if (containerBo instanceof Lane) {
           Lane lane = (Lane) containerBo;
           lane.getFlowReferences().add(activity.getId());
-          lane.getParentProcess().getFlowElements().add(activity);
-          for (SequenceFlow flow : activity.getOutgoing()) {
-            lane.getParentProcess().getFlowElements().add(flow);
+          lane.getParentProcess().addFlowElement(activity);
+          for (SequenceFlow flow : activity.getOutgoingFlows()) {
+            lane.getParentProcess().addFlowElement(flow);
           }
         }
       } else {
-        model.getMainProcess().getFlowElements().add(activity);
-        for (SequenceFlow flow : activity.getOutgoing()) {
-          model.getMainProcess().getFlowElements().add(flow);
+        if (model.getBpmnModel().getMainProcess() == null) {
+          model.addMainProcess();
+        }
+        model.getBpmnModel().getMainProcess().addFlowElement(activity);
+        for (SequenceFlow flow : activity.getOutgoingFlows()) {
+          model.getBpmnModel().getMainProcess().addFlowElement(flow);
         }
       }
 		}

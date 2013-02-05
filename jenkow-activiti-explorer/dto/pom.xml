@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.jenkins-ci.plugins</groupId>
+    <artifactId>activiti-explorer-plugin-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>activiti-explorer-dto</artifactId>
+  <description>Serializable objects that are passed between AE and Jenkins to carry information back and forth</description>
+
+  <!--
+    Because these classes need to be loaded both in Jenkins and AE,
+    we cannot depend on either.
+  -->
+</project>

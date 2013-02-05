@@ -706,6 +706,9 @@
     </profile>
     <profile>
       <id>distro</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
       <modules>
         <module>modules/activiti-spring</module>
         <module>modules/activiti-bpmn-model</module>
@@ -737,6 +740,9 @@
     <profile>
       <!-- Profile used by the start-explorer.sh script to build the Explorer webapp and all its dependencies -->
       <id>buildWebappDependencies</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
       <modules>
         <module>modules/activiti-engine</module>
         <module>modules/activiti-spring</module>

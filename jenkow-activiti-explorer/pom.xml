@@ -3,16 +3,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.jenkins-ci.plugins</groupId>
-    <artifactId>plugin</artifactId>
-    <version>1.455</version>
-    <relativePath/>
+    <groupId>com.cisco.step.jenkins.plugins</groupId>
+    <artifactId>jenkow-parent</artifactId>
+    <version>0.2.6-SNAPSHOT</version>
+    <relativePath>..</relativePath>
   </parent>
 
-  <artifactId>activiti-explorer-plugin-parent</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <artifactId>jenkow-activiti-explorer-plugin-parent</artifactId>
   <packaging>pom</packaging>
-  <url>https://wiki.jenkins-ci.org/display/JENKINS/Activiti+Explorer+Plugin</url>
+  <url>https://wiki.jenkins-ci.org/display/JENKINS/Jenkow+Activiti+Explorer+Plugin</url>
 
   <modules>
     <module>plugin</module>
@@ -20,11 +19,6 @@
     <module>activiti-explorer-override</module>
   </modules>
 
-  <properties>
-    <activiti.base.version>5.11</activiti.base.version>
-    <activiti.version>${activiti.base.version}-jenkow</activiti.version>
-  </properties>
-  
   <licenses>
     <license>
       <name>The MIT License (MIT)</name>
@@ -34,9 +28,9 @@
   </licenses>
 
   <scm>
-    <connection>scm:git:ssh://github.com/jenkinsci/activiti-explorer-plugin.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com/jenkinsci/activiti-explorer-plugin.git</developerConnection>
-    <url>https://github.com/jenkinsci/activiti-explorer-plugin</url>
+    <connection>scm:git:ssh://github.com/jenkinsci/jenkow-plugin.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/jenkinsci/jenkow-plugin.git</developerConnection>
+    <url>https://github.com/jenkinsci/jenkow-plugin</url>
   </scm>
 
   <repositories>

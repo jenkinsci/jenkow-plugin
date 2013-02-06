@@ -44,8 +44,9 @@ THE SOFTWARE.
     <module>jenkow-designer-extension</module>
     <module>jenkow-repository-seed</module>
     <module>jenkow-plugin</module>
-    <module>jenkow-activiti-designer</module>
     <module>jenkow-activiti</module>
+    <module>jenkow-activiti-designer</module>
+    <module>jenkow-activiti-explorer</module>
   </modules>
   
   <developers>
@@ -75,7 +76,8 @@ THE SOFTWARE.
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <tycho.groupid>org.eclipse.tycho</tycho.groupid>
     <tycho.version>0.16.0</tycho.version>
-    <activiti.version>5.11</activiti.version>
+    <activiti.base.version>5.11</activiti.base.version>
+    <activiti.version>${activiti.base.version}-jenkow</activiti.version>
     <activiti.designer.version>5.11.1</activiti.designer.version>
     <h2.version>1.3.168</h2.version>
     <groovy.version>1.8.6</groovy.version>

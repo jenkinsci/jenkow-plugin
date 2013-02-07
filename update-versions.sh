@@ -59,7 +59,7 @@ function updateAnyVersion ()
 
     mkdir -p "$PRJDIR/target"
     
-    $XML ed --pf --ps \
+    $XML ed --pf \
         -N ns=http://maven.apache.org/POM/4.0.0 \
         -u "$XPATH" -v "$NEW_VERSION" "$POM" >"$POMN"
 
@@ -116,7 +116,7 @@ function updateEclipseFeatureVersion ()
 
     mkdir -p "$PRJDIR/target"
     
-    $XML ed --pf --ps \
+    $XML ed --pf \
         -u "/feature/@version" -v "$BUNDLE_VERSION" "$FEATURE" >"$FEATUREN"
 
     diff "$FEATURE" "$FEATUREN"
@@ -134,6 +134,8 @@ updateMainVersion "$PRJ/pom.xml"
 find $PRJ -mindepth 2 -type f -name pom.xml \
 | grep -v '/org.activiti.designer' \
 | grep -v '/target/' \
+| grep -v '/activiti-tests/' \
+| grep -v '/jenkow-activiti/' \
 | while read POM; do
     updateParentVersion "$POM"
 done
@@ -141,6 +143,8 @@ done
 find $PRJ/eclipse -type f -name MANIFEST.MF \
 | grep -v '/org.activiti.designer' \
 | grep -v '/target/' \
+| grep -v '/activiti-tests/' \
+| grep -v '/jenkow-activiti/' \
 | while read MANIFEST; do
     updateBundleVersion "$MANIFEST"
 done
@@ -148,6 +152,8 @@ done
 find `pwd` -type f -name feature.xml \
 | grep -v '/org.activiti.designer' \
 | grep -v '/target/' \
+| grep -v '/activiti-tests/' \
+| grep -v '/jenkow-activiti/' \
 | while read FEATURE; do
     updateEclipseFeatureVersion "$FEATURE"
 done

@@ -44,6 +44,10 @@ public class ServiceTaskJsonConverter extends BaseBpmnJsonConverter {
   }
   
   protected String getStencilId(FlowElement flowElement) {
+	// TODO should have a better mapper in place
+	if ((flowElement instanceof ServiceTask) && JenkinsTaskJsonConverter.XML_JENKINSTASK_DELEGATE_CLASS.equals(((ServiceTask) flowElement).getImplementation())){
+	  return new JenkinsTaskJsonConverter().getStencilId(flowElement);
+	}
     return STENCIL_TASK_SERVICE;
   }
   
@@ -72,6 +76,11 @@ public class ServiceTaskJsonConverter extends BaseBpmnJsonConverter {
       }
     	
     	addFieldExtensions(serviceTask.getFieldExtensions(), propertiesNode);
+  	}
+  	
+	// TODO should have a better mapper in place
+  	if (JenkinsTaskJsonConverter.XML_JENKINSTASK_DELEGATE_CLASS.equals(serviceTask.getImplementation())){
+  	  new JenkinsTaskJsonConverter().convertElementToJson(propertiesNode,flowElement);
   	}
   }
   

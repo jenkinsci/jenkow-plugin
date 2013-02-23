@@ -40,7 +40,7 @@ public class JenkinsTaskJsonConverter extends BaseBpmnJsonConverter {
 
 	public static void fillBpmnTypes(Map<Class<? extends BaseElement>, 
 			                         Class<? extends BaseBpmnJsonConverter>> convertersToJsonMap) {
-		convertersToJsonMap.put(ServiceTask.class, JenkinsTaskJsonConverter.class);
+		// Because the Jenkins Task is mapped to a ServiceTask, the ServiceTaskJsonConverter has to map back
 	}
 
 	@Override
@@ -50,15 +50,24 @@ public class JenkinsTaskJsonConverter extends BaseBpmnJsonConverter {
 
 	@Override
 	protected void convertElementToJson(ObjectNode propertiesNode, FlowElement flowElement) {
-		System.out.println("************** JenkinsTaskJsonConverter.convertElementToJson");
-		System.out.println("flowElement.getClass() --> "+flowElement.getClass());
-		
-		// TODO implement convertElementToJson
+	  	ServiceTask serviceTask = (ServiceTask)flowElement;
+	  	
+		for (FieldExtension extension : serviceTask.getFieldExtensions()) {
+			ObjectNode propertyItemNode = objectMapper.createObjectNode();
+			String fn = extension.getFieldName();
+			String val = extension.getStringValue();
+			
+			// TODO should have a better way to map these attributes!
+			if (XML_JENKINSTASK_JOB_NAME.equals(fn)){
+				propertiesNode.put(JSON_JENKINSTASK_JOB_NAME,val);
+			}else if (XML_JENKINSTASK_MANUAL_LAUNCH_MODE.equals(fn)){
+				propertiesNode.put(JSON_JENKINSTASK_MANUAL_LAUNCH_MODE,val);
+			}
+		}
 	}
 
 	@Override
 	protected FlowElement convertJsonToElement(JsonNode elementNode, JsonNode modelNode, Map<String, JsonNode> shapeMap) {
-		System.out.println("************** JenkinsTaskJsonConverter.convertJsonToElement");
 		ServiceTask task = new ServiceTask();
 		
 	    task.setImplementationType(ImplementationType.IMPLEMENTATION_TYPE_CLASS);

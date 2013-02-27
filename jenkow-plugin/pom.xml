@@ -154,7 +154,10 @@ THE SOFTWARE.
       <plugin>
         <groupId>org.jenkins-ci.tools</groupId>
         <artifactId>maven-hpi-plugin</artifactId>
-        <version>1.93</version>
+        <version>1.94</version>
+        <configuration>
+          <dependencyResolution>test</dependencyResolution>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

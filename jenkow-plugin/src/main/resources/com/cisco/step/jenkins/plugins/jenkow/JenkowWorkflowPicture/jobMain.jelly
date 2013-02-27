@@ -1,0 +1,12 @@
+<?jelly escape-by-default='true'?>
+<!--
+  This page gets inserted into the main section of the job page
+-->
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:local="local">
+  <h2>${%Workflows}</h2>
+  <j:forEach var="n" items="${it.workflowNames}">
+    <div>
+      <img src="jenkow/graph/${n}"/>
+    </div>
+  </j:forEach>
+</j:jelly>

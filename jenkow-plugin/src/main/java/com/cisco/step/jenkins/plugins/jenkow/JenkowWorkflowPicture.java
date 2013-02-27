@@ -25,6 +25,8 @@ package com.cisco.step.jenkins.plugins.jenkow;
 
 import hudson.model.Action;
 
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import org.kohsuke.stapler.HttpResponses;
@@ -64,6 +66,18 @@ public class JenkowWorkflowPicture implements Action {
         }
 
         throw HttpResponses.error(404,"No such workflow: "+id);
+    }
+
+    /**
+     * Returns all the workflow names used in the builders without duplicates
+     * in the expected natural order.
+     */
+    public Collection<String> getWorkflowNames() {
+        Collection<String> r = new LinkedHashSet<String>();
+        for (JenkowBuilder b : builders) {
+            r.add(b.getWorkflowName());
+        }
+        return r;
     }
 
     @Override

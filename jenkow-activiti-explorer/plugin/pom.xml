@@ -48,6 +48,9 @@
         <groupId>org.jenkins-ci.tools</groupId>
         <artifactId>maven-hpi-plugin</artifactId>
         <version>1.93</version>
+        <configuration>
+          <dependencyResolution>test</dependencyResolution>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

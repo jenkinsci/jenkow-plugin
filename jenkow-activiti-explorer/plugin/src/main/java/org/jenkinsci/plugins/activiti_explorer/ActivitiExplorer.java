@@ -43,7 +43,7 @@ public class ActivitiExplorer implements UnprotectedRootAction {
     DescriptorImpl descriptor;
 
     public String getIconFileName() {
-        return "/plugin/activiti-explorer/images/24x24/activiti.png";
+        return "/plugin/jenkow-activiti-explorer/images/24x24/activiti.png";
     }
 
     public String getDisplayName() {

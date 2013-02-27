@@ -31,6 +31,10 @@ public class JenkowWorkflowJob extends AsyncJob<JenkowWorkflowJob,JenkowWorkflow
         return workflowName;
     }
 
+    public WorkflowDiagram doDiagram() {
+        return new WorkflowDiagram(workflowName);
+    }
+
     public TopLevelItemDescriptor getDescriptor() {
         return (TopLevelItemDescriptor)Jenkins.getInstance().getDescriptor(getClass());
     }

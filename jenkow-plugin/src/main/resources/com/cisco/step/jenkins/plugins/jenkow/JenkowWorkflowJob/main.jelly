@@ -1,0 +1,6 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core">
+  <div style="text-align:center">
+    <img src="diagram" />
+  </div>
+</j:jelly>

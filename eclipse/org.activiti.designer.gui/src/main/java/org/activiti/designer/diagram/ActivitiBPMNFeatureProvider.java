@@ -30,6 +30,7 @@ import org.activiti.bpmn.model.SignalEventDefinition;
 import org.activiti.bpmn.model.StartEvent;
 import org.activiti.bpmn.model.SubProcess;
 import org.activiti.bpmn.model.Task;
+import org.activiti.bpmn.model.TerminateEventDefinition;
 import org.activiti.bpmn.model.TextAnnotation;
 import org.activiti.bpmn.model.ThrowEvent;
 import org.activiti.bpmn.model.TimerEventDefinition;
@@ -67,6 +68,7 @@ import org.activiti.designer.features.AddServiceTaskFeature;
 import org.activiti.designer.features.AddSignalCatchingEventFeature;
 import org.activiti.designer.features.AddSignalThrowingEventFeature;
 import org.activiti.designer.features.AddStartEventFeature;
+import org.activiti.designer.features.AddTerminateEndEventFeature;
 import org.activiti.designer.features.AddTextAnnotationFeature;
 import org.activiti.designer.features.AddTimerCatchingEventFeature;
 import org.activiti.designer.features.AddTimerStartEventFeature;
@@ -104,6 +106,7 @@ import org.activiti.designer.features.CreateServiceTaskFeature;
 import org.activiti.designer.features.CreateSignalCatchingEventFeature;
 import org.activiti.designer.features.CreateSignalThrowingEventFeature;
 import org.activiti.designer.features.CreateStartEventFeature;
+import org.activiti.designer.features.CreateTerminateEndEventFeature;
 import org.activiti.designer.features.CreateTextAnnotationFeature;
 import org.activiti.designer.features.CreateTimerCatchingEventFeature;
 import org.activiti.designer.features.CreateTimerStartEventFeature;
@@ -173,7 +176,7 @@ import com.alfresco.designer.gui.features.CreateAlfrescoUserTaskFeature;
 public class ActivitiBPMNFeatureProvider extends DefaultFeatureProvider {
 
 	public POJOIndependenceSolver independenceResolver;
-	
+
 	public ActivitiBPMNFeatureProvider(IDiagramTypeProvider dtp) {
 		super(dtp);
 		setIndependenceSolver(new POJOIndependenceSolver());
@@ -183,15 +186,16 @@ public class ActivitiBPMNFeatureProvider extends DefaultFeatureProvider {
 	@Override
 	public IAddFeature getAddFeature(IAddContext context) {
 		if (context.getNewObject() instanceof StartEvent) {
-		  if(context.getNewObject() instanceof AlfrescoStartEvent) {
+		  if (context.getNewObject() instanceof AlfrescoStartEvent) {
 		    return new AddAlfrescoStartEventFeature(this);
 		  } else {
-		  	if(((StartEvent) context.getNewObject()).getEventDefinitions().size() > 0) {
-		  		if(((StartEvent) context.getNewObject()).getEventDefinitions().get(0) instanceof TimerEventDefinition) {
+		    StartEvent startEvent = (StartEvent) context.getNewObject();
+		  	if (startEvent.getEventDefinitions().size() > 0) {
+		  		if (startEvent.getEventDefinitions().get(0) instanceof TimerEventDefinition) {
 		  			return new AddTimerStartEventFeature(this);
-		  		} if (((StartEvent) context.getNewObject()).getEventDefinitions().get(0) instanceof MessageEventDefinition) {
+		  		} if (startEvent.getEventDefinitions().get(0) instanceof MessageEventDefinition) {
 		  		  return new AddMessageStartEventFeature(this);
-		  		}  else {
+		  		} else {
 		  			return new AddErrorStartEventFeature(this);
 		  		}
 		  	} else {
@@ -199,11 +203,16 @@ public class ActivitiBPMNFeatureProvider extends DefaultFeatureProvider {
 		  	}
 		  }
 		} else if (context.getNewObject() instanceof EndEvent) {
-		  if(((EndEvent) context.getNewObject()).getEventDefinitions().size() > 0) {
-		    return new AddErrorEndEventFeature(this);
-		  } else {
-		    return new AddEndEventFeature(this);
+		  EndEvent endEvent = (EndEvent) context.getNewObject();
+		  for (EventDefinition eventDefinition : endEvent.getEventDefinitions()) {
+		    if (eventDefinition instanceof ErrorEventDefinition) {
+		      return new AddErrorEndEventFeature(this);
+		    } else if (eventDefinition instanceof TerminateEventDefinition) {
+		      return new AddTerminateEndEventFeature(this);
+		    }
 		  }
+		  return new AddEndEventFeature(this);
+
 		} else if (context.getNewObject() instanceof SequenceFlow) {
 		  return new AddSequenceFlowFeature(this);
 
@@ -303,20 +312,21 @@ public class ActivitiBPMNFeatureProvider extends DefaultFeatureProvider {
 		return new ICreateFeature[] { new CreateAlfrescoStartEventFeature(this),
 						new CreateStartEventFeature(this),
 						new CreateTimerStartEventFeature(this),
-						new CreateMessageStartEventFeature(this), 
+						new CreateMessageStartEventFeature(this),
 						new CreateErrorStartEventFeature(this),
 		        new CreateEndEventFeature(this),
 		        new CreateErrorEndEventFeature(this),
+		        new CreateTerminateEndEventFeature(this),
 		        new CreateUserTaskFeature(this),
 		        new CreateAlfrescoUserTaskFeature(this),
-		        new CreateScriptTaskFeature(this), 
+		        new CreateScriptTaskFeature(this),
 		        new CreateServiceTaskFeature(this),
-		        new CreateMailTaskFeature(this), 
-		        new CreateManualTaskFeature(this), 
+		        new CreateMailTaskFeature(this),
+		        new CreateManualTaskFeature(this),
 		        new CreateReceiveTaskFeature(this),
 		        new CreateBusinessRuleTaskFeature(this),
-		        new CreateParallelGatewayFeature(this), 
-		        new CreateExclusiveGatewayFeature(this), 
+		        new CreateParallelGatewayFeature(this),
+		        new CreateExclusiveGatewayFeature(this),
 		        new CreateInclusiveGatewayFeature(this),
 		        new CreateEventGatewayFeature(this),
 		        new CreateBoundaryTimerFeature(this),
@@ -328,7 +338,7 @@ public class ActivitiBPMNFeatureProvider extends DefaultFeatureProvider {
 		        new CreateMessageCatchingEventFeature(this),
 		        new CreateSignalThrowingEventFeature(this),
 		        new CreateNoneThrowingEventFeature(this),
-		        new CreateEventSubProcessFeature(this), 
+		        new CreateEventSubProcessFeature(this),
 		        new CreateEmbeddedSubProcessFeature(this),
 		        new CreatePoolFeature(this),
 		        new CreateLaneFeature(this),
@@ -337,12 +347,12 @@ public class ActivitiBPMNFeatureProvider extends DefaultFeatureProvider {
 		        new CreateAlfrescoMailTaskFeature(this),
 		        new CreateTextAnnotationFeature(this)};
 	}
-	
+
 	@Override
 	public IDeleteFeature getDeleteFeature(IDeleteContext context) {
 	  PictogramElement pictogramElement = context.getPictogramElement();
     Object bo = getBusinessObjectForPictogramElement(pictogramElement);
-    
+
     if(bo instanceof FlowElement) {
       return new DeleteFlowElementFeature(this);
     } else if(bo instanceof Lane || bo instanceof Pool) {
@@ -360,24 +370,24 @@ public class ActivitiBPMNFeatureProvider extends DefaultFeatureProvider {
 	public IPasteFeature getPasteFeature(IPasteContext context) {
 		return new PasteFlowElementFeature(this);
 	}
-	
+
 	@Override
 	public ICreateConnectionFeature[] getCreateConnectionFeatures() {
-	  
+
 		return new ICreateConnectionFeature[] { new CreateSequenceFlowFeature(this)
 		                                      , new CreateAssociationFeature(this) };
 	}
-	
+
 	@Override
 	public IReconnectionFeature getReconnectionFeature(IReconnectionContext context) {
 	  return new ReconnectSequenceFlowFeature(this);
 	}
-	
+
 	@Override
 	public IUpdateFeature getUpdateFeature(IUpdateContext context) {
 		PictogramElement pictogramElement = context.getPictogramElement();
 		Object bo = getBusinessObjectForPictogramElement(pictogramElement);
-		
+
 		if (pictogramElement instanceof ContainerShape) {
 			if (bo instanceof FlowElement) {
 				return new UpdateFlowElementFeature(this);
@@ -395,7 +405,7 @@ public class ActivitiBPMNFeatureProvider extends DefaultFeatureProvider {
 		// simply return all create connection features
 		return getCreateConnectionFeatures();
 	}
-	
+
 	@Override
 	public IDirectEditingFeature getDirectEditingFeature(IDirectEditingContext context) {
 		PictogramElement pe = context.getPictogramElement();
@@ -426,41 +436,44 @@ public class ActivitiBPMNFeatureProvider extends DefaultFeatureProvider {
     Object bo = getBusinessObjectForPictogramElement(shape);
     if(bo instanceof BoundaryEvent) {
       return new MoveBoundaryEventFeature(this);
-    
+
     } else if (bo instanceof Activity) {
     	// in case an activity is moved, make sure, attached boundary events will move too
     	return new MoveActivityFeature(this);
-    
+
     } else if (bo instanceof Gateway) {
       return new MoveGatewayFeature(this);
-    
+
     } else if (bo instanceof Event) {
       return new MoveEventFeature(this);
-      
+
     } else if (bo instanceof Lane) {
       return new MoveLaneFeature(this);
-    } 
+    }
     return super.getMoveShapeFeature(context);
   }
- 
+
 
   @Override
   public ILayoutFeature getLayoutFeature(ILayoutContext context) {
 	  final PictogramElement pe = context.getPictogramElement();
 	  final Object bo = getBusinessObjectForPictogramElement(pe);
-	  
+
 	  if (bo instanceof TextAnnotation) {
 		  return new LayoutTextAnnotationFeature(this);
 	  }
-	  
+
 	  return super.getLayoutFeature(context);
   }
 
   @Override
 	public ICustomFeature[] getCustomFeatures(ICustomContext context) {
-		return new ICustomFeature[] { new SaveBpmnModelFeature(this), 
-				new DeleteSequenceFlowFeature(this), new DeletePoolFeature(this), new ChangeElementTypeFeature(this), 
+		return new ICustomFeature[] { new SaveBpmnModelFeature(this),
+				new DeleteSequenceFlowFeature(this), new DeletePoolFeature(this), new ChangeElementTypeFeature(this),
 				new DeleteAssociationFeature(this) };
 	}
 
+  public POJOIndependenceSolver getPojoIndependenceSolver() {
+    return independenceResolver;
+  }
 }

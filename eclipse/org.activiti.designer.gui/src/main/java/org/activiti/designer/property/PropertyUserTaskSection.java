@@ -1,16 +1,20 @@
 package org.activiti.designer.property;
 
+import java.util.List;
+
 import org.activiti.bpmn.model.UserTask;
-import org.activiti.designer.util.eclipse.ActivitiUiUtil;
 import org.activiti.designer.util.property.ActivitiPropertySection;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.graphiti.features.IFeature;
+import org.eclipse.graphiti.features.context.IContext;
+import org.eclipse.graphiti.features.context.impl.CustomContext;
+import org.eclipse.graphiti.features.impl.AbstractFeature;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
-import org.eclipse.graphiti.ui.editor.DiagramEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Composite;
@@ -62,8 +66,7 @@ public class PropertyUserTaskSection extends ActivitiPropertySection implements 
     data.right = new FormAttachment(100, 0);
     data.top = new FormAttachment(priorityText, VSPACE);
     documentationText.setLayoutData(data);
-    documentationText.addFocusListener(listener);
-
+    
     createLabel("Documentation:", composite, factory, documentationText);
   }
 
@@ -89,29 +92,8 @@ public class PropertyUserTaskSection extends ActivitiPropertySection implements 
         assigneeText.setText(userTask.getAssignee());
       }
 
-      candidateUsersText.setText("");
-      if (userTask.getCandidateUsers().size() > 0) {
-        StringBuffer expressionBuffer = new StringBuffer();
-        for (String user : userTask.getCandidateUsers()) {
-          if (expressionBuffer.length() > 0) {
-            expressionBuffer.append(",");
-          }
-          expressionBuffer.append(user.trim());
-        }
-        candidateUsersText.setText(expressionBuffer.toString());
-      }
-
-      candidateGroupsText.setText("");
-      if (userTask.getCandidateGroups().size() > 0) {
-        StringBuffer expressionBuffer = new StringBuffer();
-        for (String group : userTask.getCandidateGroups()) {
-          if (expressionBuffer.length() > 0) {
-            expressionBuffer.append(",");
-          }
-          expressionBuffer.append(group.trim());
-        }
-        candidateGroupsText.setText(expressionBuffer.toString());
-      }
+      candidateUsersText.setText(getCandidatesString(userTask.getCandidateUsers()));
+      candidateGroupsText.setText(getCandidatesString(userTask.getCandidateGroups()));
 
       formKeyText.setText("");
       if (formKeyText != null) {
@@ -156,68 +138,102 @@ public class PropertyUserTaskSection extends ActivitiPropertySection implements 
       if (pe != null) {
         final Object bo = getBusinessObject(pe);
         if (bo instanceof UserTask) {
-          DiagramEditor diagramEditor = (DiagramEditor) getDiagramEditor();
-          TransactionalEditingDomain editingDomain = diagramEditor.getEditingDomain();
-          ActivitiUiUtil.runModelChange(new Runnable() {
-
-            public void run() {
-              UserTask userTask = (UserTask) bo;
-
-              String assignee = assigneeText.getText();
-              userTask.setAssignee(assignee);
-
-              userTask.getCandidateUsers().clear();
-              if (StringUtils.isNotEmpty(candidateUsersText.getText())) {
-                String[] expressionList = null;
-                if (candidateUsersText.getText().contains(",")) {
-                  expressionList = candidateUsersText.getText().split(",");
-                } else {
-                  expressionList = new String[] { candidateUsersText.getText() };
-                }
-
-                for (String user : expressionList) {
-                  userTask.getCandidateUsers().add(user.trim());
-                }
-              }
-
-              userTask.getCandidateGroups().clear();
-              if (StringUtils.isNotEmpty(candidateGroupsText.getText())) {
-                String[] expressionList = null;
-                if (candidateGroupsText.getText().contains(",")) {
-                  expressionList = candidateGroupsText.getText().split(",");
-                } else {
-                  expressionList = new String[] { candidateGroupsText.getText() };
-                }
-
-                for (String group : expressionList) {
-                  userTask.getCandidateGroups().add(group.trim());
-                }
-              }
-
-              String formKey = formKeyText.getText();
-              if (formKey != null) {
-                userTask.setFormKey(formKey);
-              } else {
-                userTask.setFormKey("");
-              }
-
-              String dueDate = dueDateText.getText();
-              if (StringUtils.isNotEmpty(dueDate)) {
-                userTask.setDueDate(dueDate);
-
-              } else {
-                userTask.setDueDate(null);
-              }
- 
-              userTask.setPriority(priorityText.getText());
-              userTask.setDocumentation(documentationText.getText());
-            }
-          }, editingDomain, "Model Update");
+          final UserTask userTask = (UserTask) bo;
+          updateUserTaskField(userTask, e.getSource());
         }
-
       }
     }
   };
+  
+  protected String getCandidatesString(List<String> candidateList) {
+    StringBuffer expressionBuffer = new StringBuffer();
+    if (candidateList.size() > 0) {
+      for (String candidate : candidateList) {
+        if (expressionBuffer.length() > 0) {
+          expressionBuffer.append(",");
+        }
+        expressionBuffer.append(candidate.trim());
+      }
+    }
+    return expressionBuffer.toString();
+  }
+  
+  protected void updateUserTaskField(final UserTask userTask, final Object source) {
+    String oldValue = null;
+    String newValue = ((Text) source).getText();
+    if (source == assigneeText) {
+      oldValue = userTask.getAssignee();
+    } else if (source == candidateUsersText) {
+      oldValue = getCandidatesString(userTask.getCandidateUsers());
+    } else if (source == candidateGroupsText) {
+      oldValue = getCandidatesString(userTask.getCandidateGroups());
+    } else if (source == formKeyText) {
+      oldValue = userTask.getFormKey();
+    } else if (source == dueDateText) {
+      oldValue = userTask.getDueDate();
+    } else if (source == priorityText) {
+      oldValue = userTask.getPriority();
+    } else if (source == documentationText) {
+      oldValue = userTask.getDocumentation();
+    }
+    
+    if (StringUtils.isEmpty(oldValue) || oldValue.equals(newValue) == false) {
+      IFeature feature = new AbstractFeature(getDiagramTypeProvider().getFeatureProvider()) {
+        
+        @Override
+        public void execute(IContext context) {
+          if (source == assigneeText) {
+            userTask.setAssignee(assigneeText.getText());
+          } else if (source == candidateUsersText) {
+            updateCandidates(userTask, source);
+          } else if (source == candidateGroupsText) {
+            updateCandidates(userTask, source);
+          } else if (source == formKeyText) {
+            userTask.setFormKey(formKeyText.getText());
+          } else if (source == dueDateText) {
+            userTask.setDueDate(dueDateText.getText());
+          } else if (source == priorityText) {
+            userTask.setPriority(priorityText.getText());
+          } else if (source == documentationText) {
+            userTask.setDocumentation(documentationText.getText());
+          }
+        }
+        
+        @Override
+        public boolean canExecute(IContext context) {
+          return true;
+        }
+      };
+      CustomContext context = new CustomContext();
+      execute(feature, context);
+    }
+  }
+  
+  protected void updateCandidates(UserTask userTask, Object source) {
+    String candidates = ((Text) source).getText();
+    if (StringUtils.isNotEmpty(candidates)) {
+      String[] expressionList = null;
+      if (candidates.contains(",")) {
+        expressionList = candidates.split(",");
+      } else {
+        expressionList = new String[] { candidates };
+      }
+      
+      if (source == candidateUsersText) {
+        userTask.getCandidateUsers().clear();
+      } else {
+        userTask.getCandidateGroups().clear();
+      }
+
+      for (String user : expressionList) {
+        if (source == candidateUsersText) {
+          userTask.getCandidateUsers().add(user.trim());
+        } else {
+          userTask.getCandidateGroups().add(user.trim());
+        }
+      }
+    }
+  }
 
   private Text createText(Composite parent, TabbedPropertySheetWidgetFactory factory, Control top) {
     Text text = factory.createText(parent, ""); //$NON-NLS-1$
@@ -230,7 +246,6 @@ public class PropertyUserTaskSection extends ActivitiPropertySection implements 
       data.top = new FormAttachment(top, VSPACE);
     }
     text.setLayoutData(data);
-    text.addFocusListener(listener);
     return text;
   }
 

@@ -4,6 +4,7 @@ import hudson.Extension;
 import hudson.model.ItemGroup;
 import hudson.model.TopLevelItem;
 import hudson.model.TopLevelItemDescriptor;
+import hudson.model.Descriptor;
 import hudson.model.Descriptor.FormException;
 import hudson.model.Queue.FlyweightTask;
 import hudson.util.FormValidation;
@@ -46,20 +47,21 @@ public class JenkowWorkflowJob extends AsyncJob<JenkowWorkflowJob,JenkowWorkflow
         workflowName = json.getString("workflowName");
     }
 
-    @Extension
-    public static class DescriptorImpl extends TopLevelItemDescriptor {
-        @Override
-        public String getDisplayName() {
-            return "BPMN workflow project";
-        }
-
-        public FormValidation doCheckWorkflowName(@QueryParameter String value) throws IOException, ServletException {
-            return WfUtil.checkWorkflowName(value);
-        }
-        
-        @Override
-        public TopLevelItem newInstance(ItemGroup parent, String name) {
-            return new JenkowWorkflowJob(parent,name);
-        }
-    }
+//    @Extension
+//    public static class DescriptorImpl extends TopLevelItemDescriptor {
+//        
+//        @Override
+//        public String getDisplayName() {
+//            return "BPMN workflow project";
+//        }
+//
+//        public FormValidation doCheckWorkflowName(@QueryParameter String value) throws IOException, ServletException {
+//            return WfUtil.checkWorkflowName(value);
+//        }
+//        
+//        @Override
+//        public TopLevelItem newInstance(ItemGroup parent, String name) {
+//            return new JenkowWorkflowJob(parent,name);
+//        }
+//    }
 }

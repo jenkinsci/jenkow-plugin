@@ -19,6 +19,8 @@ class GitPostReceiveHook implements PostReceiveHook{
             cmd.setMode(ResetType.HARD);
             cmd.setRef("master");
             cmd.call();
+            
+            WfUtil.deployAllToEngine();
         } catch (Exception e) {
             StringWriter sw = new StringWriter();
             e.printStackTrace(new PrintWriter(sw));

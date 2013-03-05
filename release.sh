@@ -8,8 +8,8 @@ if [ $# != 2 ]; then
     exit 1
 fi
 
-RELVER=$1; shift
-NEXTVER=$1; shift
+RELVER=${1%-SNAPSHOT}; shift
+NEXTVER=${1%-SNAPSHOT}; shift
 
 export HOME="$WORKSPACE"
 

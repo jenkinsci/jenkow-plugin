@@ -42,7 +42,7 @@ set -x
 $GIT checkout -f -b v$RELVER
 ./update-versions.sh $RELVER
 $GIT commit -am "created release $RELVER"
-$MVN $MVN_OPTIONS clean install || exit 1
+$MVN $MVN_OPTIONS clean install -Djava.awt.headless=true || exit 1
 
 $GIT checkout -f master
 ./update-versions.sh $NEXTVER-SNAPSHOT

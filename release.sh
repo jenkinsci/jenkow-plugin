@@ -4,6 +4,7 @@ export PRJ=$(cd `dirname $0`; pwd)
 
 if [ $# != 2 ]; then
     echo "usage: release.sh <release-version> <next-trunk-version>"
+    echo "(Don't use a -SNAPSHOT suffix in the versions.)"
     exit 1
 fi
 

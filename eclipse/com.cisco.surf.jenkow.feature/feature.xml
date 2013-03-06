@@ -22,7 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
-<feature id="com.cisco.surf.jenkow.feature" label="Jenkow Feature" version="0.3.0.qualifier" provider-name="CISCO">
+<feature id="com.cisco.surf.jenkow.feature" label="Jenkow Feature" version="0.4.0.qualifier" provider-name="CISCO">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]

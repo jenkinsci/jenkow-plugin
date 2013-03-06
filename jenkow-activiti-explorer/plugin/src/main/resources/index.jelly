@@ -1,3 +1,8 @@
 <div>
-  Embeds Activiti Explorer inside Jenkins
+  <p>
+    Adds the 
+    <a href="http://activiti.org/components.html">Activiti Explorer and Modeler</a>
+    (web-based BPMN workflow editor) to
+    <a href="https://wiki.jenkins-ci.org/display/JENKINS/Jenkow+Plugin">Jenkow</a>.
+  </p>
 </div>

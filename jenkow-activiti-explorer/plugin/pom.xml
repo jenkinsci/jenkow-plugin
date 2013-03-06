@@ -10,8 +10,24 @@
   </parent>
 
   <artifactId>jenkow-activiti-explorer</artifactId>
-  <name>Jenkow Activiti Explorer Plugin</name>
+  <name>Jenkow Activiti Explorer</name>
   <packaging>hpi</packaging>
+  <description>Adds the Activiti Explorer and Modeler (web-based BPMN workflow editor) to Jenkow.</description>
+  <url>https://wiki.jenkins-ci.org/display/JENKINS/Jenkow+Activiti+Explorer</url>
+
+  <licenses>
+    <license>
+      <name>The MIT License (MIT)</name>
+      <url>http://www.opensource.org/licenses/mit-license.php</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <scm>
+    <connection>scm:git:ssh://github.com/jenkinsci/jenkow-plugin.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/jenkinsci/jenkow-plugin.git</developerConnection>
+    <url>https://github.com/jenkinsci/jenkow-plugin</url>
+  </scm>
 
   <dependencies>
     <dependency>

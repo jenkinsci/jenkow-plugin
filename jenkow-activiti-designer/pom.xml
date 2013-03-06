@@ -36,7 +36,7 @@ THE SOFTWARE.
   <artifactId>jenkow-activiti-designer</artifactId>
   <packaging>hpi</packaging>
   <name>Jenkow Activiti Designer</name>
-  <description>Provides the Activiti Designer (BPMN workflow editor)</description>
+  <description>Adds the Activiti Designer (Eclipse-based BPMN workflow editor) to Jenkow.</description>
   <url>https://wiki.jenkins-ci.org/display/JENKINS/Jenkow+Activiti+Designer</url>
 
   <developers>

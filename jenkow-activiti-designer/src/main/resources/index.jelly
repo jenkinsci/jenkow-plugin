@@ -1,8 +1,8 @@
 <div>
   <p>
-    Provides the 
-    <A HREF="http://www.activiti.org/userguide/index.html#activitiDesigner/">Activiti Designer</A>
-    (Eclipse-based BPMN workflow editor) for
+    Adds the 
+    <a href="http://www.activiti.org/userguide/index.html#activitiDesigner/">Activiti Designer</a>
+    (Eclipse-based BPMN workflow editor) to
     <a href="https://wiki.jenkins-ci.org/display/JENKINS/Jenkow+Plugin">Jenkow</a>.
   </p>
 </div>

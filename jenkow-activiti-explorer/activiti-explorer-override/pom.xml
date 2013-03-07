@@ -28,7 +28,7 @@ THE SOFTWARE.
   <parent>
     <groupId>com.cisco.step.jenkins.plugins</groupId>
     <artifactId>jenkow-activiti-explorer-plugin-parent</artifactId>
-    <version>0.4.0-SNAPSHOT</version>
+    <version>0.3.2-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
 

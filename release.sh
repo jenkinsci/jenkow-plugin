@@ -43,6 +43,7 @@ set -x
 $GIT checkout -f -b v$RELVER
 ./update-versions.sh $RELVER
 $GIT commit -am "created release $RELVER"
+$GIT tag -a jenkow-plugin-$RELVER -m "version $RELVER"
 $MVN $MVN_OPTIONS clean install -Djava.awt.headless=true || exit 1
 
 $GIT checkout -f master
@@ -56,4 +57,5 @@ $MVN $MVN_OPTIONS -f jenkow-activiti-designer/pom.xml deploy -Dmaven.test.skip=t
 $MVN $MVN_OPTIONS -f jenkow-activiti-explorer/pom.xml deploy -Dmaven.test.skip=true || exit 1
 $GIT checkout -f master
 
-$GIT push --all
+$GIT push --all --tags
+

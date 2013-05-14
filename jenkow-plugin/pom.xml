@@ -192,6 +192,7 @@ THE SOFTWARE.
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.12</version>
         <configuration>
+          <argLine>-Xmx4000m -Xms1024m -XX:MaxPermSize=128m</argLine>
           <systemProperties>
             <property>
               <name>jenkow.test.git</name>
@@ -202,6 +203,7 @@ THE SOFTWARE.
 <!--
             <exclude>**/com/cisco/step/jenkins/plugins/jenkow/git/GitTest.java</exclude>
             <exclude>**/SimpleWfRun/ActualTest.java</exclude>
+            <exclude>**/FailingWf/ActualTest.java</exclude>
             <exclude>**/SimpleWfCallsJob/ActualTest.java</exclude>
             <exclude>**/ManualTrigger/ActualTest.java</exclude>
             <exclude>**/ParallelJobs/ActualTest.java</exclude>

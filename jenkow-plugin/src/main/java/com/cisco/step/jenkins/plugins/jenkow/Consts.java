@@ -31,4 +31,6 @@ public class Consts {
     public static final String DIAGRAMS_SUBDIR = "src/main/resources/diagrams";
     public static final String WORKFLOW_EXT = "bpmn";
     public static final String WORKFLOW_DOT_EXT = "."+WORKFLOW_EXT;
+    
+    static final String BUILD_RESULT_NAME = "jenkow_build_result";
 }

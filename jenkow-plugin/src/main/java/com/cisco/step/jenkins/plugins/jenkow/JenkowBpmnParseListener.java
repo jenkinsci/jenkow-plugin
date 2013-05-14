@@ -23,6 +23,8 @@
  */
 package com.cisco.step.jenkins.plugins.jenkow;
 
+import java.util.List;
+
 import org.activiti.engine.impl.bpmn.parser.AbstractBpmnParseListener;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.PvmEvent;
@@ -74,8 +76,15 @@ class JenkowBpmnParseListener extends AbstractBpmnParseListener{
     }
 	
 	@Override
+    public void parseEndEvent(Element el, ScopeImpl scope, ActivityImpl activity) {
+	    if (el.element("errorEventDefinition") != null){
+	        activity.addExecutionListener(PvmEvent.EVENTNAME_END,new EndErrorHandler(el.attribute("id")));
+	    }
+    }
+
+    @Override
     public void parseProcess(Element el, ProcessDefinitionEntity processDefinition) {
-        processDefinition.addExecutionListener(PvmEvent.EVENTNAME_END,new ProcessExecLogger(el.attribute("id")));
+	    processDefinition.addExecutionListener(PvmEvent.EVENTNAME_END,new ProcessExecLogger(el.attribute("id")));
     }
 
     private void addLogger(Element el, ActivityImpl activity){

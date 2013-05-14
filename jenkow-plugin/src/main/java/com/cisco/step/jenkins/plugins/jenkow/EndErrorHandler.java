@@ -24,50 +24,40 @@
 package com.cisco.step.jenkins.plugins.jenkow;
 
 import hudson.model.Result;
-import hudson.model.TopLevelItem;
 
+import java.io.PrintStream;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import jenkins.model.Jenkins;
 
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.ExecutionListener;
 
-public class ProcessExecLogger implements ExecutionListener{
-    private static final Logger LOG = Logger.getLogger(TaskExecLogger.class.getName());
+public class EndErrorHandler implements ExecutionListener{
+    private static final Logger LOG = Logger.getLogger(EndErrorHandler.class.getName());
     private String name;
     
-    ProcessExecLogger(String name) {
+    EndErrorHandler(String name) {
         this.name = name;
     }
 
     @Override
     public void notify(DelegateExecution exec) throws Exception {
-        LOG.info("workflow "+name+"#"+exec.getProcessInstanceId()+" finished");
-        
-        Object jobName = exec.getVariable("jenkow_build_parent");
-        LOG.finer("jenkow_build_parent = "+jobName);
-        
-        Object buildNumber = exec.getVariable("jenkow_build_number");
-        LOG.finer("jenkow_build_number = "+buildNumber);
-        
-        Result buildResult = Result.SUCCESS;
-        Object forcedBuildResult = exec.getVariable(Consts.BUILD_RESULT_NAME);
-        LOG.finer(Consts.BUILD_RESULT_NAME+" = "+forcedBuildResult);
-        if (forcedBuildResult != null){
-            buildResult = Result.fromString(forcedBuildResult.toString());
+        if (LOG.isLoggable(Level.FINE)){
+            LOG.fine("name                          = "+name);
+            LOG.fine("exec.getEventName()          -> "+exec.getEventName());
+            LOG.fine("exec.getId()                 -> "+exec.getId());
+            LOG.fine("exec.getProcessBusinessKey() -> "+exec.getProcessBusinessKey());
+            LOG.fine("exec.getProcessInstanceId()  -> "+exec.getProcessInstanceId());
+            LOG.fine("jenkow_build_parent           = "+exec.getVariable("jenkow_build_parent"));
+            LOG.fine("jenkow_build_number           = "+exec.getVariable("jenkow_build_number"));
         }
         
-        LOG.info("marking job "+jobName+"#"+buildNumber+" as complete ("+buildResult+")");
-        if (jobName instanceof String && buildNumber instanceof Integer){
-            TopLevelItem it = Jenkins.getInstance().getItem((String)jobName);
-            if (it instanceof JenkowWorkflowJob){
-                JenkowWorkflowJob wfj = (JenkowWorkflowJob)it;
-                JenkowWorkflowRun build = wfj.getBuildByNumber(((Integer)buildNumber).intValue());
-                if (build != null){
-                    build.markCompleted(buildResult);
-                }
-            }
+        exec.setVariable(Consts.BUILD_RESULT_NAME,Result.FAILURE);
+        PrintStream log = BuildLoggerMap.get(exec.getVariable("jenkow_build_parent"),exec.getVariable("jenkow_build_number"));
+        if (log != null){
+            String ev = exec.getEventName();
+            if (ev != null) ev += "ed";
+            log.println(Consts.UI_PREFIX+": "+name+" "+ev);
         }
     }
 }

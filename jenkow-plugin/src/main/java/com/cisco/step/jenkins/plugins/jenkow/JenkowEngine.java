@@ -76,8 +76,8 @@ public class JenkowEngine {
 
                 // set other engine config
 				cfg.setDatabaseSchemaUpdate("true");
-				cfg.setHistory("full");
 			}
+			cfg.setHistory("full"); // so that workflow variables are getting persisted in history
 			cfg.setJobExecutorActivate(true);
 			
 			ClassLoader peCL = JenkowEngine.class.getClassLoader();

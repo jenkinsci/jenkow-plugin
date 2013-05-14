@@ -29,6 +29,7 @@ import hudson.model.Action;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
+import hudson.model.Result;
 import hudson.model.Run;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
@@ -53,7 +54,9 @@ import net.sf.json.JSONObject;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.history.HistoricDetail;
 import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.impl.persistence.entity.HistoricDetailVariableInstanceUpdateEntity;
 import org.jenkinsci.plugins.database.Database;
 import org.jenkinsci.plugins.database.DatabaseDescriptor;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -93,6 +96,7 @@ public class JenkowBuilder extends Builder{
         ProcessEngine eng = JenkowEngine.getEngine();
         RuntimeService rtSvc = eng.getRuntimeService();
         String procId = null;
+        boolean result = true;
         try {
             procId = WfUtil.launchWf(log,workflowName,build.getParent().getName(),build.getNumber());
             
@@ -104,7 +108,9 @@ public class JenkowBuilder extends Builder{
                     // TODO 8: builder should log each time the process makes a state change
                     HistoricProcessInstance hProcInst = hstSvc.createHistoricProcessInstanceQuery().processInstanceId(procId).singleResult();
                     if (hProcInst.getEndTime() != null){
-                        log.println(Consts.UI_PREFIX+": \""+workflowName+"\" ended");
+                        String wbr = getWorkflowBuildResult(hstSvc,procId);
+                        log.println(Consts.UI_PREFIX+": \""+workflowName+"\" ended ("+wbr+")");
+                        if (Result.FAILURE.toString().equals(wbr)) result = false;
                         break;
                     }
                     Thread.sleep(1000);
@@ -118,7 +124,20 @@ public class JenkowBuilder extends Builder{
             	rtSvc.deleteProcessInstance(procId,build.getFullDisplayName()+" finished");
             }
         }
-        return true;
+        return result;
+    }
+    
+    private String getWorkflowBuildResult(HistoryService hstSvc, String procId){
+        for (HistoricDetail hd : hstSvc.createHistoricDetailQuery().variableUpdates().processInstanceId(procId).list()){
+            if (hd instanceof HistoricDetailVariableInstanceUpdateEntity){
+                HistoricDetailVariableInstanceUpdateEntity hdvar = (HistoricDetailVariableInstanceUpdateEntity)hd;
+                if (Consts.BUILD_RESULT_NAME.equals(hdvar.getName())){
+                    Object v = hdvar.getValue();
+                    if (v != null) return v.toString();
+                }
+            }
+        }
+        return null;
     }
 
     public WorkflowDiagram getWorkflowDiagram() {

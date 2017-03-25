@@ -310,7 +310,7 @@ ORYX.Plugins.ShapeRepository = {
 		var el = aShapes.last();
 	
 		
-		if(aShapes.lenght == 1 && aShapes[0] instanceof ORYX.Core.Canvas) {
+		if(aShapes.length == 1 && aShapes[0] instanceof ORYX.Core.Canvas) {
 			
 			return false;
 			

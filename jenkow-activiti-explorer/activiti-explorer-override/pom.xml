@@ -39,7 +39,7 @@ THE SOFTWARE.
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
-      <version>3.1.2.RELEASE</version>
+      <version>5.2.8.RELEASE</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

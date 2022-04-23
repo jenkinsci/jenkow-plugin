@@ -10,7 +10,7 @@
   <packaging>pom</packaging>
   <version>5.11-jenkow</version>
   <properties>
-    <spring.framework.version>3.1.2.RELEASE</spring.framework.version>
+    <spring.framework.version>5.3.19</spring.framework.version>
     <mule.version>3.3.0</mule.version>
     <cxf.version>2.6.1</cxf.version>
     <restlet.version>2.0.15</restlet.version>

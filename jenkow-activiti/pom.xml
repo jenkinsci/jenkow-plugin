@@ -12,7 +12,7 @@
   <properties>
     <spring.framework.version>3.1.2.RELEASE</spring.framework.version>
     <mule.version>3.3.0</mule.version>
-    <cxf.version>2.6.1</cxf.version>
+    <cxf.version>2.6.7</cxf.version>
     <restlet.version>2.0.15</restlet.version>
     <batik.version>1.7</batik.version>
 
